@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
 
+import static org.firstinspires.ftc.teamcode.framework.AbstractOpMode.isOpModeActive;
+
 @I2cDeviceType()
 @DeviceProperties(xmlTag = "PIXYCAMERA", name = "PixyCam", description = "Camera with fast on board vision processing")
 
@@ -155,7 +157,7 @@ public class Pixycam extends I2cDeviceSynchDevice<I2cDeviceSynch> implements Har
             AbstractOpMode.delay(100);
             byte[] start = this.deviceClient.read(0x54, 5), data;
 
-            while (start[2] != (byte) Register.RESPONSE_BLOCKS.val) {
+            while ((start[2] != (byte) Register.RESPONSE_BLOCKS.val)&& isOpModeActive()) {
                 this.deviceClient.write(0x54, commands);
                 AbstractOpMode.delay(100);
                 start = this.deviceClient.read(0x54, 5);

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.boggiewheel_base.hardware.devices.drive;
+package org.firstinspires.ftc.teamcode.skidsteer_base.hardware.devices.drive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -18,8 +18,7 @@ public class Drive {
         rightMotor = new SlewDcMotor(hwMap.dcMotor.get("right"));
 
         //Motor Set Up
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         leftMotor.setSlewSpeed(0.2);
         rightMotor.setSlewSpeed(0.2);
@@ -68,11 +67,6 @@ public class Drive {
     public void setMode(DcMotor.RunMode mode){
         leftMotor.setMode(mode);
         rightMotor.setMode(mode);
-    }
-
-    public void setPosisionP(double p){
-        //leftMotor.setPositionPIDFCoefficients(p);
-        //rightMotor.setPositionPIDFCoefficients(p);
     }
 
     public int getLeftPosition(){

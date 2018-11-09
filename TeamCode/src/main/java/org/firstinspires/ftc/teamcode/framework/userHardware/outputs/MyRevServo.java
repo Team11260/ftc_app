@@ -3,9 +3,8 @@ package org.firstinspires.ftc.teamcode.framework.userHardware.outputs;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.boggiewheel_base.hardware.HardwareDevices;
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
-
+import org.firstinspires.ftc.teamcode.skidsteer_base.hardware.HardwareDevices;
 
 /**
  * Created by user on 10/1/2018.

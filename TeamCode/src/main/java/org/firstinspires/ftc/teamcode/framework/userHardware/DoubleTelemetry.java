@@ -19,13 +19,13 @@ public class DoubleTelemetry {
         dashtelem.write(message);
         dashtelem.info(message);
     }
-  
-    public void addData(String caption, double data){
-        addData(caption,Double.toString(data));
-    }
 
     public void addData(String caption, int data){
         addData(caption,Integer.toString(data));
+    }
+
+    public void addData(String caption, double data){
+        addData(caption,Double.toString(data));
     }
 
     public void addData(String data){
@@ -86,11 +86,7 @@ public class DoubleTelemetry {
     }
 
     public void update(){
-        try {
-            telemetry.update();
-        } catch (NullPointerException e){
-            e.printStackTrace();
-        }
+        telemetry.update();
         dashtelem.updateInfo();
     }
 }

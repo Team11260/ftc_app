@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.framework;
 
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public abstract class AbstractTeleop extends AbstractOpMode {
 
     private boolean threadRunning = false;
+
+    private ArrayList<Exception> exceptions = new ArrayList<>();
 
     //Setup gamepad
     private Emitter emitter = new Emitter();
@@ -37,6 +41,8 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         service.execute(InitThread);
 
         while (!isStopRequested() && !isStarted()){
+            checkException();
+
             if(!threadRunning) {
                 threadRunning = true;
                 service.execute(InitLoopThread);
@@ -46,11 +52,15 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         while (!isStopRequested() && threadRunning);
 
         if(!isStopRequested()) {
+            checkException();
+
             threadRunning = true;
             service.execute(StartThread);
         }
 
         while (opModeIsActive()) {
+            checkException();
+
             //checks the gamepad for changes
             checkGamepad();
 
@@ -80,211 +90,381 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
     }
 
+    private void throwException(Exception e){
+        exceptions.add(e);
+    }
+
+    private void checkException() {
+        try {
+            for (Exception e : exceptions) {
+                telemetry.update();
+                for (StackTraceElement element : e.getStackTrace()) {
+                    if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
+                        telemetry.addData(element.toString().replace("org.firstinspires.ftc.teamcode.",""));
+                        break;
+                    }
+                }
+                telemetry.update();
+                AbstractOpMode.delay(500);
+                switch (e.getClass().getSimpleName()) {
+                    case "NullPointerException": {
+                        throw new NullPointerException(e.getMessage());
+                    }
+                    case "IllegalArgumentException": {
+                        throw new IllegalArgumentException(e.getMessage());
+                    }
+                    case "ArrayIndexOutOfBoundsException": {
+                        throw new ArrayIndexOutOfBoundsException(e.getMessage());
+                    }
+                    default: {
+                        telemetry.addData(e.toString());
+                    }
+                }
+            }
+        } catch (ConcurrentModificationException e){}
+    }
+
     class initThread implements Runnable{
         public void run(){
-            Init();
+            try {
+                Init();
+            } catch (Exception e){
+                throwException(e);
+            }
             threadRunning = false;
         }
     }
 
     class initloopThread implements Runnable{
         public void run(){
-            InitLoop();
+            try {
+                InitLoop();
+            } catch (Exception e){
+                throwException(e);
+            }
             threadRunning = false;
         }
     }
 
     class startThread implements Runnable{
         public void run(){
-            Start();
+            try{
+                Start();
+            } catch (Exception e){
+                throwException(e);
+            }
             threadRunning = false;
         }
     }
 
     class runThread implements Runnable{
         public void run(){
-            Loop();
+            try{
+                Loop();
+            } catch (Exception e){
+                throwException(e);
+            }
             threadRunning = false;
         }
     }
 
     class a_up implements Runnable{
         public void run(){
-            a_up();
+            try{
+                a_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class a_down implements Runnable{
         public void run(){
-            a_down();
+            try{
+                a_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class b_up implements Runnable{
         public void run(){
-            b_up();
+            try{
+                b_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class b_down implements Runnable{
         public void run(){
-            b_down();
+            try{
+                b_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class x_up implements Runnable{
         public void run(){
-            x_up();
+            try{
+                x_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class x_down implements Runnable{
         public void run(){
-            x_down();
+            try{
+                x_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class y_up implements Runnable{
         public void run(){
-            y_up();
+            try{
+                y_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class y_down implements Runnable{
         public void run(){
-            y_down();
+            try{
+                y_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class lb_up implements Runnable{
         public void run(){
-            lb_up();
+            try{
+                lb_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class lb_down implements Runnable{
         public void run(){
-            lb_down();
+            try{
+                lb_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class rb_up implements Runnable{
         public void run(){
-            rb_up();
+            try{
+                rb_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class rb_down implements Runnable{
         public void run(){
-            rb_down();
+            try{
+                rb_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class dpl_up implements Runnable{
         public void run(){
-            dpl_up();
+            try{
+                dpl_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class dpl_down implements Runnable{
         public void run(){
-            dpl_down();
+            try{
+                dpl_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class dpr_up implements Runnable{
         public void run(){
-            dpr_up();
+            try{
+                dpr_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class dpr_down implements Runnable{
         public void run(){
-            dpr_down();
+            try{
+                dpr_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class dpu_up implements Runnable{
         public void run(){
-            dpu_up();
+            try{
+                dpu_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class dpu_down implements Runnable{
         public void run(){
-            dpu_down();
+            try{
+                dpu_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class dpd_up implements Runnable{
         public void run(){
-            dpd_up();
+            try{
+                dpd_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class dpd_down implements Runnable{
         public void run(){
-            dpd_down();
+            try{
+                dpd_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class start_up implements Runnable{
         public void run() {
-            start_up();
+            try{
+                start_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class start_down implements Runnable{
         public void run(){
-            start_down();
+            try{
+                start_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class back_up implements Runnable{
         public void run(){
-            back_up();
+            try{
+                back_up();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class back_down implements Runnable{
         public void run(){
-            back_down();
+            try{
+                back_down();
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class lt_change implements Runnable{
         public void run(){
-            lt_change(lt_down);
+            try{
+                lt_change(lt_down);
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class rt_change implements Runnable{
         public void run(){
-            rt_change(rt_down);
+            try{
+                rt_change(rt_down);
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class lsx_change implements Runnable{
         public void run(){
-            lsx_change(lsx_down);
+            try{
+                lsx_change(lsx_down);
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class lsy_change implements Runnable{
         public void run(){
-            lsy_change(-lsy_down);
+            try{
+                lsy_change(-lsy_down);
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class rsx_change implements Runnable{
         public void run(){
-            rsx_change(rsx_down);
+            try{
+                rsx_change(rsx_down);
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 
     class rsy_change implements Runnable{
         public void run(){
-            rsy_change(-rsy_down);
+            try{
+                rsy_change(-rsy_down);
+            } catch (Exception e){
+                throwException(e);
+            }
         }
     }
 

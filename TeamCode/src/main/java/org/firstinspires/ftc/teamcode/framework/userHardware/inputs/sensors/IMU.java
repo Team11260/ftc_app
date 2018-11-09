@@ -8,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import static org.firstinspires.ftc.teamcode.framework.AbstractOpMode.isOpModeActive;
+
 public class IMU {
     BNO055IMU imu;
     BNO055IMU.Parameters parameters;
@@ -26,7 +28,7 @@ public class IMU {
 
 
 
-        while (!imu.isGyroCalibrated());
+        while (!imu.isGyroCalibrated()&& isOpModeActive());
     }
 
     public double getHeading(){
@@ -36,6 +38,6 @@ public class IMU {
 
     public void resetAngleToZero() {
         imu.initialize(parameters);
-        while (!imu.isGyroCalibrated());
+        while (!imu.isGyroCalibrated()&& isOpModeActive());
     }
 }
