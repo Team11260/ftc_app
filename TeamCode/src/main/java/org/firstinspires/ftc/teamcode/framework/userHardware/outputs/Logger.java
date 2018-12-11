@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.framework.userHardware.outputs;
 
+import android.graphics.Path;
 import android.os.Environment;
 import android.util.Log;
 
@@ -14,26 +15,23 @@ import java.util.Date;
 
 public class Logger {
     private final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-    private final File file;
+    private File file;
 
     private FileOutputStream fOut;
     private OutputStreamWriter myOutWriter;
 
-    public Logger(String flieName){
-        file = new File(path, flieName);
-        try{
-            if ( file.exists() ) {
-                //Don't create file
-                RobotLog.i("ABCD Existing File");
+    public Logger(String fileName) {
+        try {
+            file = new File(path, "FTC RobotController Phone Log "+ fileName +" ["+new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.sss").format(new Date())+"].txt");
+            int n = 0;
+            while (file.exists()){
+                file = new File(path, "FTC RobotController Phone Log "+ fileName +" ["+new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.sss").format(new Date())+"]("+n+").txt");
             }
-            else {
-                //Create file
-                RobotLog.i("ABCD Creating New File" );
-                file.createNewFile();
-            }
+            RobotLog.i("ABCD Creating New File: "+file.getName());
+            file.createNewFile();
             fOut = new FileOutputStream(file);
             myOutWriter = new OutputStreamWriter(fOut);
-        } catch (IOException e){
+        } catch (IOException e) {
             Log.e("Exception", "File init failed " + e.toString());
         }
     }
@@ -41,16 +39,16 @@ public class Logger {
     public void log(String text) {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
-        try{
-            myOutWriter.append( timeStamp + " : " + text + (char) Character.LINE_SEPARATOR );
+        try {
+            myOutWriter.append(timeStamp + " : " + text + (char) Character.LINE_SEPARATOR);
             myOutWriter.flush();
         } catch (IOException e) {
             Log.e("Exception", "File append failed: " + e.toString());
         }
     }
 
-    public void stop(){
-        try{
+    public void stop() {
+        try {
             myOutWriter.close();
             fOut.close();
         } catch (IOException e) {

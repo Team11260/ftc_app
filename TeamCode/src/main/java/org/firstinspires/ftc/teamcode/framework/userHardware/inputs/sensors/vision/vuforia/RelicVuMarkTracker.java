@@ -6,8 +6,8 @@ public class RelicVuMarkTracker {
 
     Vuforia vuforia;
 
-    public RelicVuMarkTracker(){
-        vuforia = new Vuforia();
+    public RelicVuMarkTracker() {
+        vuforia = new Vuforia(true);
         //vuforia.setLED(false);
         //vuforia.startTracking("RelicVuMark");
     }
@@ -16,7 +16,7 @@ public class RelicVuMarkTracker {
         return RelicRecoveryVuMark.from(vuforia.getTemplate());
     }
 
-    public double[] getPose(){
+    public double[] getPose() {
         return vuforia.getPose();
     }
 }

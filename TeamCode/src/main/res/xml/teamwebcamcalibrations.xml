@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<!-- 
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?><!--
   This file can provide additional camera calibration settings beyond those built into the SDK itself.
   Each calibration is for a particular camera (indicated by USB vid & pid pair) and a particular
   capture resolution for the camera. Note: it is very important when capturing images used to calibrate
@@ -8,7 +7,7 @@
   this level of control.
 
   Beyond simply providing additional, new camera calibrations, calibrations provided herein can
-  *replace/update* those that are builtin to the SDK. This matching is keyed, of course, by the
+  *replace/updateAll* those that are builtin to the SDK. This matching is keyed, of course, by the
   (vid, pid, size) triple. Further, if such a calibration has the 'remove' attribute with value 'true',
   any existing calibration with that key is removed (and the calibration itself not added).
 

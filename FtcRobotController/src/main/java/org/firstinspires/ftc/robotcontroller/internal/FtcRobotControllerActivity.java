@@ -94,6 +94,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.upacreekrobotics.dashboard.Dashboard;
+import org.upacreekrobotics.eventloop.OurEventLoop;
 
 
 @SuppressWarnings("WeakerAccess")
@@ -137,7 +138,7 @@ public class FtcRobotControllerActivity extends Activity {
     protected FtcRobotControllerService controllerService;
     protected NetworkType networkType;
 
-    protected FtcEventLoop eventLoop;
+    //protected FtcEventLoop eventLoop;
     protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
 
     protected WifiMuteStateMachine wifiMuteStateMachine;
@@ -145,8 +146,9 @@ public class FtcRobotControllerActivity extends Activity {
 
 
     //THIS IS OUR CODE
-    Thread RestartThread;
-    RobotRestartChecker RestartChecker;
+    protected Thread RestartThread;
+    protected RobotRestartChecker RestartChecker;
+    protected OurEventLoop eventLoop; //Replacing line 141
 
     protected class RobotRestarter implements Restarter {
 
@@ -487,7 +489,7 @@ public class FtcRobotControllerActivity extends Activity {
         if (id == R.id.action_programming_mode) {
             if (cfgFileMgr.getActiveConfig().isNoConfig()) {
                 // Tell the user they must configure the robot before starting programming mode.
-                // TODO: as we are no longer truly 'modal' this warning should be adapted
+                // look at this: as we are no longer truly 'modal' this warning should be adapted
                 AppUtil.getInstance().showToast(UILocation.BOTH, context, context.getString(R.string.toastConfigureRobotBeforeProgrammingMode));
             } else {
                 Intent programmingModeIntent = new Intent(AppUtil.getDefContext(), ProgrammingModeActivity.class);
@@ -632,7 +634,7 @@ public class FtcRobotControllerActivity extends Activity {
         }
 
         OpModeRegister userOpModeRegister = createOpModeRegister();
-        eventLoop = new FtcEventLoop(hardwareFactory, userOpModeRegister, callback, this, programmingModeController);
+        eventLoop = new OurEventLoop(hardwareFactory, userOpModeRegister, callback, this, programmingModeController);
         FtcEventLoopIdle idleLoop = new FtcEventLoopIdle(hardwareFactory, userOpModeRegister, callback, this, programmingModeController);
 
         controllerService.setCallback(callback);
@@ -641,7 +643,7 @@ public class FtcRobotControllerActivity extends Activity {
         passReceivedUsbAttachmentsToEventLoop();
 
         //Our code
-        Dashboard.attachEventLoop(eventLoop,context);
+        Dashboard.attachEventLoop(eventLoop, context);
     }
 
     protected OpModeRegister createOpModeRegister() {
@@ -730,11 +732,11 @@ public class FtcRobotControllerActivity extends Activity {
     }
 
     //BELOW HERE IS OUR CODE
-    protected class RobotRestartChecker implements Runnable{
+    protected class RobotRestartChecker implements Runnable {
 
         private boolean running;
 
-        public RobotRestartChecker(){
+        public RobotRestartChecker() {
 
         }
 
@@ -742,8 +744,8 @@ public class FtcRobotControllerActivity extends Activity {
         public void run() {
             Looper.prepare();
             running = true;
-            while (running){
-                if(Dashboard.robotRestartRequested()){
+            while (running) {
+                if (Dashboard.robotRestartRequested()) {
                     requestRobotRestart();
                     Dashboard.restartComplete();
                 }
@@ -755,7 +757,7 @@ public class FtcRobotControllerActivity extends Activity {
             }
         }
 
-        public void end(){
+        public void end() {
             running = false;
         }
     }
