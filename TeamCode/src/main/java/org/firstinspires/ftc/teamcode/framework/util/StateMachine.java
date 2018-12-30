@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 
 public class StateMachine {
 
-    private ArrayList<State> states = new ArrayList<>(), activeStates = new ArrayList<>(), finishedStates, startingStates;
+    private ArrayList<State> states = new ArrayList<>(), activeStates = new ArrayList<>(), finishedStates = new ArrayList<>(), startingStates = new ArrayList<>();
 
     private ExecutorService service;
 
@@ -17,6 +17,8 @@ public class StateMachine {
 
     public void prepare() throws StateConfigurationException {
         for (State state : states) {
+            if (state instanceof PathState) continue;
+
             boolean noPrevious = true;
 
             for (State checkState : states) {
@@ -30,10 +32,7 @@ public class StateMachine {
         }
     }
 
-    public boolean update() {
-        finishedStates = new ArrayList<>();
-        startingStates = new ArrayList<>();
-
+    public synchronized boolean update() {
         for (State activeState : activeStates) {
             if (activeState.isDone()) {
                 finishedStates.add(activeState);
@@ -45,8 +44,18 @@ public class StateMachine {
 
         activeStates.removeAll(finishedStates);
         activeStates.addAll(startingStates);
-        if(activeStates.size()<=0)return false;
+
+        finishedStates.clear();
+        startingStates.clear();
+
+        if (activeStates.size() <= 0) return false;
         return true;
+    }
+
+    public synchronized void addFinishedState(String stateName) {
+        for (State state : states) {
+            if (state.getPreviousState().equals(stateName)) fire(state);
+        }
     }
 
     private void fire(State state) throws RuntimeException {

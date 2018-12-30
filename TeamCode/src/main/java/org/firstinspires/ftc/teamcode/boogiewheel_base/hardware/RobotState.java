@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware;
 
+import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition;
+import org.firstinspires.ftc.teamcode.framework.userHardware.paths.Path;
+
 public final class RobotState {
 
     public static MatchState currentMatchState = MatchState.UNKNOWN;
@@ -12,6 +15,10 @@ public final class RobotState {
     public static RobotLiftState currentRobotLiftState = RobotLiftState.RAISED;
 
     public static IntakeLiftState currentIntakeLiftState = IntakeLiftState.LOWERED;
+
+    public static SamplePosition currentSamplePosition = SamplePosition.UNKNOWN;
+
+    public static Path currentPath = null;
 
     public enum MatchState {
         AUTONOMOUS,

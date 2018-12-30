@@ -1,14 +1,7 @@
-package org.firstinspires.ftc.teamcode.framework.opModes;
+package org.firstinspires.ftc.teamcode.framework.abstractopmodes;
 
-import com.qualcomm.robotcore.robocol.Command;
-
-import org.firstinspires.ftc.robotcore.internal.network.NetworkConnectionHandler;
-import org.firstinspires.ftc.robotcore.internal.network.RobotCoreCommandList;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
-import org.firstinspires.ftc.teamcode.framework.util.State;
-import org.firstinspires.ftc.teamcode.framework.util.StateConfigurationException;
-import org.firstinspires.ftc.teamcode.framework.util.StateMachine;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,13 +12,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public abstract class AbstractAutonNew extends AbstractOpMode {
+public abstract class AbstractAuton extends AbstractOpMode {
+
+    private boolean threadRunning = false;
 
     private List<Exception> exceptions = Collections.synchronizedList(new ArrayList<Exception>());
 
-    private StateMachine stateMachine = new StateMachine();
-
-    public AbstractAutonNew() {
+    public AbstractAuton() {
 
     }
 
@@ -52,8 +45,18 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
             }
             return true;
         };
+        Callable<Boolean> RunThread = () -> {
+            try {
+                Run();
+            } catch (Exception e) {
+                throwException(e);
+            }
+            return true;
+        };
 
         Future<Boolean> CurrentFuture;
+
+        checkException();
 
         //calls user init
         CurrentFuture = service.submit(InitThread);
@@ -71,27 +74,14 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
         while (!isStopRequested() && !CurrentFuture.isDone()) checkException();
 
-        RegisterStates();
+        if (!isStopRequested()) CurrentFuture = service.submit(RunThread);
 
-        try {
-            stateMachine.prepare();
-        } catch (StateConfigurationException e) {
-            exceptions.add(e);
-        }
-
-        boolean stateMachineActive = true;
-
-        while (opModeIsActive() && stateMachineActive) {
-            checkException();
-
-            stateMachineActive = stateMachine.update();
-        }
+        while (!isStopRequested() && !CurrentFuture.isDone()) checkException();
 
         AbstractOpMode.stopRequested();
 
         //TODO remake our shutdown procedure
         CurrentFuture.cancel(true);
-        stateMachine.shutdown();
 
         while (!service.isTerminated()) {
             service.shutdownNow();
@@ -102,18 +92,16 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
         telemetry.stop();
     }
 
-    public abstract void RegisterStates();
-
     public abstract void Init();
 
     public void InitLoop() {
 
     }
 
-    public abstract void Stop();
+    public abstract void Run();
 
-    public void addState(State state) {
-        stateMachine.addState(state);
+    public void Stop() {
+
     }
 
     private void throwException(Exception e) {
@@ -163,12 +151,6 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
                     telemetry.update();
                     AbstractOpMode.delay(500);
                     VuforiaException exception = (VuforiaException) e;
-                    throw exception;
-                }
-                case "StateConfigurationException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    StateConfigurationException exception = (StateConfigurationException) e;
                     throw exception;
                 }
                 default: {

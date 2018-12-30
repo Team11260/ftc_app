@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware;
 
+import org.firstinspires.ftc.teamcode.framework.userHardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 
 import java.util.concurrent.Callable;
@@ -42,7 +43,7 @@ public class Robot extends AbstractRobot {
     }
 
     public Callable toggleDriveInvertedCallable() {
-        return ()-> {
+        return () -> {
             hardware.drive.toggleInverted();
             return true;
         };
@@ -50,6 +51,10 @@ public class Robot extends AbstractRobot {
 
     public void turnTo(double angle, double speed, double error, int period) {
         hardware.drive.turnTo(angle, speed, error, period);
+    }
+
+    public void runDrivePath(Path path) {
+        hardware.drive.runDrivePath(path);
     }
 
     public int[][] recordPath(int numSamples, int timeInterval) {
@@ -84,11 +89,40 @@ public class Robot extends AbstractRobot {
         return hardware.drive.isGyroCalibrated();
     }
 
+    public Callable autonReleaseWheelsSequenceCallable() {
+        return () -> {
+            hardware.drive.autonReleaseWheelsSequence();
+            return true;
+        };
+    }
+
+    public void autonReleaseWheelsSequence() {
+        hardware.drive.autonReleaseWheelsSequence();
+    }
+
+    public void autonDriveToWallSequence() {
+        hardware.drive.autonDriveToWallSequence();
+    }
+
+    public Callable autonDriveToWallSequenceCallable() {
+        return () -> {
+            hardware.drive.autonDriveToWallSequence();
+            return true;
+        };
+    }
+
     public double getHeading() {
         return hardware.drive.getHeading();
     }
 
     //Intake Methods
+    public Callable autonIntakeSequenceCallable() {
+        return () -> {
+            hardware.intake.autonIntakeSequence();
+            return true;
+        };
+    }
+
     public Callable beginIntakingCallable() {
         return () -> {
             beginIntaking();
@@ -199,6 +233,18 @@ public class Robot extends AbstractRobot {
         };
     }
 
+    public Callable autonLowerMineralLiftSequenceCallable() {
+        return () -> {
+            autonLowerMineralLiftSequence();
+            return true;
+        };
+    }
+
+    public void autonLowerMineralLiftSequence() {
+        hardware.mineralLift.autonLowerLiftSequence();
+    }
+
+    //robot lift methods
     public Callable robotLiftUpCallable() {
         return () -> {
             hardware.robotLift.robotLiftUp();
@@ -230,7 +276,18 @@ public class Robot extends AbstractRobot {
 
     public Callable moveRobotLiftToBottomCallable() {
         return () -> {
-            hardware.robotLift.lowerLift();
+            moveRobotLiftToBottom();
+            return true;
+        };
+    }
+
+    public void moveRobotLiftToBottom() {
+        hardware.robotLift.lowerLift();
+    }
+
+    public Callable dropMarkerCallable() {
+        return () -> {
+            hardware.drive.dropTeamMarker();
             return true;
         };
     }
