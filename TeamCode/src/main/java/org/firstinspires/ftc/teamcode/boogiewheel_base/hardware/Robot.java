@@ -282,12 +282,26 @@ public class Robot extends AbstractRobot {
     }
 
     public void moveRobotLiftToBottom() {
-        hardware.robotLift.lowerLift();
+        hardware.robotLift.autonLowerLiftSequence();
+    }
+
+    public Callable finishRobotLiftToBottomSequenceCallable(){
+        return () -> {
+            hardware.robotLift.autonFinishLowerLiftSequence();
+            return true;
+        };
     }
 
     public Callable dropMarkerCallable() {
         return () -> {
             hardware.drive.dropTeamMarker();
+            return true;
+        };
+    }
+
+    public Callable resetLiftPosCallable() {
+        return () -> {
+            hardware.robotLift.resetLiftPos();
             return true;
         };
     }

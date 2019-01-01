@@ -76,14 +76,14 @@ public class TensorFlow {
         int tfodMonitorViewId = AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.70;
+        tfodParameters.minimumConfidence = 0.50;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
     private void initTfodWithoutViewer() {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
-        tfodParameters.minimumConfidence = 0.70;
+        tfodParameters.minimumConfidence = 0.50;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
@@ -120,7 +120,7 @@ public class TensorFlow {
             if (updatedRecognitions != null) {
                 ArrayList<Mineral> minerals = new ArrayList<>();
                 for (Recognition recognition : updatedRecognitions) {
-                    if (recognition.getConfidence() < 0.5) continue;
+                    //if (recognition.getConfidence() < 0.5) continue;
                     minerals.add(new Mineral(recognition));
                 }
 

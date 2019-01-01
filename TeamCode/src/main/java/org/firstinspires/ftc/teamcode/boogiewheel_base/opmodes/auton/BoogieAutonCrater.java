@@ -27,10 +27,12 @@ public class BoogieAutonCrater extends AbstractAutonNew {
     public void RegisterStates() {
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
+        addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
-        addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
+        addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
         addState(new PathState("drive to wall with distance", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
+        //addState(new PathState("reset lift position", "back up from mineral", robot.resetLiftPosCallable()));
     }
 
     @Override
@@ -47,7 +49,7 @@ public class BoogieAutonCrater extends AbstractAutonNew {
 
         SamplePosition currentPosition = tensorFlow.getSamplePosition();
 
-        if (currentPosition != UNKNOWN) {
+        if (currentPosition != RobotState.currentSamplePosition && currentPosition != UNKNOWN) {
             RobotState.currentSamplePosition = currentPosition;
 
             telemetry.addData(DoubleTelemetry.LogMode.INFO, "Current Sample Position: " + currentPosition.toString());
@@ -75,6 +77,7 @@ public class BoogieAutonCrater extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectCenterMineral);
                 break;
         }
+
         robot.runDrivePath(Constants.craterSideToCrater);
     }
 
@@ -82,6 +85,6 @@ public class BoogieAutonCrater extends AbstractAutonNew {
     public void Stop() {
         tensorFlow.stop();
         robot.stop();
-        //Dashboard.startOpMode("TwoGamepad Boogie Teleop Tankdrive");
+        Dashboard.startOpMode("TwoGamepad Boogie Teleop Tankdrive");
     }
 }
