@@ -246,7 +246,7 @@ public class DriveController extends SubsystemController {
                 loop++;
             }
 
-            telemetry.addData(INFO, "Average loop time for drive: " + runtime.milliseconds() / loop);
+            telemetry.addData(INFO, "Average loop time for turn: " + runtime.milliseconds() / loop);
             telemetry.update();
 
             while (runtime.milliseconds() < period) {
@@ -349,6 +349,7 @@ public class DriveController extends SubsystemController {
 
     public void autonDriveToWallSequence() {
         while (((!RobotState.currentPath.getCurrentSegment().getName().equals("drive to depot double sample") && !RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) || drive.getDistance() >= DISTANCE_TO_WALL) && AbstractOpMode.isOpModeActive()) telemetry.addData(INFO,drive.getDistance());
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to depot double sample") && drive.getDistance() >= DISTANCE_TO_DEPOT_WALL) telemetry.addData(INFO,"Distance at depot: " + drive.getDistance());
         telemetry.addData("Done: " + INFO,drive.getDistance());
         RobotState.currentPath.nextSegment();
     }
@@ -411,6 +412,10 @@ public class DriveController extends SubsystemController {
         if (currentDriveDirection == DriveDirection.FORWARD)
             currentDriveDirection = DriveDirection.REVERSED;
         else currentDriveDirection = DriveDirection.FORWARD;
+    }
+
+    public synchronized double getDistance() {
+        return drive.getDistance();
     }
 
     //Util Methods
@@ -502,9 +507,7 @@ public class DriveController extends SubsystemController {
     }
 
     public void dropTeamMarker() {
-        telemetry.addData(INFO,"before loop");
-        while (!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall"));
-        telemetry.addData(INFO,"breaks loop");
+        while (!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall") && !currentPath.getCurrentSegment().getName().equals("drive to crater"));
         currentPath.pause();
         drive.setMarkerServo(DRIVE_TEAM_MARKER_EXTENDED);
         delay(1000);

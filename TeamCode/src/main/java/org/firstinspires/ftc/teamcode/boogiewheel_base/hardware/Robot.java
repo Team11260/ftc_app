@@ -130,6 +130,8 @@ public class Robot extends AbstractRobot {
         };
     }
 
+    public double getDistance() {return hardware.drive.getDistance();}
+
     public void beginIntaking() {
         hardware.intake.beginIntaking();
     }

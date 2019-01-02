@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
+import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 
 @TeleOp(name = "OneDriver Boogie Teleop", group = "New")
 //@Disabled
@@ -66,6 +67,7 @@ public class OneDriverBoogieTeleop extends AbstractTeleop {
         robot.setDriveY(-gamepad1.left_stick_y);
         robot.setDriveZ(gamepad1.right_stick_x);
         robot.driveUpdate();//updates Y and Z
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Distance Sensor: " + robot.getDistance() );
         telemetry.update();
     }
 

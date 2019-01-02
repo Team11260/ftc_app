@@ -54,21 +54,23 @@ public final class Constants {
     ////////AUTON PATHS////////
     public final static double AUTON_PATH_SPEED = 1;
     public final static double AUTON_TURN_ERROR = 8;
+    public final static double AUTON_MINERAL_TURN_ERROR = 4;
     public final static int AUTON_TURN_PERIOD = 800;
     public final static int AUTON_DISTANCE_ERROR = 20;
     public final static double DISTANCE_TO_WALL = 15.0;
+    public final static double DISTANCE_TO_DEPOT_WALL = 12.0;
 
     public final static Path collectRightMineral = new Path("collect right mineral");
     static {
-        collectRightMineral.addSegment(new TurnSegment("turn to gold mineral", 148, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
-        collectRightMineral.addSegment(new DriveSegment("drive to minerals", 26, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        collectRightMineral.addSegment(new DriveSegment("back up from minerals", -12, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectRightMineral.addSegment(new TurnSegment("turn to gold mineral", 152, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectRightMineral.addSegment(new DriveSegment("drive to minerals", 28, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectRightMineral.addSegment(new DriveSegment("back up from minerals", -14, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
 
     public final static Path collectLeftMineral = new Path("collect left mineral");
     static {
         collectLeftMineral.addSegment(new TurnSegment("start turning", 160, AUTON_PATH_SPEED, 100, 0));
-        collectLeftMineral.addSegment(new TurnSegment("turn to gold mineral", -150, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectLeftMineral.addSegment(new TurnSegment("turn to gold mineral", -150, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         collectLeftMineral.addSegment(new DriveSegment("drive to minerals", 24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectLeftMineral.addSegment(new DriveSegment("back up from minerals", -13, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
@@ -76,7 +78,7 @@ public final class Constants {
     public final static Path collectCenterMineral = new Path("collect center mineral");
     static {
         collectCenterMineral.addSegment(new TurnSegment("start turning", 160, AUTON_PATH_SPEED, 100, 0));
-        collectCenterMineral.addSegment(new TurnSegment("turn to gold mineral", 179, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectCenterMineral.addSegment(new TurnSegment("turn to gold mineral", 179, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         collectCenterMineral.addSegment(new DriveSegment("drive to minerals", 24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectCenterMineral.addSegment(new DriveSegment("back up from minerals", -10, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
@@ -91,39 +93,45 @@ public final class Constants {
         craterSideToCrater.addSegment(new DriveSegment("drive to crater", -80, AUTON_PATH_SPEED, 40, -41));
     }
 
-    public final static Path craterSideToCraterDoubleSample = new Path("crater side to crater double sample");
+    public final static Path craterSideToDepotDoubleSample = new Path("crater side to depot double sample");
     static {
-        craterSideToCraterDoubleSample.addSegment(new TurnSegment("turn to wall", -90, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
-        craterSideToCraterDoubleSample.addSegment(new DriveSegment("large drive to wall", 50, AUTON_PATH_SPEED, 500));
-        craterSideToCraterDoubleSample.addSegment(new DriveSegment("drive to wall", 42, 0.4, AUTON_DISTANCE_ERROR));
-        craterSideToCraterDoubleSample.addSegment(new TurnSegment("turn to depot", -45, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
-        craterSideToCraterDoubleSample.addSegment(new DriveSegment("large drive to depot double sample", 42, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        craterSideToCraterDoubleSample.addSegment(new DriveSegment("drive to depot double sample", 45, 0.4, AUTON_DISTANCE_ERROR));
-        craterSideToCraterDoubleSample.addSegment(new TurnSegment("prepare to sample", 90, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        craterSideToDepotDoubleSample.addSegment(new TurnSegment("turn to wall", -90, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        craterSideToDepotDoubleSample.addSegment(new DriveSegment("large drive to wall", 50, AUTON_PATH_SPEED, 500));
+        craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to wall", 42, 0.4, AUTON_DISTANCE_ERROR));
+        craterSideToDepotDoubleSample.addSegment(new TurnSegment("turn to depot", -45, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        craterSideToDepotDoubleSample.addSegment(new DriveSegment("large drive to depot double sample", 42, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to depot double sample", 45, 0.4, AUTON_DISTANCE_ERROR));
+        //craterSideToDepotDoubleSample.addSegment(new TurnSegment("prepare to sample", 90, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         //sample
-        //craterSideToCraterDoubleSample.addSegment(new TurnSegment("drive to depot", -50, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
-        //craterSideToCraterDoubleSample.addSegment(new DriveSegment("drive to crater", -70, AUTON_PATH_SPEED, 30, -43));
+        //craterSideToDepotDoubleSample.addSegment(new TurnSegment("drive to depot", -50, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        //craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to crater", -70, AUTON_PATH_SPEED, 30, -43));
     }
 
     public final static Path collectRightMineralDoubleSample = new Path("collect right mineral double sample");
     static {
-        collectRightMineralDoubleSample.addSegment(new TurnSegment("turn to gold mineral", 45, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectRightMineralDoubleSample.addSegment(new TurnSegment("turn to gold mineral", 121, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         collectRightMineralDoubleSample.addSegment(new DriveSegment("drive to minerals", 26, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        collectRightMineralDoubleSample.addSegment(new DriveSegment("back up from minerals", -12, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectRightMineralDoubleSample.addSegment(new DriveSegment("back up from minerals", -24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
 
     public final static Path collectLeftMineralDoubleSample = new Path("collect left mineral double sample");
     static {
-        collectLeftMineralDoubleSample.addSegment(new TurnSegment("start turning", 135, AUTON_PATH_SPEED, 100, 0));
-        collectLeftMineralDoubleSample.addSegment(new TurnSegment("turn to gold mineral", -153, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
-        collectLeftMineralDoubleSample.addSegment(new DriveSegment("drive to minerals", 24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        collectLeftMineralDoubleSample.addSegment(new DriveSegment("back up from minerals", -11, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectLeftMineralDoubleSample.addSegment(new TurnSegment("turn to gold mineral", 63, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectLeftMineralDoubleSample.addSegment(new DriveSegment("drive to minerals", 26, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectLeftMineralDoubleSample.addSegment(new DriveSegment("back up from minerals", -24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
 
     public final static Path collectCenterMineralDoubleSample = new Path("collect center mineral double sample");
     static {
-        collectCenterMineralDoubleSample.addSegment(new DriveSegment("drive to minerals", 24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        collectCenterMineralDoubleSample.addSegment(new DriveSegment("back up from minerals", -10, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectLeftMineralDoubleSample.addSegment(new TurnSegment("turn to gold mineral", 90, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectCenterMineralDoubleSample.addSegment(new DriveSegment("drive to minerals", 26, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectCenterMineralDoubleSample.addSegment(new DriveSegment("back up from minerals", -24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+    }
+
+    public final static Path depotToCraterDoubleSample = new Path("depot to crater double sample");
+    static {
+        depotToCraterDoubleSample.addSegment(new TurnSegment("turn to crater", -30, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        depotToCraterDoubleSample.addSegment(new DriveSegment("drive to crater", -86, AUTON_PATH_SPEED, 40, -37));
     }
 
     public final static Path depotSideToCrater = new Path("depot to crater");
@@ -135,15 +143,16 @@ public final class Constants {
 
     public final static Path collectDepotRightMineral = new Path("collect right mineral depot");
     static {
-        collectDepotRightMineral.addSegment(new TurnSegment("turn to gold mineral", 158, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectDepotRightMineral.addSegment(new TurnSegment("turn to gold mineral", 158, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         collectDepotRightMineral.addSegment(new DriveSegment("drive to minerals", 34, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectDepotRightMineral.addSegment(new TurnSegment("turn to depot",-145,AUTON_PATH_SPEED,AUTON_TURN_ERROR,AUTON_TURN_PERIOD));
-        collectDepotRightMineral.addSegment(new DriveSegment("drive to depot", 30, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));    }
+        collectDepotRightMineral.addSegment(new DriveSegment("drive to depot", 30, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+    }
 
     public final static Path collectDepotLeftMineral = new Path("collect left mineral depot");
     static {
         collectDepotLeftMineral.addSegment(new TurnSegment("start turning", 160, AUTON_PATH_SPEED, 100, 0));
-        collectDepotLeftMineral.addSegment(new TurnSegment("turn to gold mineral", -152, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectDepotLeftMineral.addSegment(new TurnSegment("turn to gold mineral", -152, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         collectDepotLeftMineral.addSegment(new DriveSegment("drive to minerals", 34, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectDepotLeftMineral.addSegment(new TurnSegment("turn to depot",170,AUTON_PATH_SPEED,AUTON_TURN_ERROR,AUTON_TURN_PERIOD));
         collectDepotLeftMineral.addSegment(new DriveSegment("drive to depot", 24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
@@ -152,8 +161,9 @@ public final class Constants {
     public final static Path collectDepotCenterMineral = new Path("collect center mineral depot");
     static {
         collectDepotCenterMineral.addSegment(new TurnSegment("start turning", 160, AUTON_PATH_SPEED, 100, 0));
-        collectDepotCenterMineral.addSegment(new TurnSegment("turn to gold mineral", 179, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectDepotCenterMineral.addSegment(new TurnSegment("turn to gold mineral", 179, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         collectDepotCenterMineral.addSegment(new DriveSegment("drive to minerals", 24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectDepotCenterMineral.addSegment(new TurnSegment("turn to depot",-165,AUTON_PATH_SPEED,AUTON_TURN_ERROR,AUTON_TURN_PERIOD));
-        collectDepotCenterMineral.addSegment(new DriveSegment("drive to depot", 30, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));    }
+        collectDepotCenterMineral.addSegment(new DriveSegment("drive to depot", 30, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+    }
 }
