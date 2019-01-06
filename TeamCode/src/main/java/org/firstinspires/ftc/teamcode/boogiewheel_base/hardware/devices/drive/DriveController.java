@@ -218,7 +218,7 @@ public class DriveController extends SubsystemController {
             double currentHeading;
 
             //While we are not in the error band keep turning
-            while (!atPosition(angle, currentHeading = getHeading(), error) && isOpModeActive()) {
+            while (!atPosition(angle, currentHeading = getHeading(), error) && (angle+error>180 ? !atPosition((((angle+error)-180) - 180) - error, currentHeading = (getHeading()), error) : true) && (angle-error<-180 ? !atPosition((((angle-error)+180) + 180) + error, currentHeading = (getHeading()), error) : true) && isOpModeActive()) {
 
                 if (segment.isDone()) {
                     setPower(0, 0);
