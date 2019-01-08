@@ -50,10 +50,10 @@ public class DriveController extends SubsystemController {
 
         //Put general setup here
         drive = new Drive(hardwareMap);
-        anglePID = new PIDController(15, 0, 150, 0.1, 0.02);
+        anglePID = new PIDController(15, 0.1, 150, 0.3, 0.08);
         //anglePID.setLogging(true);
         straightPID = new PIDController(50, 0.5, 40, 1, 0);
-        distancePID = new PIDController(0.6, 0.1, 0, 2, 0.04);
+        distancePID = new PIDController(0.6, 0.1, 0, 2, 0.1);
         drive.setSlewSpeed(0.1);
     }
 
@@ -194,6 +194,7 @@ public class DriveController extends SubsystemController {
         path.reset();
         while (!path.isDone() && AbstractOpMode.isOpModeActive()) {
             if (path.getNextSegment() == null) break;
+            telemetry.addData(INFO, "Starting segment: " + path.getCurrentSegment().getName());
             if (path.getCurrentSegment().getType() == Segment.SegmentType.TURN) {
                 turnToSegment((TurnSegment) path.getCurrentSegment());
             } else if (path.getCurrentSegment().getType() == Segment.SegmentType.DRIVE) {
@@ -217,6 +218,9 @@ public class DriveController extends SubsystemController {
 
             double currentHeading;
 
+            int loop = 0;
+            runtime.reset();
+
             //While we are not in the error band keep turning
             while (!atPosition(angle, currentHeading = getHeading(), error) && (angle+error>180 ? !atPosition((((angle+error)-180) - 180) - error, currentHeading = (getHeading()), error) : true) && (angle-error<-180 ? !atPosition((((angle-error)+180) + 180) + error, currentHeading = (getHeading()), error) : true) && isOpModeActive()) {
 
@@ -238,7 +242,12 @@ public class DriveController extends SubsystemController {
                     power = anglePID.output(angle, currentHeading);
                 }
                 setPower(-power * speed, power * speed);
+
+                loop++;
             }
+
+            telemetry.addData(INFO, "Average loop time for turn: " + runtime.milliseconds() / loop);
+            telemetry.update();
 
             while (runtime.milliseconds() < period) {
                 if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
@@ -279,6 +288,9 @@ public class DriveController extends SubsystemController {
 
         double currentHeading;
 
+        int loop = 0;
+        runtime.reset();
+
         while ((!atPosition(position, drive.getLeftPosition(), error) && !atPosition(position, drive.getRightPosition(), error)) && isOpModeActive()) {
 
             if (segment.isDone()) {
@@ -311,7 +323,13 @@ public class DriveController extends SubsystemController {
             }
 
             drive.setPower(leftPower, rightPower);
+
+            loop++;
         }
+
+        telemetry.addData(INFO, "Average loop time for drive: " + runtime.milliseconds() / loop);
+        telemetry.update();
+
         drive.setPower(0, 0);
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
@@ -330,8 +348,9 @@ public class DriveController extends SubsystemController {
     }
 
     public void autonDriveToWallSequence() {
-        while ((!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") || drive.getDistance() >= DISTANCE_TO_WALL) && AbstractOpMode.isOpModeActive()) telemetry.addData(INFO,drive.getDistance());
-        telemetry.addData(INFO,drive.getDistance());
+        while (((!RobotState.currentPath.getCurrentSegment().getName().equals("drive to depot double sample") && !RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) || drive.getDistance() >= DISTANCE_TO_WALL) && AbstractOpMode.isOpModeActive()) telemetry.addData(INFO,drive.getDistance());
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to depot double sample") && drive.getDistance() >= DISTANCE_TO_DEPOT_WALL) telemetry.addData(INFO,"Distance at depot: " + drive.getDistance());
+        telemetry.addData("Done: " + INFO,drive.getDistance());
         RobotState.currentPath.nextSegment();
     }
 
@@ -393,6 +412,10 @@ public class DriveController extends SubsystemController {
         if (currentDriveDirection == DriveDirection.FORWARD)
             currentDriveDirection = DriveDirection.REVERSED;
         else currentDriveDirection = DriveDirection.FORWARD;
+    }
+
+    public synchronized double getDistance() {
+        return drive.getDistance();
     }
 
     //Util Methods
@@ -484,7 +507,10 @@ public class DriveController extends SubsystemController {
     }
 
     public void dropTeamMarker() {
-        while (!currentPath.getCurrentSegment().getName().equals("drive to crater"));
+        telemetry.addData(INFO, "Starting team marker thread");
+        while (!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall") &&
+                !currentPath.getCurrentSegment().getName().equals("orient at depot"));
+        telemetry.addData(INFO, "Starting team marker");
         currentPath.pause();
         drive.setMarkerServo(DRIVE_TEAM_MARKER_EXTENDED);
         delay(1000);

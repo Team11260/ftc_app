@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.mineral_lift;
 
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 import static org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants.*;
@@ -10,7 +11,7 @@ public class MineralLiftController extends SubsystemController {
 
     private MineralLift mineralLift;
     private boolean isMovingDown = false;
-    private int[] liftValues = {-1, -1, -1};
+    private int[] liftValues = {-1, -1, -1, -1};
 
     public MineralLiftController() {
         init();
@@ -26,19 +27,25 @@ public class MineralLiftController extends SubsystemController {
         if (isMovingDown) {
             int currentValue = mineralLift.getCurrentPosition();
             if (liftValues[0] == -1) {
-                liftValues[0] = currentValue;
-                liftValues[1] = currentValue;
-                liftValues[2] = currentValue;
+                liftValues[0] = 10000;
+                liftValues[1] = 0;
+                liftValues[2] = -10000;
+                liftValues[3] = -20000;
                 return;
             }
+            liftValues[3] = liftValues[2];
             liftValues[2] = liftValues[1];
             liftValues[1] = liftValues[0];
             liftValues[0] = currentValue;
-            if (atPosition(liftValues[0], liftValues[1], 2) && atPosition(liftValues[1], liftValues[2], 2) && mineralLift.getCurrentPosition() < 1000) {
+            telemetry.addData(DoubleTelemetry.LogMode.INFO, "1: " + liftValues[0] + " 2: " + liftValues[1] + " 3: " + liftValues[2] + " 4: " + liftValues[3]);
+            telemetry.update();
+            if (atPosition(liftValues[0], liftValues[1], 1) && atPosition(liftValues[0], liftValues[2], 1) && atPosition(liftValues[0], liftValues[3], 1)) {
+                telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished");
                 mineralLift.resetPosition();
                 liftValues[0] = -1;
                 liftValues[1] = -1;
                 liftValues[2] = -1;
+                liftValues[3] = -1;
                 isMovingDown = false;
                 return;
             }
@@ -51,7 +58,7 @@ public class MineralLiftController extends SubsystemController {
 
     public synchronized void autonLowerLiftSequence() {
         mineralLift.setTargetPosition(300);
-        delay(2000);
+        delay(1000);
         mineralLift.setCurrentPosition(600);
         mineralLift.setTargetPosition(MINERAL_LIFT_COLLECT_POSITION);
         while (AbstractOpMode.isOpModeActive()) {
@@ -78,7 +85,7 @@ public class MineralLiftController extends SubsystemController {
 
     public synchronized void moveToCollectPosition() {
 
-        if (mineralLift.getDistance() < 20) return;
+        //if (mineralLift.getDistance() < 20) return;
         currentMineralLiftState = MineralLiftState.IN_MOTION;
         mineralLift.setTargetPosition(MINERAL_LIFT_COLLECT_POSITION);
         isMovingDown = true;

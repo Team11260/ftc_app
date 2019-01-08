@@ -12,6 +12,8 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.visi
 import org.firstinspires.ftc.teamcode.framework.util.PathState;
 import org.firstinspires.ftc.teamcode.framework.util.State;
 
+import static org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
+
 @Autonomous(name = "Boogie Auton Depot", group = "New")
 //@Disabled
 
@@ -24,8 +26,16 @@ public class BoogieAutonDepot extends AbstractAutonNew {
     public void RegisterStates() {
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
+        addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
+        addState(new PathState("intaking pause", "drive to minerals", ()->{
+            while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to minerals"));
+            RobotState.currentPath.pause();
+            delay(1000);
+            RobotState.currentPath.resume();
+            return true;
+        }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
-        addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
+        addState(new PathState("finish intaking", "turn to depot", robot.finishIntakingCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
         //addState(new PathState("drive to wall with distance", "turn to wall", robot.autonDriveToWallSequenceCallable()));
     }
@@ -34,6 +44,10 @@ public class BoogieAutonDepot extends AbstractAutonNew {
     public void Init() {
         robot = new Robot();
         tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
+
+        RobotState.currentSamplePosition = UNKNOWN;
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Current Sample Position: " + RobotState.currentSamplePosition);
+        telemetry.update();
     }
 
     @Override
@@ -42,10 +56,12 @@ public class BoogieAutonDepot extends AbstractAutonNew {
 
         SamplePosition currentPosition = tensorFlow.getSamplePosition();
 
-        if (currentPosition != SamplePosition.UNKNOWN)
+        if (currentPosition != RobotState.currentSamplePosition && currentPosition != UNKNOWN) {
             RobotState.currentSamplePosition = currentPosition;
-        telemetry.addData(DoubleTelemetry.LogMode.INFO, currentPosition.toString());
-        telemetry.update();
+
+            telemetry.addData(DoubleTelemetry.LogMode.INFO, "Current Sample Position: " + currentPosition.toString());
+            telemetry.update();
+        }
     }
 
     @Override
@@ -54,16 +70,16 @@ public class BoogieAutonDepot extends AbstractAutonNew {
         robot.moveRobotLiftToBottom();
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
-                robot.runDrivePath(Constants.collectRightMineral);
+                robot.runDrivePath(Constants.collectDepotRightMineral);
                 break;
             case LEFT:
-                robot.runDrivePath(Constants.collectLeftMineral);
+                robot.runDrivePath(Constants.collectDepotLeftMineral);
                 break;
             case CENTER:
-                robot.runDrivePath(Constants.collectCenterMineral);
+                robot.runDrivePath(Constants.collectDepotCenterMineral);
                 break;
             default:
-                robot.runDrivePath(Constants.collectCenterMineral);
+                robot.runDrivePath(Constants.collectDepotCenterMineral);
                 break;
         }
         robot.runDrivePath(Constants.depotSideToCrater);
