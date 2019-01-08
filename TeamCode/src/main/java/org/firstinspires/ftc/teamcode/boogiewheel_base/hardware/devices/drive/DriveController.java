@@ -50,7 +50,7 @@ public class DriveController extends SubsystemController {
 
         //Put general setup here
         drive = new Drive(hardwareMap);
-        anglePID = new PIDController(15, 0, 150, 0.1, 0.02);
+        anglePID = new PIDController(15, 0.1, 150, 0.3, 0.08);
         //anglePID.setLogging(true);
         straightPID = new PIDController(50, 0.5, 40, 1, 0);
         distancePID = new PIDController(0.6, 0.1, 0, 2, 0.1);
@@ -507,7 +507,10 @@ public class DriveController extends SubsystemController {
     }
 
     public void dropTeamMarker() {
-        while (!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall") && !currentPath.getCurrentSegment().getName().equals("drive to crater"));
+        telemetry.addData(INFO, "Starting team marker thread");
+        while (!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall") &&
+                !currentPath.getCurrentSegment().getName().equals("orient at depot"));
+        telemetry.addData(INFO, "Starting team marker");
         currentPath.pause();
         drive.setMarkerServo(DRIVE_TEAM_MARKER_EXTENDED);
         delay(1000);

@@ -28,17 +28,28 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
+        addState(new PathState("intaking pause", "drive to minerals", ()->{
+            while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to minerals"));
+            RobotState.currentPath.pause();
+            delay(1000);
+            RobotState.currentPath.resume();
+            return true;
+        }));
         addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
-        addState(new PathState("drop marker", "turn to crater", robot.dropMarkerCallable()));
+        addState(new PathState("drop marker", "small drive to crater", robot.dropMarkerCallable()));
         addState(new PathState("drive to wall with distance", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
         addState(new PathState("drive to wall with distance", "large drive to depot double sample", robot.autonDriveToWallSequenceCallable()));
+        //addState(new PathState("raise mineral lift", "turn from wall", robot.moveMineralLiftToDumpPositionCallable()));
+        //addState(new PathState("dump minerals", "drive to lander", robot.toggleMineralGateCallable()));
     }
 
     @Override
     public void Init() {
         robot = new Robot();
         tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
-        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Current Sample Position: " + UNKNOWN.toString());
+
+        RobotState.currentSamplePosition = UNKNOWN;
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Current Sample Position: " + RobotState.currentSamplePosition);
         telemetry.update();
     }
 

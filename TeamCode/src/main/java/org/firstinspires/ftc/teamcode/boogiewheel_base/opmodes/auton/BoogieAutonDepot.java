@@ -27,6 +27,13 @@ public class BoogieAutonDepot extends AbstractAutonNew {
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
+        addState(new PathState("intaking pause", "drive to minerals", ()->{
+            while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to minerals"));
+            RobotState.currentPath.pause();
+            delay(1000);
+            RobotState.currentPath.resume();
+            return true;
+        }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "turn to depot", robot.finishIntakingCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
@@ -37,6 +44,10 @@ public class BoogieAutonDepot extends AbstractAutonNew {
     public void Init() {
         robot = new Robot();
         tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
+
+        RobotState.currentSamplePosition = UNKNOWN;
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Current Sample Position: " + RobotState.currentSamplePosition);
+        telemetry.update();
     }
 
     @Override

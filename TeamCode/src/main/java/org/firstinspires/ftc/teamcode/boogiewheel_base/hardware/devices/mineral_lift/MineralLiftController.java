@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.mineral_lift;
 
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 import static org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants.*;
@@ -36,7 +37,10 @@ public class MineralLiftController extends SubsystemController {
             liftValues[2] = liftValues[1];
             liftValues[1] = liftValues[0];
             liftValues[0] = currentValue;
+            telemetry.addData(DoubleTelemetry.LogMode.INFO, "1: " + liftValues[0] + " 2: " + liftValues[1] + " 3: " + liftValues[2] + " 4: " + liftValues[3]);
+            telemetry.update();
             if (atPosition(liftValues[0], liftValues[1], 1) && atPosition(liftValues[0], liftValues[2], 1) && atPosition(liftValues[0], liftValues[3], 1)) {
+                telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished");
                 mineralLift.resetPosition();
                 liftValues[0] = -1;
                 liftValues[1] = -1;
