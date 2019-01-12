@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.visi
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.util.PathState;
 import org.firstinspires.ftc.teamcode.framework.util.State;
+import org.upacreekrobotics.dashboard.Dashboard;
 
 import static org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
@@ -55,8 +56,11 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
 
     @Override
     public void InitLoop(int loop) {
+
+        //Object recognition loop
         if (loop % 5 == 0) tensorFlow.restart();
 
+        //Init object recognition
         SamplePosition currentPosition = tensorFlow.getSamplePosition();
 
         if (currentPosition != RobotState.currentSamplePosition && currentPosition != UNKNOWN) {
@@ -69,10 +73,13 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
 
     @Override
     public void Run() {
+        //Stop object recognition
         tensorFlow.stop();
 
+        //Lower robot
         robot.moveRobotLiftToBottom();
 
+        //Collect first gold mineral
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
                 robot.runDrivePath(Constants.collectRightMineral);
@@ -88,8 +95,10 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
                 break;
         }
 
+        //Drive to depot and prepare for second sample
         robot.runDrivePath(Constants.craterSideToDepotDoubleSample);
 
+        //Collect second gold mineral
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
                 robot.runDrivePath(Constants.collectRightMineralDoubleSample);
@@ -105,6 +114,7 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
                 break;
         }
 
+        //Deposit team marker and drive to crater
         robot.runDrivePath(Constants.depotToCraterDoubleSample);
     }
 
@@ -112,6 +122,8 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
     public void Stop() {
         tensorFlow.stop();
         robot.stop();
-        //Dashboard.startOpMode("TwoGamepad Boogie Teleop Tankdrive");
+
+        //Start Teleop mode
+        Dashboard.startOpMode("TwoGamepad Boogie Teleop Tankdrive");
     }
 }

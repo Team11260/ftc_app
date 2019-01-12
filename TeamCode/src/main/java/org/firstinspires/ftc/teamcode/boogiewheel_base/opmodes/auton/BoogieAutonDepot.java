@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.visi
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.util.PathState;
 import org.firstinspires.ftc.teamcode.framework.util.State;
+import org.upacreekrobotics.dashboard.Dashboard;
 
 import static org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
@@ -42,7 +43,10 @@ public class BoogieAutonDepot extends AbstractAutonNew {
 
     @Override
     public void Init() {
+        //Init robot
         robot = new Robot();
+
+        //Init object recognition
         tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
 
         RobotState.currentSamplePosition = UNKNOWN;
@@ -52,6 +56,8 @@ public class BoogieAutonDepot extends AbstractAutonNew {
 
     @Override
     public void InitLoop(int loop) {
+
+        //Object recognition loop
         if (loop % 5 == 0) tensorFlow.restart();
 
         SamplePosition currentPosition = tensorFlow.getSamplePosition();
@@ -66,8 +72,13 @@ public class BoogieAutonDepot extends AbstractAutonNew {
 
     @Override
     public void Run() {
+        //Stop object recognition
         tensorFlow.stop();
+
+        //Lower robot
         robot.moveRobotLiftToBottom();
+
+        //Collect gold mineral
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
                 robot.runDrivePath(Constants.collectDepotRightMineral);
@@ -82,6 +93,8 @@ public class BoogieAutonDepot extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectDepotCenterMineral);
                 break;
         }
+
+        //Deposit team marker and drive to crater
         robot.runDrivePath(Constants.depotSideToCrater);
     }
 
@@ -89,5 +102,8 @@ public class BoogieAutonDepot extends AbstractAutonNew {
     public void Stop() {
         tensorFlow.stop();
         robot.stop();
+
+        //Start Teleop mode
+        Dashboard.startOpMode("TwoGamepad Boogie Teleop Tankdrive");
     }
 }

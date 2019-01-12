@@ -53,6 +53,10 @@ public class MineralLift {
         return liftMotor.isBusy();
     }
 
+    public void setLiftMotorPower(double power){
+        liftMotor.setPower(power);
+    }
+
     public void resetPosition() {
         liftMotor.setPower(0);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
