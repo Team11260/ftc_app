@@ -11,7 +11,7 @@ public class MineralLiftController extends SubsystemController {
 
     private MineralLift mineralLift;
     private boolean isMovingDown = false;
-    private int[] liftValues = {-1, -1, -1, -1};
+    private int[] liftValues = {-1, -1, -1, -1, -1};
 
     public MineralLiftController() {
         init();
@@ -31,20 +31,24 @@ public class MineralLiftController extends SubsystemController {
                 liftValues[1] = 0;
                 liftValues[2] = -10000;
                 liftValues[3] = -20000;
+                liftValues[4] = -30000;
                 return;
             }
+            liftValues[4] = liftValues[3];
             liftValues[3] = liftValues[2];
             liftValues[2] = liftValues[1];
             liftValues[1] = liftValues[0];
             liftValues[0] = currentValue;
 
-            if (atPosition(liftValues[0], liftValues[1], 1) && atPosition(liftValues[0], liftValues[2], 1) && atPosition(liftValues[0], liftValues[3], 1)) {
+            if (atPosition(liftValues[0], liftValues[1], 1) && atPosition(liftValues[0], liftValues[2], 1) &&
+                    atPosition(liftValues[0], liftValues[3], 1) && atPosition(liftValues[0], liftValues[4], 1)) {
                 telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished");
                 mineralLift.resetPosition();
                 liftValues[0] = -1;
                 liftValues[1] = -1;
                 liftValues[2] = -1;
                 liftValues[3] = -1;
+                liftValues[4] = -1;
                 isMovingDown = false;
                 return;
             }
@@ -89,20 +93,21 @@ public class MineralLiftController extends SubsystemController {
     }
 
     public synchronized void moveToCollectPosition() {
-
-        //if (mineralLift.getDistance() < 20) return;
+        if (mineralLift.getDistance() < 10) return;
         currentMineralLiftState = MineralLiftState.IN_MOTION;
         mineralLift.setTargetPosition(MINERAL_LIFT_COLLECT_POSITION);
         isMovingDown = true;
-        //while (mineralLift.isLiftInProgress());
         currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
     }
 
     public synchronized void moveToDumpPosition() {
         currentMineralLiftState = MineralLiftState.IN_MOTION;
         mineralLift.setTargetPosition(MINERAL_LIFT_DUMP_POSITION);
-        //while (mineralLift.isLiftInProgress());
+        while (!atPosition(MINERAL_LIFT_DUMP_POSITION, mineralLift.getCurrentPosition(), 80));
         currentMineralLiftState = MineralLiftState.DUMP_POSITION;
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift up");
+        telemetry.update();
+        mineralLift.setLiftMotorPower(0);
     }
 
     public synchronized void openGate() {
@@ -117,7 +122,7 @@ public class MineralLiftController extends SubsystemController {
 
     public synchronized void toggleGate() {
         if (currentMineralGatePosition == MineralGatePosition.OPEN) closeGate();
-        else openGate();
+        else if(currentMineralLiftState==MineralLiftState.DUMP_POSITION) openGate();
     }
 
     private boolean atPosition(double x, double y, double error) {
