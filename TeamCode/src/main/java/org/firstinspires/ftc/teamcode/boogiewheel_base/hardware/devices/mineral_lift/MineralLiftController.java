@@ -37,8 +37,7 @@ public class MineralLiftController extends SubsystemController {
             liftValues[2] = liftValues[1];
             liftValues[1] = liftValues[0];
             liftValues[0] = currentValue;
-            telemetry.addData(DoubleTelemetry.LogMode.INFO, "1: " + liftValues[0] + " 2: " + liftValues[1] + " 3: " + liftValues[2] + " 4: " + liftValues[3]);
-            telemetry.update();
+
             if (atPosition(liftValues[0], liftValues[1], 1) && atPosition(liftValues[0], liftValues[2], 1) && atPosition(liftValues[0], liftValues[3], 1)) {
                 telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished");
                 mineralLift.resetPosition();
@@ -61,22 +60,28 @@ public class MineralLiftController extends SubsystemController {
         delay(1000);
         mineralLift.setCurrentPosition(600);
         mineralLift.setTargetPosition(MINERAL_LIFT_COLLECT_POSITION);
+        int currentValue;
         while (AbstractOpMode.isOpModeActive()) {
-            int currentValue = mineralLift.getCurrentPosition();
+            currentValue = mineralLift.getCurrentPosition();
             if (liftValues[0] == -1) {
-                liftValues[0] = currentValue;
-                liftValues[1] = currentValue;
-                liftValues[2] = currentValue;
-                continue;
+                liftValues[0] = 10000;
+                liftValues[1] = 0;
+                liftValues[2] = -10000;
+                liftValues[3] = -20000;
+                return;
             }
+            liftValues[3] = liftValues[2];
             liftValues[2] = liftValues[1];
             liftValues[1] = liftValues[0];
             liftValues[0] = currentValue;
-            if (atPosition(liftValues[0], liftValues[1], 1) && atPosition(liftValues[1], liftValues[2], 1) && mineralLift.getCurrentPosition() < 100) {
+
+            if (atPosition(liftValues[0], liftValues[1], 1) && atPosition(liftValues[0], liftValues[2], 1) && atPosition(liftValues[0], liftValues[3], 1)) {
+                telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished");
                 mineralLift.resetPosition();
                 liftValues[0] = -1;
                 liftValues[1] = -1;
                 liftValues[2] = -1;
+                liftValues[3] = -1;
                 isMovingDown = false;
                 return;
             }
