@@ -45,32 +45,36 @@ public class DoubleTelemetry {
     }
 
     public void addData(LogMode mode, Object caption, Object data) {
+        String message = "[" + mode.toString() + "] " + String.valueOf(caption) + ": " + String.valueOf(data);
+        log(message);
         if (loggingMode.shouldLog(mode)) {
             telemetry.addData(String.valueOf(caption), String.valueOf(data));
-            String message = String.valueOf(caption) + ": " + String.valueOf(data);
             dashtelem.write(message);
             dashtelem.info(message);
         }
     }
 
     public void addData(LogMode mode, Object data) {
+        String message = "[" + mode.toString() + "] " + String.valueOf(data);
+        log(message);
         if (loggingMode.shouldLog(mode)) {
             telemetry.addLine(String.valueOf(data));
-            dashtelem.write(String.valueOf(data));
-            dashtelem.info(String.valueOf(data));
+            dashtelem.write(message);
+            dashtelem.info(message);
         }
     }
 
     public void addDataDB(LogMode mode, Object data) {
         if (loggingMode.shouldLog(mode)) {
-            dashtelem.write(String.valueOf(data));
+            dashtelem.write("[" + mode.toString() + "] " + String.valueOf(data));
         }
     }
 
     public void addDataPhone(LogMode mode, Object data) {
+        log("[" + mode.toString() + "] " + String.valueOf(data));
         if (loggingMode.shouldLog(mode)) {
             telemetry.addLine(String.valueOf(data));
-            dashtelem.info(String.valueOf(data));
+            dashtelem.info("[" + mode.toString() + "] " + String.valueOf(data));
         }
     }
 

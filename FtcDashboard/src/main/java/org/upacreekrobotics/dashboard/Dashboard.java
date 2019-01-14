@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecker.BatteryWatcher {
     public static final String TAG = "RobotDashboard";
@@ -40,6 +39,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     private String infoText = "";
     private double opModeInitTime = 0;
     private double opModeStartTime = 0;
+    private String activeOpModeName = "";
 
     private OpModeManagerImpl opModeManager;
     private RobotStatus.OpModeStatus activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
@@ -307,7 +307,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     }
 
     public String internalGetCurrentOpMode(){
-        return opModeManager.getActiveOpModeName();
+        return activeOpModeName;
     }
 
     ////////////////Called by the user code to request an input value from the dashboard, calls "internalGetInputValue()"////////////////
@@ -392,6 +392,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     @Override
     public void onOpModePreInit(OpMode opMode) {
         if (!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$")) {
+            activeOpModeName = dashboard.opModeManager.getActiveOpModeName();
             requestedOpModeStatus = RobotStatus.OpModeStatus.INIT;
             opModeInitTime = System.currentTimeMillis();
         }
@@ -427,6 +428,21 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     }
 
     private String internalGetLogPreMessage(){
+        String packet = "";
+
+        if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING) ||
+                activeOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
+            double currentTime = (System.currentTimeMillis() - opModeStartTime) / 1000;
+            packet = date.getDateTime().replace(": ", "") + "%&&%&&%Time since start: " + currentTime + "%&&%&&%";
+        } else if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
+            double currentTime = (System.currentTimeMillis() - opModeInitTime) / 1000;
+            packet = date.getDateTime().replace(": ", "") + "%&&%&&%Time since init: " + currentTime + "%&&%&&%";
+        } else packet = date.getDateTime().replace(": ", "") + "%&&%&&%Stopped%&&%&&%";
+
+        return packet;
+    }
+
+    private String internalGetTelemetryPreMessage(){
         String packet = "";
 
         if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING) ||
@@ -493,7 +509,6 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                 }
             }
         }
-
     }
 
     ////////////////Used by user OpMode to display telemetry on the dashboard////////////////
@@ -503,18 +518,10 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         }
 
         public void write(String text) {
-            String packet = internalGetLogPreMessage() + text;
+            String packet = internalGetTelemetryPreMessage() + text;
 
             if (data != null && connected) data.write(new Message(MessageType.TELEMETRY, packet));
             else oldTelemetry = oldTelemetry + "&#%#&" + packet;
-        }
-
-        public void write(int text) {
-            write(String.valueOf(text));
-        }
-
-        public void write(double text) {
-            write(String.valueOf(text));
         }
 
         public void updateInfo() {
