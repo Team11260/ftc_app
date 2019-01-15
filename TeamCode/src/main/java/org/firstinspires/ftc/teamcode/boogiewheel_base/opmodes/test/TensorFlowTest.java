@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.framework.util.State;
 import static org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
 @Autonomous(name = "TensorFlow Test", group = "New")
-//@Disabled
+@Disabled
 
 public class TensorFlowTest extends AbstractAutonNew {
 
