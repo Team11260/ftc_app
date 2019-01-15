@@ -37,13 +37,13 @@ public class BoogieAutonCrater extends AbstractAutonNew {
         }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
-        addState(new PathState("other robot pause", "turn to wall", ()->{
+        /*addState(new PathState("other robot pause", "turn to wall", ()->{
             while (RobotState.currentPath.getCurrentSegment().getName().equals("turn to wall"));
             RobotState.currentPath.pause();
             delay(Constants.CRATER_SIDE_PARTENER_DELAY);
             RobotState.currentPath.resume();
             return true;
-        }));
+        }));*/
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
         addState(new PathState("drive to wall with distance", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
         //addState(new PathState("reset lift position", "back up from mineral", robot.resetLiftPosCallable()));
@@ -101,6 +101,8 @@ public class BoogieAutonCrater extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectCenterMineral);
                 break;
         }
+
+        delay(8000);
 
         //Deposit team marker and drive to crater
         robot.runDrivePath(Constants.craterSideToCrater);

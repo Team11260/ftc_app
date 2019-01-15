@@ -43,7 +43,7 @@ public final class Constants {
     //Lift
     public final static int ROBOT_LIFT_LOWERED_POSITION = -2500;
     public final static int ROBOT_LIFT_RAISED_POSITION = 100;
-    public final static int ROBOT_LIFT_RELEASE_PAWL_POSITION = 200;
+    public final static int ROBOT_LIFT_RELEASE_PAWL_POSITION = 210;
     public final static double ROBOT_LIFT_LOWER_POWER = -0.7;
 
     //Pawl
