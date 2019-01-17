@@ -31,7 +31,7 @@ public class DriveController extends SubsystemController {
 
     private double turnY = 0, turn_z = 0, leftPower = 0, rightPower = 0, Drive_Power = 1.0;
 
-    public ElapsedTime runtime;
+    public ElapsedTime runtime, drivetime;
 
     private DecimalFormat DF;
 
@@ -45,6 +45,7 @@ public class DriveController extends SubsystemController {
         opModeSetup();
 
         runtime = new ElapsedTime();
+        drivetime = new ElapsedTime();
 
         DF = new DecimalFormat("#.##");
 
@@ -213,16 +214,18 @@ public class DriveController extends SubsystemController {
 
         anglePID.reset();
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double power;
+        double power, currentHeading;
         while (isOpModeActive()) {
 
-            double currentHeading;
-
-            int loop = 0;
+            int loop = 0, segmentDelays = 0, headingCalculation = 0, motorSet = 0;
             runtime.reset();
 
             //While we are not in the error band keep turning
-            while (!atPosition(angle, currentHeading = getHeading(), error) && (angle+error>180 ? !atPosition((((angle+error)-180) - 180) - error, currentHeading = (getHeading()), error) : true) && (angle-error<-180 ? !atPosition((((angle-error)+180) + 180) + error, currentHeading = (getHeading()), error) : true) && isOpModeActive()) {
+            while (!atPosition(angle, currentHeading = getHeading(), error) &&
+                    !atPosition(360 + angle, currentHeading, error) &&
+                    !atPosition(-360 + angle, currentHeading, error) && isOpModeActive()) {
+
+                drivetime.reset();
 
                 if (segment.isDone()) {
                     setPower(0, 0);
@@ -233,28 +236,44 @@ public class DriveController extends SubsystemController {
                     continue;
                 }
 
+                segmentDelays += drivetime.milliseconds();
+                drivetime.reset();
+
                 //Use the PIDController class to calculate power values for the wheels
                 if (angle - currentHeading > 180) {
                     power = anglePID.output(angle, 360 + currentHeading);
                 } else if (currentHeading - angle > 180) {
-                    power = anglePID.output(angle, angle - (360 - (currentHeading - angle)));
+                    power = anglePID.output(angle, -360 + currentHeading);
                 } else {
                     power = anglePID.output(angle, currentHeading);
                 }
+
+                headingCalculation += drivetime.milliseconds();
+                drivetime.reset();
+
                 setPower(-power * speed, power * speed);
+
+                motorSet += drivetime.milliseconds();
+                drivetime.reset();
 
                 loop++;
             }
 
             telemetry.addData(INFO, "Average loop time for turn: " + runtime.milliseconds() / loop);
+            telemetry.addData(INFO, "Average segment delay time for turn: " + segmentDelays / loop);
+            telemetry.addData(INFO, "Average heading calculation time for turn: " + headingCalculation / loop);
+            telemetry.addData(INFO, "Average motor set time for turn: " + motorSet / loop);
             telemetry.update();
 
             while (runtime.milliseconds() < period) {
-                if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
-                    break;
+                if (atPosition(angle, currentHeading = getHeading(), error) && (!(angle + error > 180) ||
+                        atPosition((((angle + error) - 180) - 180) - error, currentHeading, error)) && (!(angle - error < -180) ||
+                        atPosition((((angle - error) + 180) + 180) + error, currentHeading, error)) && isOpModeActive()) break;
             }
-            if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
-                continue;
+
+            currentHeading = getHeading();
+
+            if ((abs(currentHeading) - angle) > error && (abs(currentHeading + angle)) > error) continue;
 
             drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             return;
@@ -304,7 +323,7 @@ public class DriveController extends SubsystemController {
 
             currentHeading = getHeading();
 
-            power = range(distancePID.output(position, drive.getRightPosition()));
+            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition())/2.0));
 
             if (angle - currentHeading > 180) {
                 turn = anglePID.output(angle, 360 + currentHeading);
