@@ -39,7 +39,7 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
         addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
         addState(new PathState("drop marker", "small drive to crater", robot.dropMarkerCallable()));
         addState(new PathState("drive to wall with distance", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
-        addState(new PathState("drive to wall with distance", "large drive to depot double sample", robot.autonDriveToWallSequenceCallable()));
+        //addState(new PathState("drive to wall with distance", "large drive to depot double sample", robot.autonDriveToWallSequenceCallable()));
         //addState(new PathState("raise mineral lift", "turn from wall", robot.moveMineralLiftToDumpPositionCallable()));
         //addState(new PathState("dump minerals", "drive to lander", robot.toggleMineralGateCallable()));
     }
