@@ -10,6 +10,7 @@ public final class RobotState {
     public static DriveDirection currentDriveDirection = DriveDirection.FORWARD;
 
     public static MineralLiftState currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
+
     public static MineralGatePosition currentMineralGatePosition = MineralGatePosition.CLOSED;
 
     public static RobotLiftState currentRobotLiftState = RobotLiftState.RAISED;

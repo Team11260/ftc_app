@@ -56,7 +56,7 @@ public class RobotLiftController extends SubsystemController {
 
         robotLift.setPosition(ROBOT_LIFT_RELEASE_PAWL_POSITION);
         robotLift.setServoPosition(ROBOT_LIFT_PAWL_RELEASED);
-        delay(750);
+        delay(500);
         robotLift.setLiftNoEncoderPower(ROBOT_LIFT_LOWER_POWER);
 
         while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION));

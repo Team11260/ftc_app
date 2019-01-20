@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.framework.userHardware.outputs;
 
-import android.graphics.Path;
 import android.os.Environment;
 import android.util.Log;
 
@@ -21,6 +20,10 @@ public class Logger {
     private OutputStreamWriter myOutWriter;
 
     public Logger(String fileName) {
+        if(fileName==null) {
+            file = null;
+            return;
+        }
         try {
             file = new File(path, "FTC RobotController Phone Log " + fileName + " [" + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.sss").format(new Date()) + "].txt");
             int n = 0;
@@ -37,6 +40,8 @@ public class Logger {
     }
 
     public void log(String text) {
+        if(file==null)return;
+
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
         try {
@@ -48,6 +53,8 @@ public class Logger {
     }
 
     public void stop() {
+        if(file==null)return;
+
         try {
             myOutWriter.close();
             fOut.close();
