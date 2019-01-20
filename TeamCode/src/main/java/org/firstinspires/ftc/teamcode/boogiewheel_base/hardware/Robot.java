@@ -246,6 +246,17 @@ public class Robot extends AbstractRobot {
         hardware.mineralLift.autonLowerLiftSequence();
     }
 
+    public Callable autonMoveMineralLiftToCollectPositionSequenceCallable() {
+        return () -> {
+            autonMoveMineralLiftToCollectPositionSequence();
+            return true;
+        };
+    }
+
+    public void autonMoveMineralLiftToCollectPositionSequence(){
+        hardware.mineralLift.autonMoveToCollectPositionSequence();
+    }
+
     //robot lift methods
     public Callable robotLiftUpCallable() {
         return () -> {

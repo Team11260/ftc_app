@@ -246,15 +246,17 @@ public class DriveController extends SubsystemController {
                 loop++;
             }
 
-            telemetry.addData(INFO, "Average loop time for turn: " + runtime.milliseconds() / loop);
-            telemetry.update();
-
             while (runtime.milliseconds() < period) {
                 if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
                     break;
             }
             if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
                 continue;
+
+
+            telemetry.addData(INFO, "Average loop time for turn: " + runtime.milliseconds() / loop);
+            telemetry.addData(INFO, "Left encoder position: " + drive.getLeftPosition() + "  Right encoder position: " + drive.getRightPosition());
+            telemetry.update();
 
             drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             return;
@@ -304,7 +306,7 @@ public class DriveController extends SubsystemController {
 
             currentHeading = getHeading();
 
-            power = range(distancePID.output(position, drive.getRightPosition()));
+            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition())/2.0));
 
             if (angle - currentHeading > 180) {
                 turn = anglePID.output(angle, 360 + currentHeading);
@@ -328,6 +330,8 @@ public class DriveController extends SubsystemController {
         }
 
         telemetry.addData(INFO, "Average loop time for drive: " + runtime.milliseconds() / loop);
+        telemetry.addData(INFO, "Left encoder position: " + drive.getLeftPosition() + "  Right encoder position: " + drive.getRightPosition());
+        telemetry.addData(INFO, "Final angle: " + drive.getHeading());
         telemetry.update();
 
         drive.setPower(0, 0);
@@ -348,9 +352,20 @@ public class DriveController extends SubsystemController {
     }
 
     public void autonDriveToWallSequence() {
-        while (((!RobotState.currentPath.getCurrentSegment().getName().equals("drive to depot double sample") && !RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) || drive.getDistance() >= DISTANCE_TO_WALL) && AbstractOpMode.isOpModeActive()) telemetry.addData(INFO,drive.getDistance());
-        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to depot double sample") && drive.getDistance() >= DISTANCE_TO_DEPOT_WALL) telemetry.addData(INFO,"Distance at depot: " + drive.getDistance());
-        telemetry.addData("Done: " + INFO,drive.getDistance());
+        int[] values = new int[5];
+        for(int i=0;i<5;i++){
+            values[i]=i*1000000;
+        }
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("large drive to wall"));
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (!atPosition(values[0],values[1],1)||!atPosition(values[1],values[2],1)||!atPosition(values[2],values[3],1)||!atPosition(values[3],values[4],1))){
+            for(int i=4;i>0;i--){
+                values[i]=values[i-1];
+            }
+            values[0]=(drive.getLeftPosition() + drive.getRightPosition())/2;
+            //telemetry.addData(INFO,values[0]+" "+values[1]+" "+values[2]+" "+values[3]+" "+values[4]);
+            //telemetry.update();
+        }
+
         RobotState.currentPath.nextSegment();
     }
 
@@ -507,10 +522,8 @@ public class DriveController extends SubsystemController {
     }
 
     public void dropTeamMarker() {
-        telemetry.addData(INFO, "Starting team marker thread");
         while (!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall") &&
-                !currentPath.getCurrentSegment().getName().equals("orient at depot"));
-        telemetry.addData(INFO, "Starting team marker");
+                !currentPath.getCurrentSegment().getName().equals("turn to crater"));
         currentPath.pause();
         drive.setMarkerServo(DRIVE_TEAM_MARKER_EXTENDED);
         delay(1000);

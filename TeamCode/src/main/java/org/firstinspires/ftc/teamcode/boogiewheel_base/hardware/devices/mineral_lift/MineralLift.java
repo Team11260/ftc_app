@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.DistanceSensor2m;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
 
@@ -26,7 +27,7 @@ public class MineralLift {
 
         gateServo = hardwareMap.servo.get("mineral_gate");
         gateServo.setDirection(Servo.Direction.FORWARD);
-        gateServo.setPosition(0);
+        gateServo.setPosition(Constants.MINERAL_GATE_CLOSED_POSITION);
 
         distanceSensor = new DistanceSensor2m("Distance1");
     }

@@ -29,7 +29,7 @@ public class BoogieAutonDepot extends AbstractAutonNew {
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
         addState(new PathState("intaking pause", "drive to minerals", ()->{
-            while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to minerals"));
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("turn to depot"));
             RobotState.currentPath.pause();
             delay(1000);
             RobotState.currentPath.resume();
