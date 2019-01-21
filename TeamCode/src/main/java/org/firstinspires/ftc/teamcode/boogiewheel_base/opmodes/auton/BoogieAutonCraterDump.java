@@ -113,7 +113,7 @@ public class BoogieAutonCraterDump extends AbstractAutonNew {
         }
 
         //Dump mineral
-        robot.runDrivePath(Constants.singleSampleDump);
+        robot.runDrivePath(Constants.dumpMineral);
 
         //Deposit team marker and drive to crater
         robot.runDrivePath(Constants.craterSideToCrater);
@@ -125,6 +125,6 @@ public class BoogieAutonCraterDump extends AbstractAutonNew {
         robot.stop();
 
         //Start Teleop mode
-        Dashboard.startOpMode("TwoGamepad Boogie Teleop Tankdrive");
+        Dashboard.startOpMode(Constants.OPMODE_TO_START_AFTER_AUTON);
     }
 }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.mineral_lift;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
@@ -13,6 +15,8 @@ public class MineralLiftController extends SubsystemController {
     private boolean isMovingDown = false;
     private int[] liftValues = {-1, -1, -1, -1, -1};
 
+    private ElapsedTime cycleTimer, moveTime;
+
     public MineralLiftController() {
         init();
     }
@@ -21,6 +25,9 @@ public class MineralLiftController extends SubsystemController {
         opModeSetup();
 
         mineralLift = new MineralLift(hardwareMap);
+
+        cycleTimer = new ElapsedTime();
+        cycleTimer.reset();
     }
 
     public synchronized void update() {
@@ -134,18 +141,21 @@ public class MineralLiftController extends SubsystemController {
     }
 
     public synchronized void moveToDumpPosition() {
+        //moveTime.reset();
         currentMineralLiftState = MineralLiftState.IN_MOTION;
         mineralLift.setTargetPosition(MINERAL_LIFT_DUMP_POSITION);
+        //while (!atPosition(MINERAL_LIFT_DUMP_POSITION, mineralLift.getCurrentPosition(), 80) && moveTime.milliseconds() < 3000);
         while (!atPosition(MINERAL_LIFT_DUMP_POSITION, mineralLift.getCurrentPosition(), 80));
         currentMineralLiftState = MineralLiftState.DUMP_POSITION;
-        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift up");
-        telemetry.update();
         mineralLift.setLiftMotorPower(0);
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished");
     }
 
     public synchronized void openGate() {
         mineralLift.setGateServoPosition(MINERAL_GATE_OPEN_POSITION);
         currentMineralGatePosition = MineralGatePosition.OPEN;
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Cycle time: " + cycleTimer.milliseconds());
+        cycleTimer.reset();
     }
 
     public synchronized void closeGate() {

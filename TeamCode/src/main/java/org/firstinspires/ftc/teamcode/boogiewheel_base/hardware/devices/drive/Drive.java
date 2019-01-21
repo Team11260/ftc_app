@@ -13,7 +13,6 @@ public class Drive {
     private SlewDcMotor leftMotor, rightMotor;
     private IMU imu;
     private Servo servoMarker;
-    private DistanceSensor2m distanceSensor;
 
     public Drive(HardwareMap hardwareMap) {
 
@@ -51,11 +50,6 @@ public class Drive {
         servoMarker = hardwareMap.servo.get("servo_marker");
         servoMarker.setPosition(0);
 
-        distanceSensor = new DistanceSensor2m("Distance2");
-    }
-
-    public double getDistance() {
-        return distanceSensor.getDistanceIN();
     }
 
     public void setSlewSpeed(double ss) {

@@ -36,8 +36,9 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
             RobotState.currentPath.resume();
             return true;
         }));
-        addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
-        addState(new PathState("start drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
+        addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
+        addState(new PathState("finish intaking", "orient at depot", robot.finishIntakingCallable()));
+        addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
         addState(new PathState("drop marker", "orient at depot", robot.dropMarkerCallable()));
     }
 
@@ -121,6 +122,6 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
         robot.stop();
 
         //Start Teleop mode
-        Dashboard.startOpMode("TwoGamepad Boogie Teleop Tankdrive");
+        Dashboard.startOpMode(Constants.OPMODE_TO_START_AFTER_AUTON);
     }
 }
