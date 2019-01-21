@@ -130,8 +130,6 @@ public class Robot extends AbstractRobot {
         };
     }
 
-    public double getDistance() {return hardware.drive.getDistance();}
-
     public void beginIntaking() {
         hardware.intake.beginIntaking();
     }
@@ -244,6 +242,17 @@ public class Robot extends AbstractRobot {
 
     public void autonLowerMineralLiftSequence() {
         hardware.mineralLift.autonLowerLiftSequence();
+    }
+
+    public Callable autonMoveMineralLiftToCollectPositionSequenceCallable() {
+        return () -> {
+            autonMoveMineralLiftToCollectPositionSequence();
+            return true;
+        };
+    }
+
+    public void autonMoveMineralLiftToCollectPositionSequence(){
+        hardware.mineralLift.autonMoveToCollectPositionSequence();
     }
 
     //robot lift methods

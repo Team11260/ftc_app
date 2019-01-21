@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
-@TeleOp(name = "TwoGamepad Boogie Teleop Tankdrive", group = "New")
+@TeleOp(name = "TwoGamepad Teleop Tankdrive", group = "New")
 //@Disabled
 
 public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {
@@ -20,16 +20,7 @@ public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {
     private void twoGamepads() {
         ////////////////Gamepad 1////////////////
         ////////Drive////////
-        //THIS CODE HAS BEEN MODIFIED FOR TANKDRIVE
-        /*addEventHandler("1_lsy_change", () -> {
-            robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
-            return true;
-        });
-
-        addEventHandler("1_rsx_change", () -> {
-            robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
-            return true;
-        });*/
+        addEventHandler("1_b_down", robot.dropMarkerCallable());
 
         ////////////////Gamepad 2////////////////
         ////////Intake////////
@@ -86,5 +77,4 @@ public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {
     public void Stop() {
         robot.stop();
     }
-
 }

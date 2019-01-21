@@ -29,7 +29,7 @@ public class BoogieAutonCrater extends AbstractAutonNew {
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
         addState(new PathState("intaking pause", "drive to minerals", ()->{
-            while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to minerals"));
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"));
             RobotState.currentPath.pause();
             delay(1000);
             RobotState.currentPath.resume();
@@ -37,16 +37,8 @@ public class BoogieAutonCrater extends AbstractAutonNew {
         }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
-        addState(new PathState("other robot pause", "turn to wall", ()->{
-            while (RobotState.currentPath.getCurrentSegment().getName().equals("turn to wall"));
-            RobotState.currentPath.pause();
-            delay(Constants.CRATER_SIDE_PARTENER_DELAY);
-            RobotState.currentPath.resume();
-            return true;
-        }));
+        addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
-        addState(new PathState("drive to wall with distance", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
-        //addState(new PathState("reset lift position", "back up from mineral", robot.resetLiftPosCallable()));
     }
 
     @Override
@@ -102,6 +94,8 @@ public class BoogieAutonCrater extends AbstractAutonNew {
                 break;
         }
 
+        delay(Constants.CRATER_SIDE_PARTNER_DELAY);
+
         //Deposit team marker and drive to crater
         robot.runDrivePath(Constants.craterSideToCrater);
     }
@@ -112,6 +106,6 @@ public class BoogieAutonCrater extends AbstractAutonNew {
         robot.stop();
 
         //Start Teleop mode
-        Dashboard.startOpMode("TwoGamepad Boogie Teleop Tankdrive");
+        Dashboard.startOpMode(Constants.OPMODE_TO_START_AFTER_AUTON);
     }
 }

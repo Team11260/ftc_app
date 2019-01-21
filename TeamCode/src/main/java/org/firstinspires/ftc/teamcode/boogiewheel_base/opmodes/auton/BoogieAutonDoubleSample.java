@@ -30,18 +30,16 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("intaking pause", "drive to minerals", ()->{
-            while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to minerals"));
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"));
             RobotState.currentPath.pause();
             delay(1000);
             RobotState.currentPath.resume();
             return true;
         }));
-        addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
-        addState(new PathState("drop marker", "small drive to crater", robot.dropMarkerCallable()));
-        addState(new PathState("drive to wall with distance", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
-        addState(new PathState("drive to wall with distance", "large drive to depot double sample", robot.autonDriveToWallSequenceCallable()));
-        //addState(new PathState("raise mineral lift", "turn from wall", robot.moveMineralLiftToDumpPositionCallable()));
-        //addState(new PathState("dump minerals", "drive to lander", robot.toggleMineralGateCallable()));
+        addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
+        addState(new PathState("finish intaking", "orient at depot", robot.finishIntakingCallable()));
+        addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
+        addState(new PathState("drop marker", "orient at depot", robot.dropMarkerCallable()));
     }
 
     @Override
@@ -124,6 +122,6 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
         robot.stop();
 
         //Start Teleop mode
-        Dashboard.startOpMode("TwoGamepad Boogie Teleop Tankdrive");
+        Dashboard.startOpMode(Constants.OPMODE_TO_START_AFTER_AUTON);
     }
 }
