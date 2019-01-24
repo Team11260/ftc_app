@@ -9,7 +9,7 @@ public final class Constants {
     public static final String OPMODE_TO_START_AFTER_AUTON = "TwoGamepad Teleop Tankdrive";
 
     ////////DRIVE////////
-    public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.5;
+    public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.7;
     public static final double DRIVE_COUNTS_PER_INCH = 38.0;
 
     public static final double DRIVE_RELEASE_WHEELS_POWER = -0.5;
@@ -35,7 +35,7 @@ public final class Constants {
     ////////MINERAL LIFT////////
     //Lift
     public final static int MINERAL_LIFT_COLLECT_POSITION = -4000;
-    public final static int MINERAL_LIFT_DUMP_POSITION = 3580;
+    public final static int MINERAL_LIFT_DUMP_POSITION = 3610;
 
     //Gate
     public final static double MINERAL_GATE_OPEN_POSITION = 0.7;
@@ -98,7 +98,7 @@ public final class Constants {
     static {
         craterSideToCrater.addSegment(new TurnSegment("turn to wall", -90, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         craterSideToCrater.addSegment(new DriveSegment("large drive to wall", 46, AUTON_PATH_SPEED, 500));
-        craterSideToCrater.addSegment(new DriveSegment("drive to wall", 35, 0.6, AUTON_DISTANCE_ERROR));
+        craterSideToCrater.addSegment(new DriveSegment("drive to wall", 50, 0.6, AUTON_DISTANCE_ERROR));
         craterSideToCrater.addSegment(new TurnSegment("turn to depot", -55, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         craterSideToCrater.addSegment(new DriveSegment("drive to depot", 32, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         craterSideToCrater.addSegment(new DriveSegment("drive to crater", -70, AUTON_PATH_SPEED, 40, -25));
@@ -138,8 +138,8 @@ public final class Constants {
     public final static Path dumpMineral = new Path("single sample dump");
 
     static {
-        dumpMineral.addSegment(new DriveSegment("drive to lander", -18, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        dumpMineral.addSegment(new DriveSegment("drive away from lander", 18, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        dumpMineral.addSegment(new DriveSegment("drive to lander", -20, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        dumpMineral.addSegment(new DriveSegment("drive away from lander", 19, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
 
 
@@ -149,7 +149,7 @@ public final class Constants {
     static {
         craterSideToDepotDoubleSample.addSegment(new TurnSegment("turn to wall", -90, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         craterSideToDepotDoubleSample.addSegment(new DriveSegment("large drive to wall", 46, AUTON_PATH_SPEED, 500));
-        craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to wall", 50, 0.7, AUTON_DISTANCE_ERROR));
+        craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to wall", 50, 0.6, AUTON_DISTANCE_ERROR));
         craterSideToDepotDoubleSample.addSegment(new TurnSegment("turn to depot", -60, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         craterSideToDepotDoubleSample.addSegment(new DriveSegment("large drive to depot double sample", 21, AUTON_PATH_SPEED, 100, -57));
         craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to depot double sample", 28, AUTON_PATH_SPEED, 80, 0));

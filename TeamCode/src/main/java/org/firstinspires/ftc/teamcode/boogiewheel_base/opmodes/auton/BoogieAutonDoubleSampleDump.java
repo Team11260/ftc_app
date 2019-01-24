@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
@@ -16,7 +17,7 @@ import org.upacreekrobotics.dashboard.Dashboard;
 import static org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
 @Autonomous(name = "Boogie Auton Double Sample Dump", group = "New")
-//@Disabled
+@Disabled
 
 public class BoogieAutonDoubleSampleDump extends AbstractAutonNew {
 

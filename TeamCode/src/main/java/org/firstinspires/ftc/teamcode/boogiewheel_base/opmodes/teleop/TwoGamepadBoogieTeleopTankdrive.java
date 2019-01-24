@@ -48,7 +48,7 @@ public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {
 
         addEventHandler("2_lb_up", robot.robotLiftStopCallable());
 
-        addEventHandler("2_lt_down", robot.robotLiftDownCallable());
+        addEventHandler("2_lt_down", robot.robotLiftUpCallable());
 
         addEventHandler("2_lt_up", robot.robotLiftStopCallable());
     }

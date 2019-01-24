@@ -28,6 +28,9 @@ public class MineralLiftController extends SubsystemController {
 
         cycleTimer = new ElapsedTime();
         cycleTimer.reset();
+
+        moveTime = new ElapsedTime();
+        moveTime.reset();
     }
 
     public synchronized void update() {
@@ -141,20 +144,23 @@ public class MineralLiftController extends SubsystemController {
     }
 
     public synchronized void moveToDumpPosition() {
-        //moveTime.reset();
+        moveTime.reset();
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift up start");
+        telemetry.update();
         currentMineralLiftState = MineralLiftState.IN_MOTION;
         mineralLift.setTargetPosition(MINERAL_LIFT_DUMP_POSITION);
-        //while (!atPosition(MINERAL_LIFT_DUMP_POSITION, mineralLift.getCurrentPosition(), 80) && moveTime.milliseconds() < 3000);
-        while (!atPosition(MINERAL_LIFT_DUMP_POSITION, mineralLift.getCurrentPosition(), 80));
+        while (!atPosition(MINERAL_LIFT_DUMP_POSITION, mineralLift.getCurrentPosition(), 80) && moveTime.milliseconds() < 3000);
+        //while (!atPosition(MINERAL_LIFT_DUMP_POSITION, mineralLift.getCurrentPosition(), 80));
         currentMineralLiftState = MineralLiftState.DUMP_POSITION;
         mineralLift.setLiftMotorPower(0);
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished");
+        telemetry.update();
     }
 
     public synchronized void openGate() {
         mineralLift.setGateServoPosition(MINERAL_GATE_OPEN_POSITION);
         currentMineralGatePosition = MineralGatePosition.OPEN;
-        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Cycle time: " + cycleTimer.milliseconds());
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Cycle time: " + cycleTimer.seconds());
         cycleTimer.reset();
     }
 

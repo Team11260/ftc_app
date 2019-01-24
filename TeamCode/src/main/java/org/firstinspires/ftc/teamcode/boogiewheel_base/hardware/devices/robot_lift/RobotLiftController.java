@@ -54,9 +54,13 @@ public class RobotLiftController extends SubsystemController {
     public synchronized void autonLowerLiftSequence() {
         currentRobotLiftState = RobotLiftState.IN_MOTION;
 
+        delay(600);
+
         robotLift.setPosition(ROBOT_LIFT_RELEASE_PAWL_POSITION);
         robotLift.setServoPosition(ROBOT_LIFT_PAWL_RELEASED);
-        delay(500);
+
+        delay(600);
+
         robotLift.setLiftNoEncoderPower(ROBOT_LIFT_LOWER_POWER);
 
         while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION));

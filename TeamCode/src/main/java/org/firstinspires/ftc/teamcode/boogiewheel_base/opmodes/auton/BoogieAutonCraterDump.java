@@ -31,7 +31,7 @@ public class BoogieAutonCraterDump extends AbstractAutonNew {
         addState(new PathState("intaking pause", "drive to minerals", ()->{
             while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"));
             RobotState.currentPath.pause();
-            delay(2000);
+            delay(4000);
             RobotState.currentPath.resume();
             return true;
         }));

@@ -52,7 +52,7 @@ public class DriveController extends SubsystemController {
         drive = new Drive(hardwareMap);
         anglePID = new PIDController(15, 0.1, 150, 0.3, 0.08);
         //anglePID.setLogging(true);
-        straightPID = new PIDController(50, 0.5, 150, 1, 0);
+        straightPID = new PIDController(50, 0.5, 50, 1, 0);
         distancePID = new PIDController(0.6, 0.1, 0, 2, 0.1);
         drive.setSlewSpeed(0.1);
     }
@@ -357,7 +357,7 @@ public class DriveController extends SubsystemController {
             values[i]=i*1000000;
         }
         while (RobotState.currentPath.getCurrentSegment().getName().equals("large drive to wall"));
-        int error = 3;
+        int error = 2;
         while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (!atPosition(values[0],values[1],error)||!atPosition(values[1],values[2],error)||!atPosition(values[2],values[3],error)||!atPosition(values[3],values[4],error))){
             for(int i=4;i>0;i--){
                 values[i]=values[i-1];
