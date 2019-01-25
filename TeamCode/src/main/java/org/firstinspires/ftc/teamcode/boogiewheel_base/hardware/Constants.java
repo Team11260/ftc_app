@@ -138,8 +138,8 @@ public final class Constants {
     public final static Path dumpMineral = new Path("single sample dump");
 
     static {
-        dumpMineral.addSegment(new DriveSegment("drive to lander", -20, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        dumpMineral.addSegment(new DriveSegment("drive away from lander", 19, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        dumpMineral.addSegment(new DriveSegment("drive to lander", -18, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        dumpMineral.addSegment(new DriveSegment("drive away from lander", 17, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
 
 
