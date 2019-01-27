@@ -35,6 +35,8 @@ public class DriveController extends SubsystemController {
 
     private DecimalFormat DF;
 
+    private Path lastPath = null;
+
     //Utility Methods
     public DriveController() {
         init();
@@ -192,9 +194,20 @@ public class DriveController extends SubsystemController {
     public synchronized void runDrivePath(Path path) {
         currentPath = path;
         path.reset();
+
+        if(lastPath != null && lastPath.isPaused()) {
+            currentPath.pause();
+        }
+
+        telemetry.addData(INFO, "Starting path: " + path.getName());
+
         while (!path.isDone() && AbstractOpMode.isOpModeActive()) {
+
+            //Path is done
             if (path.getNextSegment() == null) break;
+
             telemetry.addData(INFO, "Starting segment: " + path.getCurrentSegment().getName());
+
             if (path.getCurrentSegment().getType() == Segment.SegmentType.TURN) {
                 turnToSegment((TurnSegment) path.getCurrentSegment());
             } else if (path.getCurrentSegment().getType() == Segment.SegmentType.DRIVE) {

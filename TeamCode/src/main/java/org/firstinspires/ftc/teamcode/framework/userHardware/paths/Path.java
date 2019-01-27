@@ -11,6 +11,8 @@ public class Path {
 
     private int numSegments = 0;
 
+    private boolean paused = false;
+
     private boolean isDone = false;
 
     private final String name;
@@ -39,16 +41,20 @@ public class Path {
             currentSegment.stop();
         }
 
-        AbstractAutonNew.addFinishedState(currentSegment.getName());
+        String lastSegmentName = currentSegment.getName();
 
         if (currentSegment.getNumber() >= segments.size() - 1) {
             isDone = true;
+            AbstractAutonNew.addFinishedState(lastSegmentName);
             return null;
         }
 
         currentSegment = segments.get(currentSegment.getNumber() + 1);
 
         currentSegment.start();
+
+        AbstractAutonNew.addFinishedState(lastSegmentName);
+
         return currentSegment;
     }
 
@@ -62,11 +68,17 @@ public class Path {
     }
 
     public void pause() {
+        paused = true;
         currentSegment.pause();
     }
 
     public void resume() {
+        paused = false;
         currentSegment.resume();
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 
     public boolean isDone() {
