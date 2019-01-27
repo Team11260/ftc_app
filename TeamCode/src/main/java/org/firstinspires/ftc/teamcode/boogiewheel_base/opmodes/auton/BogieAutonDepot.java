@@ -15,10 +15,10 @@ import org.upacreekrobotics.dashboard.Dashboard;
 
 import static org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
-@Autonomous(name = "Boogie Auton Crater Dump", group = "New")
+@Autonomous(name = "Bogie Auton Depot", group = "New")
 //@Disabled
 
-public class BoogieAutonCraterDump extends AbstractAutonNew {
+public class BogieAutonDepot extends AbstractAutonNew {
 
     Robot robot;
     TensorFlow tensorFlow;
@@ -29,34 +29,16 @@ public class BoogieAutonCraterDump extends AbstractAutonNew {
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
         addState(new PathState("intaking pause", "drive to minerals", ()->{
-            while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"));
-            RobotState.currentPath.pause();
-            delay(4000);
-            RobotState.currentPath.resume();
-            return true;
-        }));
-        addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
-        addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
-        addState(new PathState("raise lift", "back up from minerals", robot.moveMineralLiftToDumpPositionCallable()));
-        addState(new PathState("lift pause", "turn to lander", ()->{
-            while (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to lander"));
-            telemetry.addData(DoubleTelemetry.LogMode.INFO, "Current state: " + RobotState.currentPath.getCurrentSegment().getName());
-            RobotState.currentPath.pause();
-            delay(2000);
-            RobotState.currentPath.resume();
-            return true;
-        }));
-        addState(new PathState("open mineral gate", "drive to lander", robot.openMineralGateCallable()));
-        addState(new PathState("dump pause", "drive to lander", ()->{
-            while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to lander"));
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("turn to depot"));
             RobotState.currentPath.pause();
             delay(1000);
             RobotState.currentPath.resume();
             return true;
         }));
-        addState(new PathState("lower lift", "turn to wall", robot.autonMoveMineralLiftToCollectPositionSequenceCallable()));
-        addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
+        addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
+        addState(new PathState("finish intaking", "turn to depot", robot.finishIntakingCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
+        //addState(new PathState("drive to wall with distance", "turn to wall", robot.autonDriveToWallSequenceCallable()));
     }
 
     @Override
@@ -99,24 +81,21 @@ public class BoogieAutonCraterDump extends AbstractAutonNew {
         //Collect gold mineral
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
-                robot.runDrivePath(Constants.collectRightMineralDump);
+                robot.runDrivePath(Constants.collectDepotRightMineral);
                 break;
             case LEFT:
-                robot.runDrivePath(Constants.collectLeftMineralDump);
+                robot.runDrivePath(Constants.collectDepotLeftMineral);
                 break;
             case CENTER:
-                robot.runDrivePath(Constants.collectCenterMineralDump);
+                robot.runDrivePath(Constants.collectDepotCenterMineral);
                 break;
             default:
-                robot.runDrivePath(Constants.collectCenterMineralDump);
+                robot.runDrivePath(Constants.collectDepotCenterMineral);
                 break;
         }
 
-        //Dump mineral
-        robot.runDrivePath(Constants.dumpMineral);
-
         //Deposit team marker and drive to crater
-        robot.runDrivePath(Constants.craterSideToCrater);
+        robot.runDrivePath(Constants.depotSideToCrater);
     }
 
     @Override

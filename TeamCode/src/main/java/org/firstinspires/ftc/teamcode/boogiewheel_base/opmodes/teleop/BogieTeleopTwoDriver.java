@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
-@TeleOp(name = "TwoGamepad Teleop Tankdrive", group = "New")
+@TeleOp(name = "Bogie Teleop Two Driver", group = "New")
 //@Disabled
 
-public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {
+public class BogieTeleopTwoDriver extends AbstractTeleop {
 
     private Robot robot;
 

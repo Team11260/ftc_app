@@ -5,30 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
-@TeleOp(name = "OneDriver Boogie Teleop Tankdrive", group = "New")
+@TeleOp(name = "Boogie Teleop One Driver", group = "New")
 //@Disabled
 
-public class OneDriverBoogieTeleopTankdrive extends AbstractTeleop {
+public class BogieTeleopOneDriver extends AbstractTeleop {
 
     private Robot robot;
 
     @Override
     public void RegisterEvents() {
-        singleGamepad();
-    }
-
-    private void singleGamepad() {
-
-        /*addEventHandler("1_lsy_change", () -> {
-            robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
-            return true;
-        });
-
-        addEventHandler("1_rsy_change", () -> {
-            robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
-            return true;
-        });*/
-
         addEventHandler("1_lsb_down", robot.toggleDriveInvertedCallable());
 
         addEventHandler("1_lb_down", robot.dropMarkerCallable());
@@ -59,8 +44,8 @@ public class OneDriverBoogieTeleopTankdrive extends AbstractTeleop {
         addEventHandler("1_dpu_up", robot.robotLiftStopCallable());
 
         addEventHandler("1_dpd_up", robot.robotLiftStopCallable());
-
     }
+
 
     private void twoGamepads() {
         ////////////////Gamepad 1////////////////

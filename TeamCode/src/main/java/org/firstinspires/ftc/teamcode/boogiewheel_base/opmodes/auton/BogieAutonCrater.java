@@ -15,10 +15,10 @@ import org.upacreekrobotics.dashboard.Dashboard;
 
 import static org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
-@Autonomous(name = "Boogie Auton Depot", group = "New")
+@Autonomous(name = "Bogie Auton Crater", group = "New")
 //@Disabled
 
-public class BoogieAutonDepot extends AbstractAutonNew {
+public class BogieAutonCrater extends AbstractAutonNew {
 
     Robot robot;
     TensorFlow tensorFlow;
@@ -29,16 +29,16 @@ public class BoogieAutonDepot extends AbstractAutonNew {
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
         addState(new PathState("intaking pause", "drive to minerals", ()->{
-            while (!RobotState.currentPath.getCurrentSegment().getName().equals("turn to depot"));
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"));
             RobotState.currentPath.pause();
             delay(1000);
             RobotState.currentPath.resume();
             return true;
         }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
-        addState(new PathState("finish intaking", "turn to depot", robot.finishIntakingCallable()));
+        addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
+        addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
-        //addState(new PathState("drive to wall with distance", "turn to wall", robot.autonDriveToWallSequenceCallable()));
     }
 
     @Override
@@ -81,21 +81,23 @@ public class BoogieAutonDepot extends AbstractAutonNew {
         //Collect gold mineral
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
-                robot.runDrivePath(Constants.collectDepotRightMineral);
+                robot.runDrivePath(Constants.collectRightMineral);
                 break;
             case LEFT:
-                robot.runDrivePath(Constants.collectDepotLeftMineral);
+                robot.runDrivePath(Constants.collectLeftMineral);
                 break;
             case CENTER:
-                robot.runDrivePath(Constants.collectDepotCenterMineral);
+                robot.runDrivePath(Constants.collectCenterMineral);
                 break;
             default:
-                robot.runDrivePath(Constants.collectDepotCenterMineral);
+                robot.runDrivePath(Constants.collectCenterMineral);
                 break;
         }
 
+        delay(Constants.CRATER_SIDE_PARTNER_DELAY);
+
         //Deposit team marker and drive to crater
-        robot.runDrivePath(Constants.depotSideToCrater);
+        robot.runDrivePath(Constants.craterSideToCrater);
     }
 
     @Override

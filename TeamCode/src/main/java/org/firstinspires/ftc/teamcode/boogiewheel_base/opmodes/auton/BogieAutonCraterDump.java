@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
@@ -16,10 +15,10 @@ import org.upacreekrobotics.dashboard.Dashboard;
 
 import static org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
-@Autonomous(name = "Boogie Auton Double Sample Dump", group = "New")
-@Disabled
+@Autonomous(name = "Bogie Auton Crater Dump", group = "New")
+//@Disabled
 
-public class BoogieAutonDoubleSampleDump extends AbstractAutonNew {
+public class BogieAutonCraterDump extends AbstractAutonNew {
 
     Robot robot;
     TensorFlow tensorFlow;
@@ -29,33 +28,43 @@ public class BoogieAutonDoubleSampleDump extends AbstractAutonNew {
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
-        addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("intaking pause", "drive to minerals", ()->{
             while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"));
             RobotState.currentPath.pause();
-            delay(750);
+            delay(4000);
             RobotState.currentPath.resume();
             return true;
         }));
-        addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
-        addState(new PathState("finish intaking", "orient at depot", robot.finishIntakingCallable()));
-        addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
-        addState(new PathState("drop marker", "orient at depot", robot.dropMarkerCallable()));
-        addState(new PathState("raise lift", "drive to crater", robot.moveMineralLiftToDumpPositionCallable()));
+        addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
+        addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
+        addState(new PathState("raise lift", "back up from minerals", robot.moveMineralLiftToDumpPositionCallable()));
+        addState(new PathState("lift pause", "turn to lander", ()->{
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to lander"));
+            telemetry.addData(DoubleTelemetry.LogMode.INFO, "Current state: " + RobotState.currentPath.getCurrentSegment().getName());
+            RobotState.currentPath.pause();
+            delay(2000);
+            RobotState.currentPath.resume();
+            return true;
+        }));
         addState(new PathState("open mineral gate", "drive to lander", robot.openMineralGateCallable()));
         addState(new PathState("dump pause", "drive to lander", ()->{
-            while (!RobotState.currentPath.getCurrentSegment().getName().equals("drive away from lander"));
+            while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to lander"));
             RobotState.currentPath.pause();
             delay(1000);
             RobotState.currentPath.resume();
             return true;
         }));
-        addState(new PathState("lower lift", "drive away from lander", robot.autonMoveMineralLiftToCollectPositionSequenceCallable()));
+        addState(new PathState("lower lift", "turn to wall", robot.autonMoveMineralLiftToCollectPositionSequenceCallable()));
+        addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
+        addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
     }
 
     @Override
     public void Init() {
+        //Init robot
         robot = new Robot();
+
+        //Init object recognition
         tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
 
         RobotState.currentSamplePosition = UNKNOWN;
@@ -69,7 +78,6 @@ public class BoogieAutonDoubleSampleDump extends AbstractAutonNew {
         //Object recognition loop
         if (loop % 5 == 0) tensorFlow.restart();
 
-        //Init object recognition
         SamplePosition currentPosition = tensorFlow.getSamplePosition();
 
         if (currentPosition != RobotState.currentSamplePosition && currentPosition != UNKNOWN) {
@@ -88,59 +96,27 @@ public class BoogieAutonDoubleSampleDump extends AbstractAutonNew {
         //Lower robot
         robot.moveRobotLiftToBottom();
 
-        //Collect first gold mineral
+        //Collect gold mineral
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
-                robot.runDrivePath(Constants.collectRightMineral);
+                robot.runDrivePath(Constants.collectRightMineralDump);
                 break;
             case LEFT:
-                robot.runDrivePath(Constants.collectLeftMineral);
+                robot.runDrivePath(Constants.collectLeftMineralDump);
                 break;
             case CENTER:
-                robot.runDrivePath(Constants.collectCenterMineral);
+                robot.runDrivePath(Constants.collectCenterMineralDump);
                 break;
             default:
-                robot.runDrivePath(Constants.collectCenterMineral);
+                robot.runDrivePath(Constants.collectCenterMineralDump);
                 break;
         }
 
-        //Drive to depot and prepare for second sample
-        robot.runDrivePath(Constants.craterSideToDepotDoubleSample);
-
-        //Collect second gold mineral
-        switch (RobotState.currentSamplePosition) {
-            case RIGHT:
-                robot.runDrivePath(Constants.collectRightMineralDoubleSample);
-                break;
-            case LEFT:
-                robot.runDrivePath(Constants.collectLeftMineralDoubleSample);
-                break;
-            case CENTER:
-                robot.runDrivePath(Constants.collectCenterMineralDoubleSample);
-                break;
-            default:
-                robot.runDrivePath(Constants.collectCenterMineralDoubleSample);
-                break;
-        }
+        //Dump mineral
+        robot.runDrivePath(Constants.dumpMineral);
 
         //Deposit team marker and drive to crater
-        robot.runDrivePath(Constants.doubleSampleDepotToLander);
-
-        //Drive to crater
-        switch (RobotState.currentSamplePosition) {
-            case RIGHT:
-                robot.runDrivePath(Constants.doubleSampleLanderToCraterRight);
-                break;
-            case LEFT:
-                robot.runDrivePath(Constants.doubleSampleLanderToCraterLeft);
-                break;
-            case CENTER:
-                robot.runDrivePath(Constants.doubleSampleLanderToCraterCenter);
-                break;
-            default:
-                robot.runDrivePath(Constants.doubleSampleLanderToCraterCenter);
-                break;
-        }
+        robot.runDrivePath(Constants.craterSideToCrater);
     }
 
     @Override

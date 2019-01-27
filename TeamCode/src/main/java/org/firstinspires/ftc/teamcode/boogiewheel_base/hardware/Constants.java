@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.paths.TurnSegment;
 
 public final class Constants {
     ////////Opmodes////////
-    public static final String OPMODE_TO_START_AFTER_AUTON = "TwoGamepad Teleop Tankdrive";
+    public static final String OPMODE_TO_START_AFTER_AUTON = "Bogie Teleop Two Driver";
 
     ////////DRIVE////////
     public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.7;

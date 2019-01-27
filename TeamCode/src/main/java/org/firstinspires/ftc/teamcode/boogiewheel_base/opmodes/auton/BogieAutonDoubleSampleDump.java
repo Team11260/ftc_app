@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
@@ -15,10 +16,10 @@ import org.upacreekrobotics.dashboard.Dashboard;
 
 import static org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
-@Autonomous(name = "Boogie Auton Double Sample", group = "New")
-//@Disabled
+@Autonomous(name = "Bogie Auton Double Sample Dump", group = "New")
+@Disabled
 
-public class BoogieAutonDoubleSample extends AbstractAutonNew {
+public class BogieAutonDoubleSampleDump extends AbstractAutonNew {
 
     Robot robot;
     TensorFlow tensorFlow;
@@ -32,7 +33,7 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
         addState(new PathState("intaking pause", "drive to minerals", ()->{
             while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"));
             RobotState.currentPath.pause();
-            delay(1000);
+            delay(750);
             RobotState.currentPath.resume();
             return true;
         }));
@@ -40,6 +41,16 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
         addState(new PathState("finish intaking", "orient at depot", robot.finishIntakingCallable()));
         addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
         addState(new PathState("drop marker", "orient at depot", robot.dropMarkerCallable()));
+        addState(new PathState("raise lift", "drive to crater", robot.moveMineralLiftToDumpPositionCallable()));
+        addState(new PathState("open mineral gate", "drive to lander", robot.openMineralGateCallable()));
+        addState(new PathState("dump pause", "drive to lander", ()->{
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("drive away from lander"));
+            RobotState.currentPath.pause();
+            delay(1000);
+            RobotState.currentPath.resume();
+            return true;
+        }));
+        addState(new PathState("lower lift", "drive away from lander", robot.autonMoveMineralLiftToCollectPositionSequenceCallable()));
     }
 
     @Override
@@ -113,7 +124,23 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
         }
 
         //Deposit team marker and drive to crater
-        robot.runDrivePath(Constants.depotToCraterDoubleSample);
+        robot.runDrivePath(Constants.doubleSampleDepotToLander);
+
+        //Drive to crater
+        switch (RobotState.currentSamplePosition) {
+            case RIGHT:
+                robot.runDrivePath(Constants.doubleSampleLanderToCraterRight);
+                break;
+            case LEFT:
+                robot.runDrivePath(Constants.doubleSampleLanderToCraterLeft);
+                break;
+            case CENTER:
+                robot.runDrivePath(Constants.doubleSampleLanderToCraterCenter);
+                break;
+            default:
+                robot.runDrivePath(Constants.doubleSampleLanderToCraterCenter);
+                break;
+        }
     }
 
     @Override
