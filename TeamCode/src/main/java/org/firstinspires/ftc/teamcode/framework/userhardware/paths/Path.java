@@ -51,6 +51,8 @@ public class Path {
 
         currentSegment = segments.get(currentSegment.getNumber() + 1);
 
+        if(paused) currentSegment.pause();
+
         currentSegment.start();
 
         AbstractAutonNew.addFinishedState(lastSegmentName);

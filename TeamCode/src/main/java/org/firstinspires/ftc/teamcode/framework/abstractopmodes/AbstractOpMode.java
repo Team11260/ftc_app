@@ -31,6 +31,9 @@ public abstract class AbstractOpMode extends LinearOpMode {
         opmode = this;
         linearOpMode = this;
         telemetry = new DoubleTelemetry(super.telemetry, Dashboard.getInstance().getTelemetry(), new Logger(Dashboard.getCurrentOpMode()));
+
+        gamepad1.reset();
+        gamepad2.reset();
     }
 
     @Override

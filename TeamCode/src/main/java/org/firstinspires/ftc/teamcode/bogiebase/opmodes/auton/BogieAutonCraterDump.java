@@ -32,6 +32,12 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
         addState(new PathState("raise lift", "back up from minerals", robot.autonMoveMineralLiftToDumpPositionSequenceCallable()));
+        addState(new PathState("dump pause", "drive to lander", ()->{
+            RobotState.currentPath.pause();
+            delay(Constants.DUMP_MINERAL_DELAY);
+            RobotState.currentPath.resume();
+            return true;
+        }));
         addState(new PathState("open mineral gate", "drive to lander", robot.openMineralGateCallable()));
         addState(new PathState("dump pause", "drive to lander", ()->{
             while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to lander"));

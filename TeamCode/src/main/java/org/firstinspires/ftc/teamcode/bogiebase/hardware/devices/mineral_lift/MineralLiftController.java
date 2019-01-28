@@ -136,7 +136,6 @@ public class MineralLiftController extends SubsystemController {
     }
 
     public synchronized void autonMoveToDumpPositionSequence() {
-        currentPath.pause();
         moveTime.reset();
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift up start");
         telemetry.update();
