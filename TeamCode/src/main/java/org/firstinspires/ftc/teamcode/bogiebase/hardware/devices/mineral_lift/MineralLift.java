@@ -30,11 +30,11 @@ public class MineralLift {
 
         gateServo = hardwareMap.servo.get("mineral_gate");
         gateServo.setDirection(Servo.Direction.FORWARD);
-        gateServo.setPosition(Constants.MINERAL_GATE_CLOSED_POSITION);
+        gateServo.setPosition(Constants.MINERAL_LIFT_GATE_CLOSED_POSITION);
 
         angleServo = hardwareMap.servo.get("sorter_angle");
         angleServo.setDirection(Servo.Direction.REVERSE);
-        angleServo.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.ANGLE_SERVO_POSITION_VERTICAL : Constants.ANGLE_SERVO_POSITION_HORIZONTAL);
+        angleServo.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION : Constants.MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
 
         distanceSensor = new DistanceSensor2m("Distance1");
     }
@@ -45,7 +45,7 @@ public class MineralLift {
 
     public void setTargetPosition(int position) {
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(1);
+        liftMotor.setPower(Constants.MINERAL_LIFT_FULL_SPEED);
         liftMotor.setTargetPosition(position);
     }
 

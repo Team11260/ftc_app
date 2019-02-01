@@ -56,7 +56,6 @@ public class DriveController extends SubsystemController {
         //anglePID.setLogging(true);
         straightPID = new PIDController(50, 0.5, 50, 1, 0);
         distancePID = new PIDController(0.6, 0.1, 0, 2, 0.1);
-        drive.setSlewSpeed(0.1);
     }
 
     public synchronized void update() {
@@ -218,7 +217,6 @@ public class DriveController extends SubsystemController {
 
     //Autonomous Methods
     public synchronized void turnToSegment(TurnSegment segment) {
-        //AbstractOpMode.delay(100);
 
         double angle = segment.getAngle(), speed = segment.getSpeed(), error = segment.getError(), period = segment.getPeriod();
 
@@ -360,7 +358,7 @@ public class DriveController extends SubsystemController {
 
     public synchronized void autonReleaseWheelsSequence() {
         setPower(DRIVE_RELEASE_WHEELS_POWER, DRIVE_RELEASE_WHEELS_POWER);
-        delay(1000);
+        delay(ROBOT_LIFT_AUTON_DELAY);
         setPower(0, 0);
     }
 
@@ -376,8 +374,6 @@ public class DriveController extends SubsystemController {
                 values[i] = values[i - 1];
             }
             values[0] = (drive.getLeftPosition() + drive.getRightPosition()) / 2;
-            //telemetry.addData(INFO,values[0]+" "+values[1]+" "+values[2]+" "+values[3]+" "+values[4]);
-            //telemetry.update();
         }
 
         if (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) return;
@@ -532,20 +528,23 @@ public class DriveController extends SubsystemController {
     }
 
     public void dropTeamMarker() {
+        //Teleop dump marker sequence
         if (RobotState.currentMatchState == MatchState.TELEOP) {
             drive.setMarkerServo(DRIVE_TEAM_MARKER_EXTENDED);
-            delay(DUMP_TEAM_MARKER_DELAY);
+            delay(DRIVE_DUMP_TEAM_MARKER_DELAY);
             drive.setMarkerServo(DRIVE_TEAM_MARKER_TELEOP_RETRACTED);
             return;
         }
+
+        //Auton dump marker sequence
         telemetry.addData(INFO, "Wait marker dump");
-        while (!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall") &&
-                !currentPath.getCurrentSegment().getName().equals("turn to crater")) ;
+        while ((!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall") &&
+                !currentPath.getCurrentSegment().getName().equals("turn to crater")) && isOpModeActive()) ;
         telemetry.addData(INFO, "Start marker dump");
         currentPath.pause();
         telemetry.addData(INFO, "Pause path");
         drive.setMarkerServo(DRIVE_TEAM_MARKER_EXTENDED);
-        delay(DUMP_TEAM_MARKER_DELAY);
+        delay(DRIVE_DUMP_TEAM_MARKER_DELAY);
         drive.setMarkerServo(DRIVE_TEAM_MARKER_RETRACTED);
         currentPath.resume();
         telemetry.addData(INFO, "Marker dumped");

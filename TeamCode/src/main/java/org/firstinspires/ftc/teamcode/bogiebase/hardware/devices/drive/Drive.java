@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ThreadPool;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
@@ -29,8 +30,8 @@ public class Drive {
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        leftMotor.setSlewSpeed(1);
-        rightMotor.setSlewSpeed(1);
+        leftMotor.setSlewSpeed(Constants.DRIVE_SLEW_SPEED);
+        rightMotor.setSlewSpeed(Constants.DRIVE_SLEW_SPEED);
 
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -51,13 +52,7 @@ public class Drive {
     }
 
     public void initIMU(HardwareMap hardwareMap) {
-        try {
-            ((Callable<Boolean>) () -> {
-                imu = new IMU(hardwareMap);
-                return true;
-            }).call();
-        } catch (Exception e) {
-        }
+        ThreadPool.getDefault().execute(() -> imu = new IMU(hardwareMap));
     }
 
     public void setSlewSpeed(double ss) {

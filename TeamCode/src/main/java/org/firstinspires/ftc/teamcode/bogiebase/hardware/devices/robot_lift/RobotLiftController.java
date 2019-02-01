@@ -54,17 +54,16 @@ public class RobotLiftController extends SubsystemController {
     public synchronized void autonLowerLiftSequence() {
         currentRobotLiftState = RobotLiftState.IN_MOTION;
 
-        delay(600);
+        delay(ROBOT_LIFT_AUTON_DELAY);
 
         robotLift.setPosition(ROBOT_LIFT_RELEASE_PAWL_POSITION);
         robotLift.setServoPosition(ROBOT_LIFT_PAWL_RELEASED);
 
-        delay(600);
+        delay(ROBOT_LIFT_AUTON_DELAY);
 
         robotLift.setLiftNoEncoderPower(ROBOT_LIFT_LOWER_POWER);
 
-        while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION))
-            ;
+        while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION)) ;
 
         robotLift.setPosition(ROBOT_LIFT_LOWERED_POSITION);
     }
@@ -72,13 +71,13 @@ public class RobotLiftController extends SubsystemController {
     public synchronized void autonFinishLowerLiftSequence() {
         robotLift.setLiftPower(0);
         robotLift.setServoPosition(ROBOT_LIFT_PAWL_ENGAGED);
-        telemetry.addData(DoubleTelemetry.LogMode.INFO, "encoder: " + robotLift.getCurrentPosition());
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Encoder: " + robotLift.getCurrentPosition());
         currentRobotLiftState = RobotLiftState.LOWERED;
     }
 
-    public synchronized void resetLiftPos() {
+    public synchronized void resetLiftPosition() {
         robotLift.setPosition(0);
-        delay(5000);
+        delay(1000);
         robotLift.setLiftPower(0);
     }
 }

@@ -72,7 +72,7 @@ public class BogieAutonCrater extends AbstractAutonNew {
                 break;
         }
 
-        delay(Constants.CRATER_SIDE_PARTNER_DELAY);
+        delay(Constants.AUTON_CRATER_SIDE_PARTNER_DELAY);
 
         //Deposit team marker and drive to crater
         robot.runDrivePath(Constants.craterSideToCrater);

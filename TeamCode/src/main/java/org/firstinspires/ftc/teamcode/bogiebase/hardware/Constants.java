@@ -15,6 +15,8 @@ public final class Constants {
 
 
     ////////DRIVE////////
+    public static final double DRIVE_SLEW_SPEED = 0.1;
+
     public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.7;
     public static final double DRIVE_COUNTS_PER_INCH = 38.0;
 
@@ -24,7 +26,8 @@ public final class Constants {
     public static final double DRIVE_TEAM_MARKER_RETRACTED = 0;
     public static final double DRIVE_TEAM_MARKER_TELEOP_RETRACTED = 0.2;
 
-    public static final int DUMP_TEAM_MARKER_DELAY = 1000;
+    public static final int DRIVE_RELEASE_WHEEL_DELAY = 1000;
+    public static final int DRIVE_DUMP_TEAM_MARKER_DELAY = 1000;
 
 
     ////////INTAKE////////
@@ -41,19 +44,24 @@ public final class Constants {
 
     ////////MINERAL LIFT////////
     //Lift
-    public final static int MINERAL_LIFT_COLLECT_POSITION = -4000;
+    public final static double MINERAL_LIFT_FULL_SPEED = 1;
+    public final static double MINERAL_LIFT_SLOW_SPEED = 0.5;
+
+    public final static int MINERAL_LIFT_AUTON_RAISED_POSITION = 300;
     public final static int MINERAL_LIFT_DUMP_POSITION = 2600;
     public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 1600;
     public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 100;
 
+    public final static int MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS = 4;
+
     //Gate
-    public final static double MINERAL_GATE_OPEN_POSITION = 0.7;
-    public final static double MINERAL_GATE_CLOSED_POSITION = 0.01;
+    public final static double MINERAL_LIFT_GATE_OPEN_POSITION = 0.7;
+    public final static double MINERAL_LIFT_GATE_CLOSED_POSITION = 0.01;
 
     //Angle Servo
-    public final static double ANGLE_SERVO_POSITION_HORIZONTAL = 0.05;
-    public final static double ANGLE_SERVO_POSITION_DUMP = 0.3;
-    public final static double ANGLE_SERVO_POSITION_VERTICAL = 0.8;
+    public final static double MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION = 0.05;
+    public final static double MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION = 0.3;
+    public final static double MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION = 0.8;
 
 
     ////////ROBOT LIFT////////
@@ -63,6 +71,8 @@ public final class Constants {
     public final static int ROBOT_LIFT_RELEASE_PAWL_POSITION = 210;
     public final static double ROBOT_LIFT_LOWER_POWER = -0.7;
 
+    public static final int ROBOT_LIFT_AUTON_DELAY = 600;
+
     //Pawl
     public final static double ROBOT_LIFT_PAWL_RELEASED = 0.1;
     public final static double ROBOT_LIFT_PAWL_ENGAGED = 0.0;
@@ -71,8 +81,9 @@ public final class Constants {
     ////////AUTON PATHS////////
 
     //Crater side
-    public final static int CRATER_SIDE_PARTNER_DELAY = 8;
+    public final static int AUTON_CRATER_SIDE_PARTNER_DELAY = 8;
 
+    //Path variables
     public final static double AUTON_PATH_SPEED = 1;
     public final static double AUTON_TURN_ERROR = 8;
     public final static double AUTON_MINERAL_TURN_ERROR = 4;

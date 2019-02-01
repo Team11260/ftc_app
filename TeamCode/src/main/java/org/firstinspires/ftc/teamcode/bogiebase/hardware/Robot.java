@@ -391,9 +391,9 @@ public class Robot extends AbstractRobot {
         };
     }
 
-    public Callable resetLiftPosCallable() {
+    public Callable resetLiftPositionCallable() {
         return () -> {
-            hardware.robotLift.resetLiftPos();
+            hardware.robotLift.resetLiftPosition();
             return true;
         };
     }
