@@ -22,8 +22,9 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
-        addState(new PathState("intaking pause", "drive to minerals", ()->{
-            while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"));
+        addState(new PathState("intaking pause", "drive to minerals", () -> {
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"))
+                ;
             RobotState.currentPath.pause();
             delay(Constants.DUMP_ROUTE_INTAKING_DELAY);
             RobotState.currentPath.resume();
@@ -32,15 +33,15 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
         addState(new PathState("raise lift", "back up from minerals", robot.autonMoveMineralLiftToDumpPositionSequenceCallable()));
-        addState(new PathState("dump pause", "drive to lander", ()->{
+        addState(new PathState("dump pause", "drive to lander", () -> {
             RobotState.currentPath.pause();
             delay(Constants.DUMP_MINERAL_DELAY);
             RobotState.currentPath.resume();
             return true;
         }));
         addState(new PathState("open mineral gate", "drive to lander", robot.openMineralGateCallable()));
-        addState(new PathState("dump pause", "drive to lander", ()->{
-            while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to lander"));
+        addState(new PathState("dump pause", "drive to lander", () -> {
+            while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to lander")) ;
             RobotState.currentPath.pause();
             delay(Constants.DUMP_MINERAL_DELAY);
             RobotState.currentPath.resume();

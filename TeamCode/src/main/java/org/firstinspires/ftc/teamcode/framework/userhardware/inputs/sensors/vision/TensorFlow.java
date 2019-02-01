@@ -92,7 +92,7 @@ public class TensorFlow {
         tfod.activate();
     }
 
-    public void restart(){
+    public void restart() {
         tfod.deactivate();
         tfod.activate();
     }

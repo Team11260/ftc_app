@@ -22,6 +22,7 @@ public final class Constants {
 
     public static final double DRIVE_TEAM_MARKER_EXTENDED = 0.5;
     public static final double DRIVE_TEAM_MARKER_RETRACTED = 0;
+    public static final double DRIVE_TEAM_MARKER_TELEOP_RETRACTED = 0.2;
 
     public static final int DUMP_TEAM_MARKER_DELAY = 1000;
 
@@ -41,11 +42,18 @@ public final class Constants {
     ////////MINERAL LIFT////////
     //Lift
     public final static int MINERAL_LIFT_COLLECT_POSITION = -4000;
-    public final static int MINERAL_LIFT_DUMP_POSITION = 3610;
+    public final static int MINERAL_LIFT_DUMP_POSITION = 2600;
+    public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 1600;
+    public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 100;
 
     //Gate
     public final static double MINERAL_GATE_OPEN_POSITION = 0.7;
     public final static double MINERAL_GATE_CLOSED_POSITION = 0.01;
+
+    //Angle Servo
+    public final static double ANGLE_SERVO_POSITION_HORIZONTAL = 0.05;
+    public final static double ANGLE_SERVO_POSITION_DUMP = 0.3;
+    public final static double ANGLE_SERVO_POSITION_VERTICAL = 0.8;
 
 
     ////////ROBOT LIFT////////

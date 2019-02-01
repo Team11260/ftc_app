@@ -195,7 +195,7 @@ public class DriveController extends SubsystemController {
         currentPath = path;
         path.reset();
 
-        if(lastPath != null && lastPath.isPaused()) {
+        if (lastPath != null && lastPath.isPaused()) {
             currentPath.pause();
         }
 
@@ -235,7 +235,7 @@ public class DriveController extends SubsystemController {
             runtime.reset();
 
             //While we are not in the error band keep turning
-            while (!atPosition(angle, currentHeading = getHeading(), error) && (angle+error>180 ? !atPosition((((angle+error)-180) - 180) - error, currentHeading, error) : true) && (angle-error<-180 ? !atPosition((((angle-error)+180) + 180) + error, currentHeading, error) : true) && isOpModeActive()) {
+            while (!atPosition(angle, currentHeading = getHeading(), error) && (angle + error > 180 ? !atPosition((((angle + error) - 180) - 180) - error, currentHeading, error) : true) && (angle - error < -180 ? !atPosition((((angle - error) + 180) + 180) + error, currentHeading, error) : true) && isOpModeActive()) {
 
                 if (segment.isDone()) {
                     setPower(0, 0);
@@ -279,7 +279,7 @@ public class DriveController extends SubsystemController {
 
     public synchronized void driveToSegment(DriveSegment segment) {
 
-       //AbstractOpMode.delay(100);
+        //AbstractOpMode.delay(100);
 
         double distance = segment.getDistance(), speed = segment.getSpeed(), angle = baseHeading;
         if (segment.getAngle() != null) angle = segment.getAngle();
@@ -319,7 +319,7 @@ public class DriveController extends SubsystemController {
 
             currentHeading = getHeading();
 
-            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition())/2.0));
+            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition()) / 2.0));
 
             if (angle - currentHeading > 180) {
                 turn = anglePID.output(angle, 360 + currentHeading);
@@ -366,21 +366,21 @@ public class DriveController extends SubsystemController {
 
     public void autonDriveToWallSequence() {
         int[] values = new int[5];
-        for(int i=0;i<5;i++){
-            values[i]=i*1000000;
+        for (int i = 0; i < 5; i++) {
+            values[i] = i * 1000000;
         }
-        while (RobotState.currentPath.getCurrentSegment().getName().equals("large drive to wall"));
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("large drive to wall")) ;
         int error = 2;
-        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (!atPosition(values[0],values[1],error)||!atPosition(values[1],values[2],error)||!atPosition(values[2],values[3],error)||!atPosition(values[3],values[4],error))){
-            for(int i=4;i>0;i--){
-                values[i]=values[i-1];
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (!atPosition(values[0], values[1], error) || !atPosition(values[1], values[2], error) || !atPosition(values[2], values[3], error) || !atPosition(values[3], values[4], error))) {
+            for (int i = 4; i > 0; i--) {
+                values[i] = values[i - 1];
             }
-            values[0]=(drive.getLeftPosition() + drive.getRightPosition())/2;
+            values[0] = (drive.getLeftPosition() + drive.getRightPosition()) / 2;
             //telemetry.addData(INFO,values[0]+" "+values[1]+" "+values[2]+" "+values[3]+" "+values[4]);
             //telemetry.update();
         }
 
-        if(!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) return;
+        if (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) return;
 
         RobotState.currentPath.nextSegment();
     }
@@ -532,22 +532,22 @@ public class DriveController extends SubsystemController {
     }
 
     public void dropTeamMarker() {
-        if(RobotState.currentMatchState == MatchState.TELEOP) {
+        if (RobotState.currentMatchState == MatchState.TELEOP) {
             drive.setMarkerServo(DRIVE_TEAM_MARKER_EXTENDED);
             delay(DUMP_TEAM_MARKER_DELAY);
-            drive.setMarkerServo(DRIVE_TEAM_MARKER_RETRACTED);
+            drive.setMarkerServo(DRIVE_TEAM_MARKER_TELEOP_RETRACTED);
             return;
         }
-        telemetry.addData(INFO,"Wait marker dump");
+        telemetry.addData(INFO, "Wait marker dump");
         while (!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall") &&
-                !currentPath.getCurrentSegment().getName().equals("turn to crater"));
-        telemetry.addData(INFO,"Start marker dump");
+                !currentPath.getCurrentSegment().getName().equals("turn to crater")) ;
+        telemetry.addData(INFO, "Start marker dump");
         currentPath.pause();
-        telemetry.addData(INFO,"Pause path");
+        telemetry.addData(INFO, "Pause path");
         drive.setMarkerServo(DRIVE_TEAM_MARKER_EXTENDED);
         delay(DUMP_TEAM_MARKER_DELAY);
         drive.setMarkerServo(DRIVE_TEAM_MARKER_RETRACTED);
         currentPath.resume();
-        telemetry.addData(INFO,"Marker dumped");
+        telemetry.addData(INFO, "Marker dumped");
     }
 }

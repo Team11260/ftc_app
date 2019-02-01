@@ -63,7 +63,8 @@ public class RobotLiftController extends SubsystemController {
 
         robotLift.setLiftNoEncoderPower(ROBOT_LIFT_LOWER_POWER);
 
-        while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION));
+        while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION))
+            ;
 
         robotLift.setPosition(ROBOT_LIFT_LOWERED_POSITION);
     }

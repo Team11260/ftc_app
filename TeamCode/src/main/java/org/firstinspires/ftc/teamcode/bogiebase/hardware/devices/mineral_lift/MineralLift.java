@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.DistanceSensor2m;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 
@@ -13,7 +14,7 @@ public class MineralLift {
 
     private SlewDcMotor liftMotor;
 
-    private Servo gateServo;
+    private Servo gateServo, angleServo;
 
     private DistanceSensor2m distanceSensor;
 
@@ -25,9 +26,15 @@ public class MineralLift {
         liftMotor.setTargetPosition(0);
         liftMotor.setPower(0);
 
+        liftMotor.setSlewSpeed(2);
+
         gateServo = hardwareMap.servo.get("mineral_gate");
         gateServo.setDirection(Servo.Direction.FORWARD);
         gateServo.setPosition(Constants.MINERAL_GATE_CLOSED_POSITION);
+
+        angleServo = hardwareMap.servo.get("sorter_angle");
+        angleServo.setDirection(Servo.Direction.REVERSE);
+        angleServo.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.ANGLE_SERVO_POSITION_VERTICAL : Constants.ANGLE_SERVO_POSITION_HORIZONTAL);
 
         distanceSensor = new DistanceSensor2m("Distance1");
     }
@@ -50,11 +57,21 @@ public class MineralLift {
         return liftMotor.getCurrentPosition();
     }
 
+    public double getPower() {
+        return liftMotor.getPower();
+    }
+
     public boolean isLiftInProgress() {
         return liftMotor.isBusy();
     }
 
-    public void setLiftMotorPower(double power){
+    public void setLiftMotorPower(double power) {
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setPower(power);
+    }
+
+    public void setLiftMotorPowerNoEncoder(double power) {
+        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftMotor.setPower(power);
     }
 
@@ -66,6 +83,10 @@ public class MineralLift {
 
     public void setGateServoPosition(double position) {
         gateServo.setPosition(position);
+    }
+
+    public void setAngleServoPosition(double position) {
+        angleServo.setPosition(position);
     }
 
     public void stop() {

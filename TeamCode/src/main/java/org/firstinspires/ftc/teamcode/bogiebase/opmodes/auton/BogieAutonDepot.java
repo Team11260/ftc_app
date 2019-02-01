@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.opmodes.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
@@ -21,8 +22,8 @@ public class BogieAutonDepot extends AbstractAutonNew {
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
-        addState(new PathState("intaking pause", "drive to minerals", ()->{
-            while (!RobotState.currentPath.getCurrentSegment().getName().equals("turn to depot"));
+        addState(new PathState("intaking pause", "drive to minerals", () -> {
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("turn to depot")) ;
             RobotState.currentPath.pause();
             delay(Constants.NORMAL_INTAKING_DELAY);
             RobotState.currentPath.resume();

@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.IMU;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 
@@ -45,7 +47,7 @@ public class Drive {
 
 
         servoMarker = hardwareMap.servo.get("servo_marker");
-        servoMarker.setPosition(0);
+        servoMarker.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.DRIVE_TEAM_MARKER_RETRACTED : Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED);
     }
 
     public void initIMU(HardwareMap hardwareMap) {
@@ -54,7 +56,8 @@ public class Drive {
                 imu = new IMU(hardwareMap);
                 return true;
             }).call();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public void setSlewSpeed(double ss) {
@@ -127,12 +130,12 @@ public class Drive {
     }
 
     public double getHeading() {
-        if(imu == null) return 0.0;
+        if (imu == null) return 0.0;
         return imu.getHeading();
     }
 
     public boolean isGyroCalibrated() {
-        if(imu == null) return false;
+        if (imu == null) return false;
         return imu.isGyroCalibrated();
     }
 

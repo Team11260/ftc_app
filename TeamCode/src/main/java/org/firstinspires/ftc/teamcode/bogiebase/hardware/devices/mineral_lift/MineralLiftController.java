@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.mineral_lift;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
@@ -36,6 +37,11 @@ public class MineralLiftController extends SubsystemController {
     public synchronized void update() {
         if (isMovingDown) {
             int currentValue = mineralLift.getCurrentPosition();
+
+            if (mineralLift.getPower() == -1 && mineralLift.getCurrentPosition() < MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION) {
+                mineralLift.setLiftMotorPowerNoEncoder(-0.5);
+            }
+
             if (liftValues[0] == -1) {
                 liftValues[0] = 10000;
                 liftValues[1] = 0;
@@ -50,15 +56,18 @@ public class MineralLiftController extends SubsystemController {
             liftValues[1] = liftValues[0];
             liftValues[0] = currentValue;
 
-            if (atPosition(liftValues[0], liftValues[1], 1) && atPosition(liftValues[0], liftValues[2], 1) &&
-                    atPosition(liftValues[0], liftValues[3], 1) && atPosition(liftValues[0], liftValues[4], 1)) {
-                telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished");
+            int error = 4;
+
+            if (atPosition(liftValues[0], liftValues[1], error) && atPosition(liftValues[1], liftValues[2], error) &&
+                    atPosition(liftValues[2], liftValues[3], error) && atPosition(liftValues[3], liftValues[4], error)) {
+                telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished in: " + moveTime.milliseconds());
                 mineralLift.resetPosition();
                 liftValues[0] = -1;
                 liftValues[1] = -1;
                 liftValues[2] = -1;
                 liftValues[3] = -1;
                 liftValues[4] = -1;
+                currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
                 isMovingDown = false;
                 return;
             }
@@ -72,8 +81,11 @@ public class MineralLiftController extends SubsystemController {
     public synchronized void autonLowerLiftSequence() {
         mineralLift.setTargetPosition(300);
         delay(1000);
+        mineralLift.setAngleServoPosition(ANGLE_SERVO_POSITION_HORIZONTAL);
+
         mineralLift.setCurrentPosition(600);
         mineralLift.setTargetPosition(MINERAL_LIFT_COLLECT_POSITION);
+
         int currentValue;
         while (AbstractOpMode.isOpModeActive()) {
             currentValue = mineralLift.getCurrentPosition();
@@ -105,6 +117,8 @@ public class MineralLiftController extends SubsystemController {
     public synchronized void autonMoveToCollectPositionSequence() {
         closeGate();
 
+        mineralLift.setAngleServoPosition(ANGLE_SERVO_POSITION_HORIZONTAL);
+
         mineralLift.setTargetPosition(MINERAL_LIFT_COLLECT_POSITION);
         delay(500);
         int currentValue;
@@ -130,6 +144,7 @@ public class MineralLiftController extends SubsystemController {
                 liftValues[2] = -1;
                 liftValues[3] = -1;
                 isMovingDown = false;
+                currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
                 return;
             }
         }
@@ -140,21 +155,26 @@ public class MineralLiftController extends SubsystemController {
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift up start");
         telemetry.update();
         currentMineralLiftState = MineralLiftState.IN_MOTION;
-        mineralLift.setTargetPosition(MINERAL_LIFT_DUMP_POSITION);
-        while (!atPosition(MINERAL_LIFT_DUMP_POSITION, mineralLift.getCurrentPosition(), 80) && moveTime.milliseconds() < 3000);
+        //mineralLift.setTargetPosition(MINERAL_LIFT_DUMP_POSITION);
+        mineralLift.setLiftMotorPowerNoEncoder(1);
+        while (mineralLift.getCurrentPosition() < MINERAL_LIFT_DUMP_POSITION && moveTime.milliseconds() < 3000)
+            ;
         currentMineralLiftState = MineralLiftState.DUMP_POSITION;
         mineralLift.setLiftMotorPower(0);
-        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished");
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished in: " + moveTime.milliseconds());
         telemetry.update();
         currentPath.resume();
     }
 
     public synchronized void moveToCollectPosition() {
+        moveTime.reset();
         if (mineralLift.getDistance() < 10) return;
         currentMineralLiftState = MineralLiftState.IN_MOTION;
-        mineralLift.setTargetPosition(MINERAL_LIFT_COLLECT_POSITION);
+        //mineralLift.setTargetPosition(MINERAL_LIFT_COLLECT_POSITION);
+        mineralLift.setLiftMotorPowerNoEncoder(-1);
         isMovingDown = true;
-        currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
+        mineralLift.setAngleServoPosition(ANGLE_SERVO_POSITION_HORIZONTAL);
+        delay(200);
     }
 
     public synchronized void moveToDumpPosition() {
@@ -162,11 +182,18 @@ public class MineralLiftController extends SubsystemController {
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift up start");
         telemetry.update();
         currentMineralLiftState = MineralLiftState.IN_MOTION;
-        mineralLift.setTargetPosition(MINERAL_LIFT_DUMP_POSITION);
-        while (!atPosition(MINERAL_LIFT_DUMP_POSITION, mineralLift.getCurrentPosition(), 80) && moveTime.milliseconds() < 3000);
+        //mineralLift.setTargetPosition(MINERAL_LIFT_DUMP_POSITION);
+        mineralLift.setLiftMotorPowerNoEncoder(1);
+        delay(200);
+        mineralLift.setAngleServoPosition(ANGLE_SERVO_POSITION_VERTICAL);
+        while (mineralLift.getCurrentPosition() < MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION && moveTime.milliseconds() < 3000)
+            ;
+        mineralLift.setAngleServoPosition(ANGLE_SERVO_POSITION_DUMP);
+        while (mineralLift.getCurrentPosition() < MINERAL_LIFT_DUMP_POSITION && moveTime.milliseconds() < 3000)
+            ;
         currentMineralLiftState = MineralLiftState.DUMP_POSITION;
         mineralLift.setLiftMotorPower(0);
-        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished");
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished in: " + moveTime.milliseconds());
         telemetry.update();
     }
 
@@ -184,7 +211,24 @@ public class MineralLiftController extends SubsystemController {
 
     public synchronized void toggleGate() {
         if (currentMineralGatePosition == MineralGatePosition.OPEN) closeGate();
-        else if(currentMineralLiftState==MineralLiftState.DUMP_POSITION) openGate();
+        else if (currentMineralLiftState == MineralLiftState.DUMP_POSITION) openGate();
+    }
+
+    public void setAngleServoPositionDump() {
+        mineralLift.setAngleServoPosition(Constants.ANGLE_SERVO_POSITION_DUMP);
+    }
+
+    public void setAngleServoPositionHorizontal() {
+        mineralLift.setAngleServoPosition(Constants.ANGLE_SERVO_POSITION_HORIZONTAL);
+    }
+
+    public void setAngleServoPositionVertical() {
+        mineralLift.setAngleServoPosition(Constants.ANGLE_SERVO_POSITION_VERTICAL);
+    }
+
+
+    public synchronized void setAngleServoPosition(double position) {
+        mineralLift.setAngleServoPosition(position);
     }
 
     private boolean atPosition(double x, double y, double error) {

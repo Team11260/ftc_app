@@ -38,6 +38,9 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
         RobotState.currentMatchState = RobotState.MatchState.TELEOP;
 
+        gamepad1.reset();
+        gamepad2.reset();
+
         ExecutorService service = Executors.newSingleThreadExecutor();
 
         Callable<Boolean> InitThread = () -> {

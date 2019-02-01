@@ -24,8 +24,9 @@ public class BogieAutonDoubleSampleDump extends AbstractAutonNew {
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
-        addState(new PathState("intaking pause", "drive to minerals", ()->{
-            while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"));
+        addState(new PathState("intaking pause", "drive to minerals", () -> {
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"))
+                ;
             RobotState.currentPath.pause();
             delay(Constants.NORMAL_INTAKING_DELAY);
             RobotState.currentPath.resume();
@@ -37,8 +38,9 @@ public class BogieAutonDoubleSampleDump extends AbstractAutonNew {
         addState(new PathState("drop marker", "orient at depot", robot.dropMarkerCallable()));
         addState(new PathState("raise lift", "drive to crater", robot.moveMineralLiftToDumpPositionCallable()));
         addState(new PathState("open mineral gate", "drive to lander", robot.openMineralGateCallable()));
-        addState(new PathState("dump pause", "drive to lander", ()->{
-            while (!RobotState.currentPath.getCurrentSegment().getName().equals("drive away from lander"));
+        addState(new PathState("dump pause", "drive to lander", () -> {
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("drive away from lander"))
+                ;
             RobotState.currentPath.pause();
             delay(Constants.DUMP_MINERAL_DELAY);
             RobotState.currentPath.resume();

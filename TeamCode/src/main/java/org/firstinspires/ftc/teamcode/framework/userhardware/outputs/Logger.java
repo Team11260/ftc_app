@@ -20,7 +20,7 @@ public class Logger {
     private OutputStreamWriter myOutWriter;
 
     public Logger(String fileName) {
-        if(fileName==null) {
+        if (fileName == null) {
             file = null;
             return;
         }
@@ -40,7 +40,7 @@ public class Logger {
     }
 
     public void log(String text) {
-        if(file==null)return;
+        if (file == null) return;
 
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
@@ -53,7 +53,7 @@ public class Logger {
     }
 
     public void stop() {
-        if(file==null)return;
+        if (file == null) return;
 
         try {
             myOutWriter.close();

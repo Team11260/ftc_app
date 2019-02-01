@@ -19,7 +19,7 @@ public class Robot extends AbstractRobot {
     public Robot() {
         hardware = new HardwareDevices();
 
-        if(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS){
+        if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
             tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
 
             RobotState.currentSamplePosition = UNKNOWN;
@@ -43,7 +43,7 @@ public class Robot extends AbstractRobot {
         }
     }
 
-    public void stopTensorFlow(){
+    public void stopTensorFlow() {
         tensorFlow.stop();
     }
 
@@ -267,6 +267,42 @@ public class Robot extends AbstractRobot {
         };
     }
 
+    public void setAngleServoPositionHorizontal() {
+        hardware.mineralLift.setAngleServoPositionHorizontal();
+    }
+
+    public Callable setAngleServoPositionHorizontalCallable() {
+        return () -> {
+            hardware.mineralLift.setAngleServoPositionHorizontal();
+            return true;
+        };
+    }
+
+
+    public void setAngleServoPositionDump() {
+        hardware.mineralLift.setAngleServoPositionDump();
+    }
+
+    public Callable setAngleServoPositionDumpCallable() {
+        return () -> {
+            hardware.mineralLift.setAngleServoPositionDump();
+            return true;
+        };
+    }
+
+
+    public void setAngleServoPositionVertical() {
+        hardware.mineralLift.setAngleServoPositionVertical();
+    }
+
+    public Callable setAngleServoPositionVerticalCallable() {
+        return () -> {
+            hardware.mineralLift.setAngleServoPositionVertical();
+            return true;
+        };
+    }
+
+
     public Callable autonLowerMineralLiftSequenceCallable() {
         return () -> {
             autonLowerMineralLiftSequence();
@@ -285,7 +321,7 @@ public class Robot extends AbstractRobot {
         };
     }
 
-    public void autonMoveMineralLiftToCollectPositionSequence(){
+    public void autonMoveMineralLiftToCollectPositionSequence() {
         hardware.mineralLift.autonMoveToCollectPositionSequence();
     }
 
@@ -296,7 +332,7 @@ public class Robot extends AbstractRobot {
         };
     }
 
-    public void autonMoveMineralLiftToDumpPositionSequence(){
+    public void autonMoveMineralLiftToDumpPositionSequence() {
         hardware.mineralLift.autonMoveToDumpPositionSequence();
     }
 
@@ -341,7 +377,7 @@ public class Robot extends AbstractRobot {
         hardware.robotLift.autonLowerLiftSequence();
     }
 
-    public Callable finishRobotLiftToBottomSequenceCallable(){
+    public Callable finishRobotLiftToBottomSequenceCallable() {
         return () -> {
             hardware.robotLift.autonFinishLowerLiftSequence();
             return true;
