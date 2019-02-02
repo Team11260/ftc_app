@@ -11,12 +11,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 
-public class IMU {
+public class IMU implements Runnable{
 
     BNO055IMU imu;
     BNO055IMU.Parameters parameters;
 
     ElapsedTime GyroTimeOut;
+
+    private boolean newValue = false;
+    private double heading = 0;
+
+    private final Object lock = new Object();
 
     public IMU(HardwareMap hwMap) {
         parameters = new BNO055IMU.Parameters();
@@ -43,8 +48,16 @@ public class IMU {
     }
 
     public double getHeading() {
-        Orientation angle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return angle.firstAngle;
+        while (AbstractOpMode.isOpModeActive()) {
+            synchronized (lock) {
+                if(newValue == true) {
+                    newValue = false;
+                    return heading;
+                }
+            }
+        }
+
+        return 0;
     }
 
     public void resetAngleToZero() {
@@ -55,5 +68,18 @@ public class IMU {
 
     public boolean isGyroCalibrated() {
         return imu.isGyroCalibrated();
+    }
+
+    @Override
+    public void run() {
+        Orientation angle;
+        while (AbstractOpMode.isOpModeActive()) {
+            angle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+            synchronized (lock) {
+                heading = angle.firstAngle;
+                newValue = true;
+            }
+        }
     }
 }
