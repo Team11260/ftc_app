@@ -358,7 +358,7 @@ public class DriveController extends SubsystemController {
 
     public synchronized void autonReleaseWheelsSequence() {
         setPower(DRIVE_RELEASE_WHEELS_POWER, DRIVE_RELEASE_WHEELS_POWER);
-        delay(ROBOT_LIFT_AUTON_DELAY);
+        delay(DRIVE_RELEASE_WHEEL_DELAY);
         setPower(0, 0);
     }
 
