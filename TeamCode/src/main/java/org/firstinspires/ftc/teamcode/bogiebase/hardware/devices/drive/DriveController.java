@@ -35,8 +35,6 @@ public class DriveController extends SubsystemController {
 
     private DecimalFormat DF;
 
-    private Path lastPath = null;
-
     //Utility Methods
     public DriveController() {
         init();
@@ -191,21 +189,21 @@ public class DriveController extends SubsystemController {
     }
 
     public synchronized void runDrivePath(Path path) {
-        currentPath = path;
-        path.reset();
-
-        if (lastPath != null && lastPath.isPaused()) {
-            currentPath.pause();
+        if (currentPath != null && currentPath.isPaused()) {
+            path.pause();
         }
 
-        telemetry.addData(INFO, "Starting path: " + path.getName());
+        currentPath = path;
+        currentPath.reset();
+
+        telemetry.addData(INFO, "Starting path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
 
         while (!path.isDone() && AbstractOpMode.isOpModeActive()) {
 
             //Path is done
             if (path.getNextSegment() == null) break;
 
-            telemetry.addData(INFO, "Starting segment: " + path.getCurrentSegment().getName());
+            telemetry.addData(INFO, "Starting segment: " + path.getCurrentSegment().getName() + " in path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
 
             if (path.getCurrentSegment().getType() == Segment.SegmentType.TURN) {
                 turnToSegment((TurnSegment) path.getCurrentSegment());
@@ -367,9 +365,10 @@ public class DriveController extends SubsystemController {
         for (int i = 0; i < 5; i++) {
             values[i] = i * 1000000;
         }
-        while (RobotState.currentPath.getCurrentSegment().getName().equals("large drive to wall")) ;
-        int error = 2;
-        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (!atPosition(values[0], values[1], error) || !atPosition(values[1], values[2], error) || !atPosition(values[2], values[3], error) || !atPosition(values[3], values[4], error))) {
+
+        int error = 8;
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (!atPosition(values[0], values[1], error) ||
+                !atPosition(values[1], values[2], error) || !atPosition(values[2], values[3], error) || !atPosition(values[3], values[4], error)) && AbstractOpMode.isOpModeActive()) {
             for (int i = 4; i > 0; i--) {
                 values[i] = values[i - 1];
             }

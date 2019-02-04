@@ -55,7 +55,7 @@ public class Robot extends AbstractRobot {
     }
 
     public void stop() {
-        stopTensorFlow();
+        if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) stopTensorFlow();
         hardware.stop();
     }
 

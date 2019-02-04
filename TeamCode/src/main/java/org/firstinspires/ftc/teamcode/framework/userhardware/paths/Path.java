@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware.paths;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
 
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Path {
+public class Path implements Cloneable {
 
     private ConcurrentHashMap<Integer, Segment> segments = new ConcurrentHashMap<>();
     private Segment currentSegment = null;
@@ -22,7 +25,11 @@ public class Path {
     }
 
     public void reset() {
+        for(HashMap.Entry<Integer, Segment> segment:segments.entrySet()){
+            segment.getValue().reset();
+        }
         currentSegment = null;
+        paused = false;
         isDone = false;
     }
 
@@ -51,9 +58,9 @@ public class Path {
 
         currentSegment = segments.get(currentSegment.getNumber() + 1);
 
-        if (paused) currentSegment.pause();
-
         currentSegment.start();
+
+        if (paused) currentSegment.pause();
 
         AbstractAutonNew.addFinishedState(lastSegmentName);
 

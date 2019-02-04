@@ -31,6 +31,11 @@ public abstract class Segment {
         return type;
     }
 
+    protected void reset() {
+        isRunning = false;
+        isDone = false;
+    }
+
     protected void start() {
         isRunning = true;
         isDone = false;

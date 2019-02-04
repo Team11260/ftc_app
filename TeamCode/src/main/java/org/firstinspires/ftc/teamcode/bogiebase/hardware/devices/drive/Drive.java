@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ThreadPool;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
@@ -13,12 +12,12 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor
 public class Drive {
 
     private SlewDcMotor leftMotor, rightMotor;
-    private IMU imu = null;
+    private IMU imu;
     private Servo servoMarker;
 
     public Drive(HardwareMap hardwareMap) {
 
-        initIMU(hardwareMap);
+        imu = new IMU(hardwareMap);
 
         //Motors
         leftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("left"));
@@ -47,10 +46,6 @@ public class Drive {
 
         servoMarker = hardwareMap.servo.get("servo_marker");
         servoMarker.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.DRIVE_TEAM_MARKER_RETRACTED : Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED);
-    }
-
-    public void initIMU(HardwareMap hardwareMap) {
-        ThreadPool.getDefault().execute(() -> imu = new IMU(hardwareMap));
     }
 
     public void setSlewSpeed(double ss) {

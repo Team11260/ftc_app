@@ -88,39 +88,9 @@ public class MineralLiftController extends SubsystemController {
 
         mineralLift.setLiftMotorPowerNoEncoder(-MINERAL_LIFT_SLOW_SPEED);
 
-        int currentValue;
-        while (AbstractOpMode.isOpModeActive()) {
-            currentValue = mineralLift.getCurrentPosition();
+        delay(1000);
 
-            if (liftValues[0] == -1) {
-                liftValues[0] = 10000;
-                liftValues[1] = 0;
-                liftValues[2] = -10000;
-                liftValues[3] = -20000;
-                liftValues[4] = -30000;
-                return;
-            }
-
-            liftValues[4] = liftValues[3];
-            liftValues[3] = liftValues[2];
-            liftValues[2] = liftValues[1];
-            liftValues[1] = liftValues[0];
-            liftValues[0] = currentValue;
-
-            if (atPosition(liftValues[0], liftValues[1], MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS) && atPosition(liftValues[1], liftValues[2], MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS) &&
-                    atPosition(liftValues[2], liftValues[3], MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS) && atPosition(liftValues[3], liftValues[4], MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS)) {
-                telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished in: " + moveTime.milliseconds());
-                mineralLift.resetPosition();
-                liftValues[0] = -1;
-                liftValues[1] = -1;
-                liftValues[2] = -1;
-                liftValues[3] = -1;
-                liftValues[4] = -1;
-                isMovingDown = false;
-                currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
-                return;
-            }
-        }
+        mineralLift.resetPosition();
     }
 
     public synchronized void autonMoveToCollectPositionSequence() {
@@ -132,59 +102,22 @@ public class MineralLiftController extends SubsystemController {
 
         mineralLift.setAngleServoPosition(MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
 
-        mineralLift.setLiftMotorPowerNoEncoder(-MINERAL_LIFT_FULL_SPEED);
+        mineralLift.setLiftMotorPowerNoEncoder(-MINERAL_LIFT_SLOW_SPEED);
 
-        delay(200);
+        delay(2000);
 
-        int currentValue;
-
-        while (AbstractOpMode.isOpModeActive()) {
-            currentValue = mineralLift.getCurrentPosition();
-
-            if (mineralLift.getPower() == -1 && currentValue < MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION) {
-                mineralLift.setLiftMotorPowerNoEncoder(-MINERAL_LIFT_SLOW_SPEED);
-            }
-
-            if (liftValues[0] == -1) {
-                liftValues[0] = 10000;
-                liftValues[1] = 0;
-                liftValues[2] = -10000;
-                liftValues[3] = -20000;
-                liftValues[4] = -30000;
-                return;
-            }
-
-            liftValues[4] = liftValues[3];
-            liftValues[3] = liftValues[2];
-            liftValues[2] = liftValues[1];
-            liftValues[1] = liftValues[0];
-            liftValues[0] = currentValue;
-
-            if (atPosition(liftValues[0], liftValues[1], MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS) && atPosition(liftValues[1], liftValues[2], MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS) &&
-                    atPosition(liftValues[2], liftValues[3], MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS) && atPosition(liftValues[3], liftValues[4], MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS)) {
-                telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished in: " + moveTime.milliseconds());
-                mineralLift.resetPosition();
-                liftValues[0] = -1;
-                liftValues[1] = -1;
-                liftValues[2] = -1;
-                liftValues[3] = -1;
-                liftValues[4] = -1;
-                isMovingDown = false;
-                currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
-                return;
-            }
-        }
+        mineralLift.resetPosition();
     }
 
     public synchronized void autonMoveToDumpPositionSequence() {
+        currentPath.pause();
         moveTime.reset();
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift up start");
         telemetry.update();
         currentMineralLiftState = MineralLiftState.IN_MOTION;
-        //mineralLift.setTargetPosition(MINERAL_LIFT_DUMP_POSITION);
+        mineralLift.setAngleServoPosition(MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION);
         mineralLift.setLiftMotorPowerNoEncoder(1);
-        while (mineralLift.getCurrentPosition() < MINERAL_LIFT_DUMP_POSITION && moveTime.milliseconds() < 3000)
-            ;
+        while (mineralLift.getCurrentPosition() < MINERAL_LIFT_DUMP_POSITION && moveTime.milliseconds() < 3000) ;
         currentMineralLiftState = MineralLiftState.DUMP_POSITION;
         mineralLift.setLiftMotorPower(0);
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished in: " + moveTime.milliseconds());

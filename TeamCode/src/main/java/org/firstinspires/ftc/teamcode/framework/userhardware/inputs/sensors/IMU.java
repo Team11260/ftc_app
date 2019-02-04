@@ -3,20 +3,20 @@ package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.ThreadPool;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 
-public class IMU implements Runnable{
+public class IMU implements Runnable {
 
-    BNO055IMU imu;
-    BNO055IMU.Parameters parameters;
+    private BNO055IMU imu;
+    private BNO055IMU.Parameters parameters;
 
-    ElapsedTime GyroTimeOut;
+    private ElapsedTime GyroTimeOut;
 
     private boolean newValue = false;
     private double heading = 0;
@@ -34,17 +34,9 @@ public class IMU implements Runnable{
 
         AbstractOpMode.telemetry.addData("IMU initializing: " + imu.toString());
 
-        imu.initialize(parameters);
+        ThreadPool.getDefault().submit((Runnable)() -> imu.initialize(parameters));
 
-        GyroTimeOut = new ElapsedTime();
-        GyroTimeOut.reset();
-
-        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000 && AbstractOpMode.isOpModeActive()) {
-            AbstractOpMode.telemetry.addDataPhone(DoubleTelemetry.LogMode.INFO, imu.getCalibrationStatus().toString());
-            AbstractOpMode.telemetry.update();
-        }
-
-        AbstractOpMode.telemetry.addData("IMU initialized");
+        new Thread(this).start();
     }
 
     public double getHeading() {
