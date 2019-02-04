@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.framework.abstractopmodes;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
-import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.util.Emitter;
 
 import java.util.ArrayList;
@@ -37,6 +37,9 @@ public abstract class AbstractTeleop extends AbstractOpMode {
     public void runOpMode() {
 
         RobotState.currentMatchState = RobotState.MatchState.TELEOP;
+
+        gamepad1.reset();
+        gamepad2.reset();
 
         ExecutorService service = Executors.newSingleThreadExecutor();
 

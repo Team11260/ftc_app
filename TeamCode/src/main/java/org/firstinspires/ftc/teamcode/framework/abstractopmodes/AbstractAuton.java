@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.framework.abstractopmodes;
 
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
-import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +26,9 @@ public abstract class AbstractAuton extends AbstractOpMode {
     public void runOpMode() {
 
         RobotState.currentMatchState = RobotState.MatchState.AUTONOMOUS;
+
+        gamepad1.reset();
+        gamepad2.reset();
 
         ExecutorService service = Executors.newSingleThreadExecutor();
 

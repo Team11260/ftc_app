@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.Logger;
+import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.Logger;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 public abstract class AbstractOpMode extends LinearOpMode {

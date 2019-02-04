@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.framework.util;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 
 public abstract class SubsystemController {
 
