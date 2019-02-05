@@ -61,7 +61,7 @@ public final class Constants {
     //Angle Servo
     public final static double MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION = 0.08;
     public final static double MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION = 0.3;
-    public final static double MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION = 0.8;
+    public final static double MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION = 0.65;
 
 
     ////////ROBOT LIFT////////
