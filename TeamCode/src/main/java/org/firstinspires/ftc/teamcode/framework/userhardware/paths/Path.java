@@ -24,7 +24,7 @@ public class Path implements Cloneable {
         this.name = name;
     }
 
-    public void reset() {
+    public synchronized void reset() {
         for(HashMap.Entry<Integer, Segment> segment:segments.entrySet()){
             segment.getValue().reset();
         }
@@ -33,13 +33,13 @@ public class Path implements Cloneable {
         isDone = false;
     }
 
-    public void addSegment(Segment segment) {
+    public synchronized void addSegment(Segment segment) {
         segment.setNumber(numSegments);
         segments.put(numSegments, segment);
         numSegments++;
     }
 
-    public Segment getNextSegment() {
+    public synchronized Segment getNextSegment() {
         if (currentSegment == null) {
             currentSegment = segments.get(0);
             currentSegment.start();
@@ -67,34 +67,34 @@ public class Path implements Cloneable {
         return currentSegment;
     }
 
-    public Segment getCurrentSegment() {
+    public synchronized Segment getCurrentSegment() {
         if (currentSegment == null) return segments.get(0);
         return currentSegment;
     }
 
-    public void nextSegment() {
+    public synchronized void nextSegment() {
         currentSegment.stop();
     }
 
-    public void pause() {
+    public synchronized void pause() {
         paused = true;
         currentSegment.pause();
     }
 
-    public void resume() {
+    public synchronized void resume() {
         paused = false;
         currentSegment.resume();
     }
 
-    public boolean isPaused() {
+    public synchronized boolean isPaused() {
         return paused;
     }
 
-    public boolean isDone() {
+    public synchronized boolean isDone() {
         return isDone;
     }
 
-    public String getName() {
+    public synchronized String getName() {
         return name;
     }
 }

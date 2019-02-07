@@ -29,19 +29,19 @@ public class Emitter {
 
     // Register a new event handler.
     // An event handler is a Runnable that is run on an Executor.
-    public void on(String eventName, Callable eventHandler) {
+    public synchronized void on(String eventName, Callable eventHandler) {
         EventRegistry.put(eventName, eventHandler);
     }
 
-    public void pauseEvent(String name) {
+    public synchronized void pauseEvent(String name) {
         PausedEvents.add(name);
     }
 
-    public void resumeEvent(String name) {
+    public synchronized void resumeEvent(String name) {
         PausedEvents.remove(name);
     }
 
-    public void removeEvent(String name) {
+    public synchronized void removeEvent(String name) {
         EventRegistry.remove(name);
     }
 
@@ -49,7 +49,7 @@ public class Emitter {
     //
     // This will run all event handlers registered to this event. Each event handler will be
     // executed inside of the executor service, which means events may be handled in parallel.
-    public Future<Boolean> emit(String name) throws RuntimeException {
+    public synchronized Future<Boolean> emit(String name) throws RuntimeException {
 
         for (String pausedName : PausedEvents) {
             if (pausedName.equals(name)) return new EmptyResult();
@@ -60,7 +60,7 @@ public class Emitter {
         return f;
     }
 
-    public Future<Boolean> futureFor(String eventName) {
+    public synchronized Future<Boolean> futureFor(String eventName) {
         if (this.cache.contains(eventName)) {
             return this.cache.get(eventName);
         }
@@ -69,14 +69,14 @@ public class Emitter {
 
     // This does the actual firing of the event. The emit() method calls this, and caches
     // the resulting future for cancelation.
-    protected Future<Boolean> fire(String eventName) throws RuntimeException {
+    protected synchronized Future<Boolean> fire(String eventName) throws RuntimeException {
         Callable eventHandler = EventRegistry.get(eventName);
         if (eventHandler != null) return service.submit(eventHandler);
         // By default, we return a future that returns false.
         return new EmptyResult();
     }
 
-    public void shutdown() {
+    public synchronized void shutdown() {
         for (Map.Entry<String, Future<Boolean>> future : cache.entrySet()) {
             if (!futureFor(future.getKey()).isDone()) {
                 futureFor(future.getKey()).cancel(true);

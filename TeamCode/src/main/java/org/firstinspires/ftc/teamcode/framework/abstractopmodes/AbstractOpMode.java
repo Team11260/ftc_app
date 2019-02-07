@@ -37,6 +37,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
     public abstract void runOpMode();
 
     public static void delay(int millis) {
+        if(Thread.currentThread().isInterrupted()) return;
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {

@@ -24,4 +24,15 @@ public abstract class SubsystemController {
     public void delay(int millis) {
         AbstractOpMode.delay(millis);
     }
+
+    public boolean atPosition(double x, double y, double error) {
+        double upperRange = x + error;
+        double lowerRange = x - error;
+
+        return y >= lowerRange && y <= upperRange;
+    }
+
+    public boolean opModeIsActive() {
+        return AbstractOpMode.isOpModeActive();
+    }
 }

@@ -15,50 +15,50 @@ public abstract class Segment {
         this.type = type;
     }
 
-    protected void setNumber(int number) {
+    protected synchronized void setNumber(int number) {
         this.number = number;
     }
 
-    protected int getNumber() {
+    protected synchronized int getNumber() {
         return number;
     }
 
-    public String getName() {
+    public synchronized String getName() {
         return name;
     }
 
-    public SegmentType getType() {
+    public synchronized SegmentType getType() {
         return type;
     }
 
-    protected void reset() {
+    protected synchronized void reset() {
         isRunning = false;
         isDone = false;
     }
 
-    protected void start() {
+    protected synchronized void start() {
         isRunning = true;
         isDone = false;
     }
 
-    protected void stop() {
+    protected synchronized void stop() {
         isRunning = false;
         isDone = true;
     }
 
-    protected void pause() {
+    protected synchronized void pause() {
         isRunning = false;
     }
 
-    protected void resume() {
+    protected synchronized void resume() {
         isRunning = true;
     }
 
-    public boolean isRunning() {
+    public synchronized boolean isRunning() {
         return isRunning;
     }
 
-    public boolean isDone() {
+    public synchronized boolean isDone() {
         return isDone;
     }
 

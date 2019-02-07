@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.mineral_lift;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
-import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
@@ -117,7 +116,7 @@ public class MineralLiftController extends SubsystemController {
         currentMineralLiftState = MineralLiftState.IN_MOTION;
         mineralLift.setAngleServoPosition(MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION);
         mineralLift.setLiftMotorPowerNoEncoder(1);
-        while (mineralLift.getCurrentPosition() < MINERAL_LIFT_DUMP_POSITION && moveTime.milliseconds() < 3000) ;
+        while (mineralLift.getCurrentPosition() < MINERAL_LIFT_DUMP_POSITION && moveTime.milliseconds() < 3000 && opModeIsActive());
         currentMineralLiftState = MineralLiftState.DUMP_POSITION;
         mineralLift.setLiftMotorPower(0);
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished in: " + moveTime.milliseconds());
@@ -170,26 +169,19 @@ public class MineralLiftController extends SubsystemController {
         else if (currentMineralLiftState == MineralLiftState.DUMP_POSITION) openGate();
     }
 
-    public void setAngleServoPositionDump() {
+    public synchronized void setAngleServoPositionDump() {
         mineralLift.setAngleServoPosition(Constants.MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION);
     }
 
-    public void setAngleServoPositionHorizontal() {
+    public synchronized void setAngleServoPositionHorizontal() {
         mineralLift.setAngleServoPosition(Constants.MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
     }
 
-    public void setAngleServoPositionVertical() {
+    public synchronized void setAngleServoPositionVertical() {
         mineralLift.setAngleServoPosition(Constants.MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION);
     }
 
     public synchronized void setAngleServoPosition(double position) {
         mineralLift.setAngleServoPosition(position);
-    }
-
-    private boolean atPosition(double x, double y, double error) {
-        double upperRange = x + error;
-        double lowerRange = x - error;
-
-        return y >= lowerRange && y <= upperRange;
     }
 }

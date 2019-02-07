@@ -15,7 +15,7 @@ public class StateMachine {
         activeStates.add(new State("start", "", () -> true));
     }
 
-    public void prepare() throws StateConfigurationException {
+    public synchronized void prepare() throws StateConfigurationException {
         for (State state : states) {
             if (state instanceof PathState) continue;
 
@@ -58,18 +58,18 @@ public class StateMachine {
         }
     }
 
-    private void fire(State state) throws RuntimeException {
+    private synchronized void fire(State state) throws RuntimeException {
         if (state.getRun() != null) {
             startingStates.add(state);
             state.setFuture(service.submit(state.getRun()));
         }
     }
 
-    public void addState(State state) {
+    public synchronized void addState(State state) {
         states.add(state);
     }
 
-    public void shutdown() {
+    public synchronized void shutdown() {
         for (State activeState : activeStates) {
             activeState.cancel();
         }

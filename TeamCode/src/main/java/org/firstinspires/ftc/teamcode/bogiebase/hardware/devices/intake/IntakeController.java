@@ -29,14 +29,12 @@ public class IntakeController extends SubsystemController {
         intake.stop();
     }
 
-    public void autonIntakeSequence() {
+    public synchronized void autonIntakeSequence() {
         while ((!currentPath.getCurrentSegment().getName().equals("drive to minerals") &&
-                !currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive())
-            ;
+                !currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive());
         beginIntaking();
         while ((currentPath.getCurrentSegment().getName().equals("drive to minerals") ||
-                currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive())
-            ;
+                currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive());
         finishIntaking();
     }
 
