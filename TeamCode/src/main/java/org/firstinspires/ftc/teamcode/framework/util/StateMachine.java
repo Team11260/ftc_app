@@ -35,6 +35,7 @@ public class StateMachine {
     public synchronized boolean update() {
         for (State activeState : activeStates) {
             if (activeState.isDone()) {
+                activeState.getValue();
                 finishedStates.add(activeState);
                 for (State state : states) {
                     if (state.getPreviousState().equals(activeState.getName())) fire(state);

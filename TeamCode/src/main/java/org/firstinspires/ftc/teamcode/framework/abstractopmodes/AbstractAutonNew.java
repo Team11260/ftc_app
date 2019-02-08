@@ -17,8 +17,6 @@ import java.util.concurrent.Future;
 
 public abstract class AbstractAutonNew extends AbstractOpMode {
 
-    private List<Exception> exceptions = Collections.synchronizedList(new ArrayList<Exception>());
-
     private StateMachine stateMachine = new StateMachine();
 
     private static AbstractAutonNew abstractAutonNew;
@@ -78,7 +76,7 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
         try {
             stateMachine.prepare();
         } catch (StateConfigurationException e) {
-            exceptions.add(e);
+            throwException(e);
         }
 
         addState(new State("run", "start", () -> {
@@ -132,69 +130,5 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
     public static void addFinishedState(String state) {
         abstractAutonNew.stateMachine.addFinishedState(state);
-    }
-
-    private void throwException(Exception e) {
-        exceptions.add(e);
-    }
-
-    private void checkException() {
-        for (Exception e : exceptions) {
-            telemetry.update();
-            for (StackTraceElement element : e.getStackTrace()) {
-                if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
-                    telemetry.addData(element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
-                }
-            }
-            switch (e.getClass().getSimpleName()) {
-                case "NullPointerException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    NullPointerException exception = (NullPointerException) e;
-                    throw exception;
-                }
-                case "IllegalArgumentException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    IllegalArgumentException exception = (IllegalArgumentException) e;
-                    throw exception;
-                }
-                case "ArrayIndexOutOfBoundsException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    ArrayIndexOutOfBoundsException exception = (ArrayIndexOutOfBoundsException) e;
-                    throw exception;
-                }
-                case "ConcurrentModificationException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    ConcurrentModificationException exception = (ConcurrentModificationException) e;
-                    throw exception;
-                }
-                case "IllegalStateException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    IllegalStateException exception = (IllegalStateException) e;
-                    throw exception;
-                }
-                case "VuforiaException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    VuforiaException exception = (VuforiaException) e;
-                    throw exception;
-                }
-                case "StateConfigurationException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    StateConfigurationException exception = (StateConfigurationException) e;
-                    throw exception;
-                }
-                default: {
-                    telemetry.addData(e.getClass().getSimpleName());
-                    telemetry.update();
-                    AbstractOpMode.delay(2000);
-                }
-            }
-        }
     }
 }

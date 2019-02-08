@@ -188,12 +188,17 @@ public class DriveController extends SubsystemController {
     }
 
     public synchronized void runDrivePath(Path path) {
+
+        boolean lastPathPaused = false;
+
         if (currentPath != null && currentPath.isPaused()) {
-            path.pause();
+            lastPathPaused = true;
         }
 
         currentPath = path;
         currentPath.reset();
+
+        if(lastPathPaused) currentPath.pause();
 
         telemetry.addData(INFO, "Starting path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
 
@@ -212,7 +217,6 @@ public class DriveController extends SubsystemController {
         }
     }
 
-    //Autonomous Methods
     public synchronized void turnToSegment(TurnSegment segment) {
 
         double angle = segment.getAngle(), speed = segment.getSpeed(), error = segment.getError(), period = segment.getPeriod();
@@ -264,6 +268,7 @@ public class DriveController extends SubsystemController {
 
             telemetry.addData(INFO, "Average loop time for turn: " + runtime.milliseconds() / loop);
             telemetry.addData(INFO, "Left encoder position: " + drive.getLeftPosition() + "  Right encoder position: " + drive.getRightPosition());
+            telemetry.addData(INFO, "Final angle: " + getHeading());
             telemetry.update();
 
             drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -291,7 +296,6 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drive.setPosisionP(5);
-        double startHeading = angle;
         telemetry.update();
         double leftPower, rightPower;
         double power;
@@ -365,7 +369,7 @@ public class DriveController extends SubsystemController {
             values[i] = i * 1000000;
         }
 
-        int error = 8;
+        int error = 3;
         while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (!atPosition(values[0], values[1], error) ||
                 !atPosition(values[1], values[2], error) || !atPosition(values[2], values[3], error) || !atPosition(values[3], values[4], error)) && opModeIsActive()) {
             for (int i = 4; i > 0; i--) {
@@ -528,9 +532,6 @@ public class DriveController extends SubsystemController {
         }
 
         //Auton dump marker sequence
-        telemetry.addData(INFO, "Wait marker dump");
-        /*while ((!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall") &&
-                !currentPath.getCurrentSegment().getName().equals("turn to crater")) && opModeIsActive()) ;*/
         telemetry.addData(INFO, "Start marker dump");
         currentPath.pause();
         telemetry.addData(INFO, "Pause path");
