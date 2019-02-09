@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.framework.util.PathState;
 import org.firstinspires.ftc.teamcode.framework.util.State;
 import org.upacreekrobotics.dashboard.Dashboard;
 
+import java.util.ConcurrentModificationException;
+
 @Autonomous(name = "Bogie Auton Depot", group = "New")
 //@Disabled
 
@@ -22,17 +24,15 @@ public class BogieAutonDepot extends AbstractAutonNew {
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
-        addState(new PathState("intaking pause", "drive to minerals", () -> {
-            while (!RobotState.currentPath.getCurrentSegment().getName().equals("turn to depot")) ;
+        addState(new PathState("intaking pause", "turn to depot", () -> {
             RobotState.currentPath.pause();
             delay(Constants.NORMAL_INTAKING_DELAY);
             RobotState.currentPath.resume();
             return true;
         }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
-        addState(new PathState("finish intaking", "turn to depot", robot.finishIntakingCallable()));
+        addState(new PathState("finish intaking", "drive to depot", robot.finishIntakingCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
-        //addState(new PathState("drive to wall with distance", "turn to wall", robot.autonDriveToWallSequenceCallable()));
     }
 
     @Override
@@ -49,6 +49,7 @@ public class BogieAutonDepot extends AbstractAutonNew {
 
     @Override
     public void Run() {
+
         //Stop object recognition
         robot.stopTensorFlow();
 

@@ -61,7 +61,7 @@ public final class Constants {
     //Angle Servo
     public final static double MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION = 0.08;
     public final static double MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION = 0.3;
-    public final static double MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION = 0.8;
+    public final static double MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION = 0.65;
 
 
     ////////ROBOT LIFT////////
@@ -123,7 +123,7 @@ public final class Constants {
     static {
         craterSideToCrater.addSegment(new TurnSegment("turn to wall", -90, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         craterSideToCrater.addSegment(new DriveSegment("large drive to wall", 46, AUTON_PATH_SPEED, 500));
-        craterSideToCrater.addSegment(new DriveSegment("drive to wall", 50, 0.6, AUTON_DISTANCE_ERROR));
+        craterSideToCrater.addSegment(new DriveSegment("drive to wall", 50, 0.4, AUTON_DISTANCE_ERROR));
         craterSideToCrater.addSegment(new TurnSegment("turn to depot", -55, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         craterSideToCrater.addSegment(new DriveSegment("drive to depot", 38, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         craterSideToCrater.addSegment(new DriveSegment("drive to crater", -70, AUTON_PATH_SPEED, 40, -25));
@@ -174,7 +174,7 @@ public final class Constants {
     static {
         craterSideToDepotDoubleSample.addSegment(new TurnSegment("turn to wall", -90, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         craterSideToDepotDoubleSample.addSegment(new DriveSegment("large drive to wall", 46, AUTON_PATH_SPEED, 500));
-        craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to wall", 50, 0.6, AUTON_DISTANCE_ERROR));
+        craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to wall", 50, 0.4, AUTON_DISTANCE_ERROR));
         craterSideToDepotDoubleSample.addSegment(new TurnSegment("turn to depot", -60, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         craterSideToDepotDoubleSample.addSegment(new DriveSegment("large drive to depot double sample", 21, AUTON_PATH_SPEED, 100, -57));
         craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to depot double sample", 28, AUTON_PATH_SPEED, 80, 0));
@@ -253,7 +253,7 @@ public final class Constants {
 
     static {
         depotSideToCrater.addSegment(new TurnSegment("turn to wall", -60, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
-        depotSideToCrater.addSegment(new DriveSegment("drive to crater", 80, AUTON_PATH_SPEED, 40, -50));
+        depotSideToCrater.addSegment(new DriveSegment("drive to crater", 72, AUTON_PATH_SPEED, 40, -50));
     }
 
     public final static Path collectDepotRightMineral = new Path("collect right mineral depot");

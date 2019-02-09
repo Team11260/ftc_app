@@ -18,8 +18,6 @@ import java.util.concurrent.Future;
 
 public abstract class AbstractTeleop extends AbstractOpMode {
 
-    private List<Exception> exceptions = Collections.synchronizedList(new ArrayList<>());
-
     //Setup gamepad
     private Emitter emitter = new Emitter();
     private ElapsedTime emitTime;
@@ -155,64 +153,6 @@ public abstract class AbstractTeleop extends AbstractOpMode {
     public abstract void Loop();
 
     public abstract void Stop();
-
-    private void throwException(Exception e) {
-        exceptions.add(e);
-    }
-
-    private void checkException() {
-        for (Exception e : exceptions) {
-            telemetry.update();
-            for (StackTraceElement element : e.getStackTrace()) {
-                if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
-                    telemetry.addData(element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
-                }
-            }
-            switch (e.getClass().getSimpleName()) {
-                case "NullPointerException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    NullPointerException exception = (NullPointerException) e;
-                    throw exception;
-                }
-                case "IllegalArgumentException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    IllegalArgumentException exception = (IllegalArgumentException) e;
-                    throw exception;
-                }
-                case "ArrayIndexOutOfBoundsException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    ArrayIndexOutOfBoundsException exception = (ArrayIndexOutOfBoundsException) e;
-                    throw exception;
-                }
-                case "ConcurrentModificationException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    ConcurrentModificationException exception = (ConcurrentModificationException) e;
-                    throw exception;
-                }
-                case "IllegalStateException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    IllegalStateException exception = (IllegalStateException) e;
-                    throw exception;
-                }
-                case "VuforiaException": {
-                    telemetry.update();
-                    AbstractOpMode.delay(500);
-                    VuforiaException exception = (VuforiaException) e;
-                    throw exception;
-                }
-                default: {
-                    telemetry.addData(e.getClass().getSimpleName());
-                    telemetry.update();
-                    AbstractOpMode.delay(2000);
-                }
-            }
-        }
-    }
 
     public void addEventHandler(String name, Callable event) {
         emitter.on(name, event);

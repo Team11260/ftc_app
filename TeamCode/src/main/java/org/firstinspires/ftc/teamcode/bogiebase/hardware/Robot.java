@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 
 import java.util.concurrent.Callable;
 
+import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.INFO;
 import static org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
 public class Robot extends AbstractRobot {
@@ -20,10 +21,11 @@ public class Robot extends AbstractRobot {
         hardware = new HardwareDevices();
 
         if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
+            telemetry.addData(INFO,"starting tensorflow");
             tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
 
             RobotState.currentSamplePosition = UNKNOWN;
-            telemetry.addData(DoubleTelemetry.LogMode.INFO, "Current Sample Position: " + RobotState.currentSamplePosition);
+            telemetry.addData(INFO, "Current Sample Position: " + RobotState.currentSamplePosition);
             telemetry.update();
         }
     }
@@ -38,7 +40,7 @@ public class Robot extends AbstractRobot {
         if (currentPosition != RobotState.currentSamplePosition && currentPosition != UNKNOWN) {
             RobotState.currentSamplePosition = currentPosition;
 
-            telemetry.addData(DoubleTelemetry.LogMode.INFO, "Current Sample Position: " + currentPosition.toString());
+            telemetry.addData(INFO, "Current Sample Position: " + currentPosition.toString());
             telemetry.update();
         }
     }

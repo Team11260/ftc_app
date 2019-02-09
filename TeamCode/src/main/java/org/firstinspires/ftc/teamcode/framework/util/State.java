@@ -1,6 +1,12 @@
 package org.firstinspires.ftc.teamcode.framework.util;
 
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
+
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class State {
@@ -29,6 +35,17 @@ public class State {
 
     public void setFuture(Future<Boolean> future) {
         this.future = future;
+    }
+
+    public Object getValue() {
+        if(future == null || !future.isDone()) return null;
+        try {
+            return future.get();
+        } catch (InterruptedException e) {
+        } catch (ExecutionException e) {
+            AbstractOpMode.staticThrowException(e);
+        }
+        return null;
     }
 
     public boolean isDone() {

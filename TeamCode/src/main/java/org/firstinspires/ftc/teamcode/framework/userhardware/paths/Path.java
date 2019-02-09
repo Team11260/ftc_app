@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.framework.userhardware.paths;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +26,7 @@ public class Path implements Cloneable {
         this.name = name;
     }
 
-    public void reset() {
+    public synchronized void reset() {
         for(HashMap.Entry<Integer, Segment> segment:segments.entrySet()){
             segment.getValue().reset();
         }
@@ -33,16 +35,17 @@ public class Path implements Cloneable {
         isDone = false;
     }
 
-    public void addSegment(Segment segment) {
+    public synchronized void addSegment(Segment segment) {
         segment.setNumber(numSegments);
         segments.put(numSegments, segment);
         numSegments++;
     }
 
-    public Segment getNextSegment() {
+    public synchronized Segment getNextSegment() {
         if (currentSegment == null) {
             currentSegment = segments.get(0);
             currentSegment.start();
+            if (paused) pause();
             return currentSegment;
         } else {
             currentSegment.stop();
@@ -60,41 +63,43 @@ public class Path implements Cloneable {
 
         currentSegment.start();
 
-        if (paused) currentSegment.pause();
+        if (paused) pause();
 
         AbstractAutonNew.addFinishedState(lastSegmentName);
 
         return currentSegment;
     }
 
-    public Segment getCurrentSegment() {
+    public synchronized Segment getCurrentSegment() {
         if (currentSegment == null) return segments.get(0);
         return currentSegment;
     }
 
-    public void nextSegment() {
-        currentSegment.stop();
+    public synchronized void nextSegment() {
+        if(currentSegment != null) currentSegment.stop();
     }
 
-    public void pause() {
+    public synchronized void pause() {
+        AbstractOpMode.telemetry.addData(DoubleTelemetry.LogMode.INFO, "Paused path: " + name);
         paused = true;
-        currentSegment.pause();
+        if(currentSegment != null) currentSegment.pause();
     }
 
-    public void resume() {
+    public synchronized void resume() {
+        AbstractOpMode.telemetry.addData(DoubleTelemetry.LogMode.INFO, "Resumed path: " + name);
         paused = false;
-        currentSegment.resume();
+        if(currentSegment != null) currentSegment.resume();
     }
 
-    public boolean isPaused() {
+    public synchronized boolean isPaused() {
         return paused;
     }
 
-    public boolean isDone() {
+    public synchronized boolean isDone() {
         return isDone;
     }
 
-    public String getName() {
+    public synchronized String getName() {
         return name;
     }
 }

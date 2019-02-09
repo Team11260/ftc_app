@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 import java.text.DecimalFormat;
 
 import static java.lang.Math.*;
-import static org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode.isOpModeActive;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.*;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.*;
 import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.INFO;
@@ -78,9 +77,9 @@ public class DriveController extends SubsystemController {
         anglePID.setMinimumOutput(0);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double power;
-        while (isOpModeActive()) {
+        while (opModeIsActive()) {
             //While we are not in the error band keep turning
-            while (!atPosition(angle, drive.getHeading(), error) && isOpModeActive()) {
+            while (!atPosition(angle, drive.getHeading(), error) && opModeIsActive()) {
                 telemetry.addDataDB("--------------------");
                 //Use the PIDController class to calculate power values for the wheels
                 if (angle - getHeading() > 180) {
@@ -136,7 +135,7 @@ public class DriveController extends SubsystemController {
         telemetry.update();
         double leftPower, rightPower;
         double power;
-        while ((!atPosition(position, drive.getLeftPosition(), 15) && !atPosition(position, drive.getRightPosition(), 15)) && isOpModeActive()) {
+        while ((!atPosition(position, drive.getLeftPosition(), 15) && !atPosition(position, drive.getRightPosition(), 15)) && opModeIsActive()) {
             power = range(distancePID.output(position, drive.getRightPosition()));
 
             turn = straightPID.output(startHeading, getHeading());
@@ -189,16 +188,21 @@ public class DriveController extends SubsystemController {
     }
 
     public synchronized void runDrivePath(Path path) {
+
+        boolean lastPathPaused = false;
+
         if (currentPath != null && currentPath.isPaused()) {
-            path.pause();
+            lastPathPaused = true;
         }
 
         currentPath = path;
         currentPath.reset();
 
+        if(lastPathPaused) currentPath.pause();
+
         telemetry.addData(INFO, "Starting path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
 
-        while (!path.isDone() && AbstractOpMode.isOpModeActive()) {
+        while (!path.isDone() && opModeIsActive()) {
 
             //Path is done
             if (path.getNextSegment() == null) break;
@@ -213,7 +217,6 @@ public class DriveController extends SubsystemController {
         }
     }
 
-    //Autonomous Methods
     public synchronized void turnToSegment(TurnSegment segment) {
 
         double angle = segment.getAngle(), speed = segment.getSpeed(), error = segment.getError(), period = segment.getPeriod();
@@ -223,7 +226,7 @@ public class DriveController extends SubsystemController {
         anglePID.reset();
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double power;
-        while (isOpModeActive()) {
+        while (opModeIsActive()) {
 
             double currentHeading;
 
@@ -231,7 +234,7 @@ public class DriveController extends SubsystemController {
             runtime.reset();
 
             //While we are not in the error band keep turning
-            while (!atPosition(angle, currentHeading = getHeading(), error) && (angle + error > 180 ? !atPosition((((angle + error) - 180) - 180) - error, currentHeading, error) : true) && (angle - error < -180 ? !atPosition((((angle - error) + 180) + 180) + error, currentHeading, error) : true) && isOpModeActive()) {
+            while (!atPosition(angle, currentHeading = getHeading(), error) && (angle + error > 180 ? !atPosition((((angle + error) - 180) - 180) - error, currentHeading, error) : true) && (angle - error < -180 ? !atPosition((((angle - error) + 180) + 180) + error, currentHeading, error) : true) && opModeIsActive()) {
 
                 if (segment.isDone()) {
                     setPower(0, 0);
@@ -265,6 +268,7 @@ public class DriveController extends SubsystemController {
 
             telemetry.addData(INFO, "Average loop time for turn: " + runtime.milliseconds() / loop);
             telemetry.addData(INFO, "Left encoder position: " + drive.getLeftPosition() + "  Right encoder position: " + drive.getRightPosition());
+            telemetry.addData(INFO, "Final angle: " + getHeading());
             telemetry.update();
 
             drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -292,7 +296,6 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drive.setPosisionP(5);
-        double startHeading = angle;
         telemetry.update();
         double leftPower, rightPower;
         double power;
@@ -302,7 +305,7 @@ public class DriveController extends SubsystemController {
         int loop = 0;
         runtime.reset();
 
-        while ((!atPosition(position, drive.getLeftPosition(), error) && !atPosition(position, drive.getRightPosition(), error)) && isOpModeActive()) {
+        while ((!atPosition(position, drive.getLeftPosition(), error) && !atPosition(position, drive.getRightPosition(), error)) && opModeIsActive()) {
 
             if (segment.isDone()) {
                 setPower(0, 0);
@@ -366,9 +369,9 @@ public class DriveController extends SubsystemController {
             values[i] = i * 1000000;
         }
 
-        int error = 8;
+        int error = 3;
         while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (!atPosition(values[0], values[1], error) ||
-                !atPosition(values[1], values[2], error) || !atPosition(values[2], values[3], error) || !atPosition(values[3], values[4], error)) && AbstractOpMode.isOpModeActive()) {
+                !atPosition(values[1], values[2], error) || !atPosition(values[2], values[3], error) || !atPosition(values[3], values[4], error)) && opModeIsActive()) {
             for (int i = 4; i > 0; i--) {
                 values[i] = values[i - 1];
             }
@@ -446,10 +449,10 @@ public class DriveController extends SubsystemController {
         int[][] values = new int[2][numSamples];
         runtime.reset();
         for (int i = 0; i < numSamples; i++) {
-            while (runtime.milliseconds() < timeInterval && isOpModeActive()) ;
+            while (runtime.milliseconds() < timeInterval && opModeIsActive()) ;
             values[0][i] = drive.getLeftPosition();
             values[1][i] = drive.getRightPosition();
-            if (!isOpModeActive()) break;
+            if (!opModeIsActive()) break;
             runtime.reset();
         }
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -462,9 +465,9 @@ public class DriveController extends SubsystemController {
         drive.setPower(1, 1);
         runtime.reset();
         for (int i = 0; i < (left.length - right.length <= 0 ? right.length : left.length); i++) {
-            while (runtime.milliseconds() < timeInterval && isOpModeActive()) ;
+            while (runtime.milliseconds() < timeInterval && opModeIsActive()) ;
             drive.setTargetPosition(left[i], right[i]);
-            if (!isOpModeActive()) break;
+            if (!opModeIsActive()) break;
             runtime.reset();
         }
     }
@@ -476,13 +479,13 @@ public class DriveController extends SubsystemController {
         int[] values = new int[numSamples * 3];
         runtime.reset();
         for (int i = 0; i < numSamples * 3; i += 3) {
-            while (runtime.milliseconds() < timeInterval && isOpModeActive()) ;
+            while (runtime.milliseconds() < timeInterval && opModeIsActive()) ;
             telemetry.addData(drive.getHeading());
             telemetry.update();
             values[i] = (int) drive.getHeading();
             values[i + 1] = drive.getLeftPosition();
             values[i + 2] = drive.getRightPosition();
-            if (!isOpModeActive()) break;
+            if (!opModeIsActive()) break;
             runtime.reset();
         }
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -496,11 +499,11 @@ public class DriveController extends SubsystemController {
         runtime.reset();
         double turn;
         for (int i = 0; i < values.length; i += 3) {
-            while (runtime.milliseconds() < timeInterval && isOpModeActive()) ;
+            while (runtime.milliseconds() < timeInterval && opModeIsActive()) ;
             turn = anglePID.output(values[i], getHeading());
             drive.setPower(speed - turn, speed + turn);
             drive.setTargetPosition(values[i + 1], values[i + 2]);
-            if (!isOpModeActive()) break;
+            if (!opModeIsActive()) break;
             runtime.reset();
         }
     }
@@ -514,14 +517,7 @@ public class DriveController extends SubsystemController {
         if (val > 1) val = 1;
         return val;
     }
-
-    private boolean atPosition(double x, double y, double error) {
-        double upperRange = x + error;
-        double lowerRange = x - error;
-
-        return y >= lowerRange && y <= upperRange;
-    }
-
+    
     public synchronized boolean isGyroCalibrated() {
         return drive.isGyroCalibrated();
     }
@@ -536,9 +532,6 @@ public class DriveController extends SubsystemController {
         }
 
         //Auton dump marker sequence
-        telemetry.addData(INFO, "Wait marker dump");
-        while ((!currentPath.getCurrentSegment().getName().equals("drive to crater") && !currentPath.getCurrentSegment().getName().equals("turn to wall") &&
-                !currentPath.getCurrentSegment().getName().equals("turn to crater")) && isOpModeActive()) ;
         telemetry.addData(INFO, "Start marker dump");
         currentPath.pause();
         telemetry.addData(INFO, "Pause path");
