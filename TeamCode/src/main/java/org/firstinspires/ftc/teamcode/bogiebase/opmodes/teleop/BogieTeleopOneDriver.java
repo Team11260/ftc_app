@@ -33,9 +33,9 @@ public class BogieTeleopOneDriver extends AbstractTeleop {
         ///////Mineral Lift////////
         addEventHandler("1_rt_down", robot.moveMineralLiftToDumpPositionCallable());
 
-        addEventHandler("1_lt_down", robot.moveMineralLiftToCollectPositionCallable());
-
         addEventHandler("1_y_down", robot.toggleMineralGateCallable());
+
+        addEventHandler("1_y_down", robot.setAngleServoPositionDumpCallable());
 
         ////////Robot Lift////////
         addEventHandler("1_dpu_down", robot.robotLiftUpCallable());

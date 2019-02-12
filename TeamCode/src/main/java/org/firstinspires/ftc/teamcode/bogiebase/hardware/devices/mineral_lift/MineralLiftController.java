@@ -147,7 +147,9 @@ public class MineralLiftController extends SubsystemController {
         mineralLift.setAngleServoPosition(MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION);
         while (mineralLift.getCurrentPosition() < MINERAL_LIFT_DUMP_POSITION && moveTime.milliseconds() < 2000);
         currentMineralLiftState = MineralLiftState.DUMP_POSITION;
-        mineralLift.setLiftMotorPower(0);
+        mineralLift.setLiftMotorPowerNoEncoder(0.4);
+        delay(500);
+        mineralLift.setLiftMotorPowerNoEncoder(0);
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished in: " + moveTime.milliseconds());
         telemetry.update();
     }
@@ -157,11 +159,14 @@ public class MineralLiftController extends SubsystemController {
         currentMineralGatePosition = MineralGatePosition.OPEN;
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Cycle time: " + cycleTimer.seconds());
         cycleTimer.reset();
+        //mineralLift.setAngleServoPosition(MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION);
+
     }
 
     public synchronized void closeGate() {
         mineralLift.setGateServoPosition(MINERAL_LIFT_GATE_CLOSED_POSITION);
         currentMineralGatePosition = MineralGatePosition.CLOSED;
+        //mineralLift.setAngleServoPosition(MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
     }
 
     public synchronized void toggleGate() {
