@@ -12,6 +12,7 @@ import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.*;
 public class MineralLiftController extends SubsystemController {
 
     private MineralLift mineralLift;
+
     private boolean isMovingDown = false;
     private int[] liftValues = {-1, -1, -1, -1, -1};
 
@@ -137,6 +138,7 @@ public class MineralLiftController extends SubsystemController {
     public synchronized void moveToDumpPosition() {
         isMovingDown = false;
         moveTime.reset();
+        mineralLift.setGateServoPosition(MINERAL_LIFT_GATE_PUSH_POSITION);
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift up start");
         telemetry.update();
         currentMineralLiftState = MineralLiftState.IN_MOTION;
@@ -147,9 +149,10 @@ public class MineralLiftController extends SubsystemController {
         mineralLift.setAngleServoPosition(MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION);
         while (mineralLift.getCurrentPosition() < MINERAL_LIFT_DUMP_POSITION && moveTime.milliseconds() < 2000);
         currentMineralLiftState = MineralLiftState.DUMP_POSITION;
-        mineralLift.setLiftMotorPowerNoEncoder(0.4);
+        mineralLift.setLiftMotorPowerNoEncoder(MINERAL_LIFT_SLOW_SPEED);
         delay(500);
         mineralLift.setLiftMotorPowerNoEncoder(0);
+        mineralLift.setGateServoPosition(MINERAL_LIFT_GATE_CLOSED_POSITION);
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished in: " + moveTime.milliseconds());
         telemetry.update();
     }

@@ -45,17 +45,18 @@ public final class Constants {
     ////////MINERAL LIFT////////
     //Lift
     public final static double MINERAL_LIFT_FULL_SPEED = 1;
-    public final static double MINERAL_LIFT_SLOW_SPEED = 0.7;
+    public final static double MINERAL_LIFT_SLOW_SPEED = 0.4;
 
     public final static int MINERAL_LIFT_AUTON_RAISED_POSITION = 300;
     public final static int MINERAL_LIFT_DUMP_POSITION = 2600;
     public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 1800;
-    public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 100;
+    public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 200;
 
     public final static int MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS = 5;
 
     //Gate
     public final static double MINERAL_LIFT_GATE_OPEN_POSITION = 0.7;
+    public final static double MINERAL_LIFT_GATE_PUSH_POSITION = 0.35;
     public final static double MINERAL_LIFT_GATE_CLOSED_POSITION = 0.1;
 
     //Angle Servo
