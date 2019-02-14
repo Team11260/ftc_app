@@ -76,7 +76,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
             telemetry.update();
             for (StackTraceElement element : e.getStackTrace()) {
                 if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
-                    telemetry.addData(element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
+                    telemetry.addData(DoubleTelemetry.LogMode.ERROR, element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
                 }
             }
             switch (e.getClass().getSimpleName()) {
@@ -114,6 +114,18 @@ public abstract class AbstractOpMode extends LinearOpMode {
                     telemetry.update();
                     AbstractOpMode.delay(500);
                     VuforiaException exception = (VuforiaException) e;
+                    throw exception;
+                }
+                case "ExecutionException": {
+                    telemetry.update();
+                    for (StackTraceElement element : e.getCause().getStackTrace())) {
+                        if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
+                            telemetry.addData(DoubleTelemetry.LogMode.ERROR, element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
+                        }
+                    }
+                    telemetry.update();
+                    AbstractOpMode.delay(500);
+                    ExecutionException exception = (ExecutionException) e;
                     throw exception;
                 }
                 default: {
