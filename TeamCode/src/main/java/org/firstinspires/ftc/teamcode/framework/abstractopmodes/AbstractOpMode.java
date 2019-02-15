@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public abstract class AbstractOpMode extends LinearOpMode {
 
@@ -118,14 +119,14 @@ public abstract class AbstractOpMode extends LinearOpMode {
                 }
                 case "ExecutionException": {
                     telemetry.update();
-                    for (StackTraceElement element : e.getCause().getStackTrace())) {
+                    for (StackTraceElement element : e.getCause().getStackTrace()) {
                         if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
                             telemetry.addData(DoubleTelemetry.LogMode.ERROR, element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
                         }
                     }
                     telemetry.update();
                     AbstractOpMode.delay(500);
-                    ExecutionException exception = (ExecutionException) e;
+                    NullPointerException exception = (NullPointerException) e;
                     throw exception;
                 }
                 default: {
