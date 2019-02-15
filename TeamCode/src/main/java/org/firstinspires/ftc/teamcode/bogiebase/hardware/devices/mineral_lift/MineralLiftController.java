@@ -153,7 +153,7 @@ public class MineralLiftController extends SubsystemController {
         delay(500);
         mineralLift.setLiftMotorPowerNoEncoder(0);
         mineralLift.setGateServoPosition(MINERAL_LIFT_GATE_CLOSED_POSITION);
-        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished in: " + moveTime.milliseconds());
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished in: " + moveTime.milliseconds() + " " +  mineralLift.getCurrentPosition());
         telemetry.update();
     }
 
