@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.IMU;
@@ -56,6 +57,11 @@ public class Drive {
     public void setPower(double l, double r) {
         leftMotor.setPower(l);
         rightMotor.setPower(r);
+    }
+
+    public void setVelocity(double l, double r, AngleUnit unit) {
+        leftMotor.setVelocity(l, unit);
+        rightMotor.setVelocity(r, unit);
     }
 
     public void resetAngleToZero() {

@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
+import org.firstinspires.ftc.teamcode.framework.userhardware.trajectory.Trajectory;
 import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 
 import java.util.concurrent.Callable;
@@ -62,16 +63,8 @@ public class Robot extends AbstractRobot {
     }
 
     //Drive Methods
-    public void setDriveY(double y) {
-        hardware.drive.setY(y);
-    }
-
-    public void setDriveZ(double z) {
-        hardware.drive.setZ(z);
-    }
-
-    public void driveUpdate() {
-        hardware.drive.updateYZDrive();
+    public void driveFollowTrajectory(Trajectory trajectory) {
+        hardware.drive.followTrajectory(trajectory);
     }
 
     public void setDrivePower(double l, double r) {
@@ -85,36 +78,8 @@ public class Robot extends AbstractRobot {
         };
     }
 
-    public void turnTo(double angle, double speed, double error, int period) {
-        hardware.drive.turnTo(angle, speed, error, period);
-    }
-
     public void runDrivePath(Path path) {
         hardware.drive.runDrivePath(path);
-    }
-
-    public int[][] recordPath(int numSamples, int timeInterval) {
-        return hardware.drive.recordPath(numSamples, timeInterval);
-    }
-
-    public void runPath(int[] left, int[] right, int timeInterval) {
-        hardware.drive.runPath(left, right, timeInterval);
-    }
-
-    public void driveTo(double distance, double speed) {
-        hardware.drive.driveTo(distance, speed);
-    }
-
-    public void driveTo(double distance, double speed, int angle) {
-        hardware.drive.driveTo(distance, speed, angle);
-    }
-
-    public int[] recordPathWithHeading(int numSamples, int timeInterval) {
-        return hardware.drive.recordPathWithHeading(numSamples, timeInterval);
-    }
-
-    public void runPathWithHeading(int[] values, int timeInterval, double speed) {
-        hardware.drive.runPathWithHeading(values, timeInterval, speed);
     }
 
     public void setPosition(int position, double power) {
