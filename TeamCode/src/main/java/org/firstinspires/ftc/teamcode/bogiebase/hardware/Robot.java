@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
@@ -15,10 +16,13 @@ public class Robot extends AbstractRobot {
 
     private HardwareDevices hardware;
     private TensorFlow tensorFlow;
+    private ExpansionHubMonitor hub;
 
     //Robot Methods
     public Robot() {
         hardware = new HardwareDevices();
+
+        hub = new ExpansionHubMonitor("Expansion Hub 2");
 
         if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
             telemetry.addData(INFO,"starting tensorflow");
@@ -54,6 +58,14 @@ public class Robot extends AbstractRobot {
         hardware.intake.update();
         hardware.mineralLift.update();
         hardware.robotLift.update();
+
+        telemetry.addData(INFO, "Left drive current: " + hub.getCurrentDrawMotor0());
+        telemetry.addData(INFO, "Right drive current: " + hub.getCurrentDrawMotor1());
+        telemetry.addData(INFO, "Mineral lift current: " + hub.getCurrentDrawMotor2());
+        telemetry.addData(INFO, "Robot lift current: " + hub.getCurrentDrawMotor3());
+        telemetry.addData(INFO, "Total current: " + hub.getTotalCurrentDraw());
+        telemetry.addData(INFO, "Voltage: " + hub.getVoltage());
+        telemetry.update();
     }
 
     public void stop() {

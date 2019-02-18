@@ -71,7 +71,6 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
     @Override
     public void Loop() {
         robot.updateAll();
-        telemetry.update();
     }
 
     @Override

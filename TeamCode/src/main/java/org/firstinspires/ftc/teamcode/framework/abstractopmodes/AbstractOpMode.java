@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.Logger;
+import org.openftc.revextensions2.RevExtensions2;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
     }
 
     public AbstractOpMode() {
+        RevExtensions2.init();
         thisOpMode = this;
         opmode = this;
         linearOpMode = this;
