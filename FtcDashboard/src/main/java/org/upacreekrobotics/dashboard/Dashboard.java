@@ -281,20 +281,18 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             if (opModeManager == null) return "0";
             voltageSensors = opModeManager.getHardwareMap().getAll(VoltageSensor.class);
         }
-        if (voltageSensors.size() > 0) {
-            for (VoltageSensor voltageSensor : voltageSensors) {
-                try {
-                    if (voltageSensor.getVoltage() != 0) {
-                        sensors++;
-                        voltage += voltageSensor.getVoltage();
-                    }
-                } catch (Exception e) {
-                    DashboardTelemtry.write("Robot Battery Voltage Read Error");
+        if (voltageSensors.size() < 1) return "0";
+        for (VoltageSensor voltageSensor : voltageSensors) {
+            try {
+                if (voltageSensor.getVoltage() != 0) {
+                    sensors++;
+                    voltage += voltageSensor.getVoltage();
                 }
+            } catch (Exception e) {
+                DashboardTelemtry.write("Robot Battery Voltage Read Error");
             }
         }
-        if (sensors != 0) return String.format("%.2f", voltage / sensors);
-        return "0";
+        return String.format("%.2f", voltage / sensors);
     }
 
     ////////////////Returns an instance of dashboardtelemetry to be used in the user code////////////////

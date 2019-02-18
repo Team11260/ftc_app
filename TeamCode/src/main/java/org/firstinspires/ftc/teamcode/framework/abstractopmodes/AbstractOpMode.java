@@ -126,7 +126,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
                     }
                     telemetry.update();
                     AbstractOpMode.delay(500);
-                    NullPointerException exception = (NullPointerException) e;
+                    RuntimeException exception = (RuntimeException) e;
                     throw exception;
                 }
                 default: {
