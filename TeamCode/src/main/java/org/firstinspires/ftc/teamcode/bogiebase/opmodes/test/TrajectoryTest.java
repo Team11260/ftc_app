@@ -27,7 +27,10 @@ public class TrajectoryTest extends AbstractAutonNew {
 
     private Robot robot;
 
-    private static final Waypoint TEST = new Waypoint(new Pose2d(10, 20, 0), PI / 2, -PI / 2);
+    private static final Waypoint START = new Waypoint(new Pose2d(10, 20, -3*PI/4), -3*PI/4, -3*PI/4);
+    private static final Waypoint RIGHT_MINERAL = new Waypoint(new Pose2d(10, 20, -3*PI/4), -3*PI/4, -3*PI/4);
+    private static final Waypoint DEPOT = new Waypoint(new Pose2d(-50, 64, 0), 0, 0);
+    private static final Waypoint CRATER = new Waypoint(new Pose2d(20, 64, 0), 0, 0);
 
     @Override
     public void RegisterStates() {
@@ -44,8 +47,8 @@ public class TrajectoryTest extends AbstractAutonNew {
 
         while (opModeIsActive()) robot.updateAll();
 
-        //SuperArrayList<Trajectory> trajectories = new TrajectoryBuilder(new Waypoint(new Pose2d(0, 0, -PI / 4), PI / 4)).to(TEST).build();
-        //robot.driveFollowTrajectory(trajectories.get(1));
+        //SuperArrayList<Trajectory> trajectories = new TrajectoryBuilder(START).to(RIGHT_MINERAL).to(START).to(DEPOT).to(CRATER).build();
+        //robot.driveFollowTrajectory(trajectories.get(0));
     }
 
     @Override

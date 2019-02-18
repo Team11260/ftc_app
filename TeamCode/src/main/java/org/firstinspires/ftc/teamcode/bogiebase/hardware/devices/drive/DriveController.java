@@ -309,6 +309,10 @@ public class DriveController extends SubsystemController {
         drive.setVelocity(wheelVelocity, -wheelVelocity, AngleUnit.RADIANS);
     }
 
+    public void setCurrentPose(Pose2d pose) {
+        currentEstimatedPose = pose;
+    }
+
     private synchronized void updatePoseEstimate() {
         if (lastUpdate == 0) {
             lastUpdate = System.currentTimeMillis();

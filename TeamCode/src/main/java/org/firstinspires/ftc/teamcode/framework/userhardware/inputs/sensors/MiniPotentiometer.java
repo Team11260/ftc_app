@@ -1,14 +1,10 @@
-package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors;
+package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractTeleop;
-import org.firstinspires.ftc.teamcode.framework.userHardware.RoundNumber;
-
-/**
- * Created by user on 9/30/2018.
- */
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
+import org.firstinspires.ftc.teamcode.framework.userhardware.RoundNumber;
 
 public class MiniPotentiometer {
 

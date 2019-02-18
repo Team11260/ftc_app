@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import com.acmerobotics.roadrunner.Pose2d;
+
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
@@ -65,6 +66,10 @@ public class Robot extends AbstractRobot {
     //Drive Methods
     public void driveFollowTrajectory(Trajectory trajectory) {
         hardware.drive.followTrajectory(trajectory);
+    }
+
+    public void driveSetCurrentPose(Pose2d pose) {
+        hardware.drive.setCurrentPose(pose);
     }
 
     public void setDrivePower(double l, double r) {

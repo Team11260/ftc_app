@@ -1,12 +1,7 @@
-package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors;
+package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
-
-import static org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode.hwMap;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 
 public class MRTouchSen {
 
