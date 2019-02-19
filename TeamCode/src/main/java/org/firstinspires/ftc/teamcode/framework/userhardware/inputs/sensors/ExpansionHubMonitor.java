@@ -11,6 +11,9 @@ public class ExpansionHubMonitor {
 
     public ExpansionHubMonitor(String hubName) {
         hub = AbstractOpMode.getHardwareMap().get(ExpansionHubEx.class, hubName);
+
+        //TODO test this
+        //hub.setAllI2cBusSpeeds(ExpansionHubEx.I2cBusSpeed.HIGH_3_4M);
     }
 
     public double getVoltage() {

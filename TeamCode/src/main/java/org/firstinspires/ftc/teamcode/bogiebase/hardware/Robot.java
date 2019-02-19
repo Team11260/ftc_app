@@ -22,7 +22,7 @@ public class Robot extends AbstractRobot {
     public Robot() {
         hardware = new HardwareDevices();
 
-        hub = new ExpansionHubMonitor("Expansion Hub 2");
+        hub = new ExpansionHubMonitor("Expansion Hub 1");
 
         if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
             telemetry.addData(INFO,"starting tensorflow");
@@ -61,8 +61,8 @@ public class Robot extends AbstractRobot {
 
         telemetry.addData(INFO, "Left drive current: " + hub.getCurrentDrawMotor0());
         telemetry.addData(INFO, "Right drive current: " + hub.getCurrentDrawMotor1());
-        telemetry.addData(INFO, "Mineral lift current: " + hub.getCurrentDrawMotor2());
-        telemetry.addData(INFO, "Robot lift current: " + hub.getCurrentDrawMotor3());
+        telemetry.addData(INFO, "Robot lift current: " + hub.getCurrentDrawMotor2());
+        telemetry.addData(INFO, "Mineral lift current: " + hub.getCurrentDrawMotor3());
         telemetry.addData(INFO, "Total current: " + hub.getTotalCurrentDraw());
         telemetry.addData(INFO, "Voltage: " + hub.getVoltage());
         telemetry.update();
