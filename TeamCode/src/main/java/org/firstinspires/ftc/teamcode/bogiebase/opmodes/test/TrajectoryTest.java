@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import static java.lang.Math.PI;
 import static org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
-@Autonomous(name = "TensorFlow Test", group = "New")
-@Disabled
+@Autonomous(name = "Trajectory Test", group = "New")
+//@Disabled
 
 public class TrajectoryTest extends AbstractAutonNew {
 
@@ -36,10 +36,10 @@ public class TrajectoryTest extends AbstractAutonNew {
     public void RegisterStates() {
 
     }
-
     @Override
     public void Init() {
         robot = new Robot();
+        robot.stopTensorFlow();
     }
 
     @Override
@@ -47,8 +47,11 @@ public class TrajectoryTest extends AbstractAutonNew {
 
         while (opModeIsActive()) robot.updateAll();
 
-        //SuperArrayList<Trajectory> trajectories = new TrajectoryBuilder(START).to(RIGHT_MINERAL).to(START).to(DEPOT).to(CRATER).build();
-        //robot.driveFollowTrajectory(trajectories.get(0));
+        /*SuperArrayList<Trajectory> trajectories = new TrajectoryBuilder(START).to(RIGHT_MINERAL).to(START).to(DEPOT).to(CRATER).build();
+
+        for(Trajectory trajectory:trajectories) {
+            robot.driveFollowTrajectory(trajectory);
+        }*/
     }
 
     @Override

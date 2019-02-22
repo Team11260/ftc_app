@@ -1,13 +1,8 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive;
 
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.drive.Kinematics;
 import com.acmerobotics.roadrunner.drive.TankKinematics;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
@@ -38,7 +33,7 @@ public class DriveController extends SubsystemController {
 
     private double turnY = 0, turn_z = 0, leftPower = 0, rightPower = 0, Drive_Power = 1.0;
 
-    public ElapsedTime runtime;
+    private ElapsedTime runtime, trajectoryTime;
 
     private DecimalFormat DF;
 
@@ -46,7 +41,7 @@ public class DriveController extends SubsystemController {
     private double[] lastWheelPositions = new double[2];
 
     private double lastHeading = 0;
-    private long lastUpdate = 0;
+    private double lastUpdate = 0;
 
     //Utility Methods
     public DriveController() {
@@ -58,6 +53,8 @@ public class DriveController extends SubsystemController {
         opModeSetup();
 
         runtime = new ElapsedTime();
+        trajectoryTime = new ElapsedTime();
+        trajectoryTime.reset();
 
         DF = new DecimalFormat("#.##");
 
@@ -75,6 +72,7 @@ public class DriveController extends SubsystemController {
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Drive x position: " + currentEstimatedPose.getX());
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Drive y position: " + currentEstimatedPose.getY());
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Drive heading: " + currentEstimatedPose.getHeading());
+        telemetry.update();
 
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Left drive power: " + drive.getLeftPower());
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Right drive power: " + drive.getRightPower());
@@ -293,20 +291,27 @@ public class DriveController extends SubsystemController {
 
     //Trajectory Methods
     public void followTrajectory(Trajectory trajectory) {
-        long startTime = System.currentTimeMillis();
+        double startTime = trajectoryTime.seconds();
 
         while (!trajectory.isComplete() && opModeIsActive()) {
             updatePoseEstimate();
 
-            internalSetVelocity(Kinematics.fieldToRobotPoseVelocity(currentEstimatedPose, trajectory.update((System.currentTimeMillis() - startTime) / 1000.0, currentEstimatedPose)));
+            Pose2d updatedPose = trajectory.update(trajectoryTime.seconds() - startTime, currentEstimatedPose);
+
+            internalSetVelocity(Kinematics.fieldToRobotPoseVelocity(currentEstimatedPose, updatedPose));
         }
     }
 
     private void internalSetVelocity(Pose2d v) {
-        Vector2d rotorVelocity = new Vector2d(v.getX() - v.getHeading(),v.getY() + v.getHeading());
-        double surfaceVelocity = rotorVelocity.dot(new Vector2d(1, 1));
-        double wheelVelocity = surfaceVelocity / 2; //2 is the radius of the wheels
-        drive.setVelocity(wheelVelocity, -wheelVelocity, AngleUnit.RADIANS);
+        telemetry.addData(INFO, v.getY());
+        telemetry.update();
+
+        delay(2000);
+
+        List<Double> powers = TankKinematics.robotToWheelVelocities(v,14);
+
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        drive.setPower(powers.get(0), powers.get(1));
     }
 
     public void setCurrentPose(Pose2d pose) {
@@ -314,23 +319,26 @@ public class DriveController extends SubsystemController {
     }
 
     private synchronized void updatePoseEstimate() {
+
         if (lastUpdate == 0) {
-            lastUpdate = System.currentTimeMillis();
+            lastUpdate = trajectoryTime.milliseconds();
             lastHeading = getHeading();
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < lastWheelPositions.length; i++) {
                 lastWheelPositions[i] = (i == 0 ? drive.getLeftPosition() : drive.getRightPosition());
             }
             return;
         }
 
+
+
         List<Double> wheelVelocities = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < lastWheelPositions.length; i++) {
             double pos = (i == 0 ? drive.getLeftPosition() : drive.getRightPosition());
             double distance = (pos - lastWheelPositions[i]) / DRIVE_COUNTS_PER_INCH;
             wheelVelocities.add(distance);
             lastWheelPositions[i] = pos;
         }
-        Pose2d v = TankKinematics.wheelToRobotVelocities(wheelVelocities, 16);
+        Pose2d v = TankKinematics.wheelToRobotVelocities(wheelVelocities, 14);
         double currentHeading = getHeading();
         v = new Pose2d(v.pos(), currentHeading - lastHeading);
         lastHeading = currentHeading;

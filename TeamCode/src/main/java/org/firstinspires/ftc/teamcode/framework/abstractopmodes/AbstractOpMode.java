@@ -126,7 +126,8 @@ public abstract class AbstractOpMode extends LinearOpMode {
                     }
                     telemetry.update();
                     AbstractOpMode.delay(500);
-                    RuntimeException exception = (RuntimeException) e;
+                    RuntimeException exception = new RuntimeException(e.getCause().getMessage());
+                    exception.setStackTrace(e.getCause().getStackTrace());
                     throw exception;
                 }
                 default: {
