@@ -36,9 +36,6 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
         RobotState.currentMatchState = RobotState.MatchState.TELEOP;
 
-        gamepad1.reset();
-        gamepad2.reset();
-
         ExecutorService service = Executors.newSingleThreadExecutor();
 
         Callable<Boolean> InitThread = () -> {
@@ -73,8 +70,18 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             }
             return true;
         };
+        Callable<Boolean> UpdateThread = () -> {
+            try {
+                emitter.update();
 
-        Future<Boolean> CurrentFuture;
+                checkException();
+            } catch (Exception e) {
+                throwException(e);
+            }
+            return true;
+        };
+
+        Future<Boolean> currentFuture;
 
         //sets up emitter
         emitTime = new ElapsedTime();
@@ -82,49 +89,53 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         floatStates = new FloatStateMap();
 
         //calls user init
-        CurrentFuture = service.submit(InitThread);
+        currentFuture = service.submit(InitThread);
 
         int initLoops = 0;
 
         while (!isStopRequested() && !isStarted()) {
             checkException();
 
-            if (CurrentFuture.isDone()) {
+            if (currentFuture.isDone()) {
                 initLoops++;
-                CurrentFuture = service.submit(InitLoopThread);
+                currentFuture = service.submit(InitLoopThread);
             }
         }
 
-        while (!isStopRequested() && !CurrentFuture.isDone()) ;
+        while (!isStopRequested() && !currentFuture.isDone()) ;
 
         if (!isStopRequested()) {
             checkException();
 
-            CurrentFuture = service.submit(StartThread);
+            currentFuture = service.submit(StartThread);
         }
 
-        while (!isStopRequested() && !CurrentFuture.isDone()) ;
+        while (!isStopRequested() && !currentFuture.isDone()) ;
 
         RegisterEvents();
 
         emitTime.reset();
 
-        while (opModeIsActive()) {
-            checkException();
+        Future<Boolean> updateFuture = service.submit(UpdateThread);
 
+        while (opModeIsActive()) {
             //checks the gamepad for changes
             checkEvents();
 
+            if(updateFuture.isDone()) {
+                updateFuture = service.submit(UpdateThread);
+            }
+
             //calls user loop
-            if (CurrentFuture.isDone()) {
-                CurrentFuture = service.submit(LoopThread);
+            if (currentFuture.isDone()) {
+                currentFuture = service.submit(LoopThread);
             }
         }
 
         //AbstractOpMode.stopRequested();
 
         //TODO remake our shutdown procedure
-        CurrentFuture.cancel(true);
+        currentFuture.cancel(true);
         emitter.shutdown();
 
         while (!service.isTerminated()) {

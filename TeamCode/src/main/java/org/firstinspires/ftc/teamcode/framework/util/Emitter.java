@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.framework.util;
 
 import android.support.annotation.NonNull;
 
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -17,9 +19,10 @@ import java.util.concurrent.TimeoutException;
 //
 // Create a new event with 'emit'. Register event handlers with 'on'.
 public class Emitter {
-    private ConcurrentHashMap<String, Callable<Boolean>> EventRegistry = new ConcurrentHashMap<>();
-    private ArrayList<String> PausedEvents = new ArrayList<>();
-    private ConcurrentHashMap<String, Future<Boolean>> cache = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, ArrayList<Callable<Boolean>>> eventRegistry = new ConcurrentHashMap<>();
+    private ArrayList<String> pausedEvents = new ArrayList<>();
+    private ArrayList<Future> runningFutures = new ArrayList<>();
+    private ConcurrentHashMap<String, ArrayList<Future<Boolean>>> cache = new ConcurrentHashMap<>();
 
     private ExecutorService service;
 
@@ -30,56 +33,80 @@ public class Emitter {
     // Register a new event handler.
     // An event handler is a Runnable that is run on an Executor.
     public synchronized void on(String eventName, Callable eventHandler) {
-        EventRegistry.put(eventName, eventHandler);
+        if(eventRegistry.get(eventName) == null) eventRegistry.put(eventName, new ArrayList<>());
+        eventRegistry.get(eventName).add(eventHandler);
     }
 
     public synchronized void pauseEvent(String name) {
-        PausedEvents.add(name);
+        pausedEvents.add(name);
     }
 
     public synchronized void resumeEvent(String name) {
-        PausedEvents.remove(name);
+        pausedEvents.remove(name);
     }
 
     public synchronized void removeEvent(String name) {
-        EventRegistry.remove(name);
+        eventRegistry.remove(name);
+    }
+
+    public synchronized void update() {
+
+        ArrayList<Future> finishedFutures = new ArrayList<>();
+
+        for(Future<Boolean> future:runningFutures){
+            if(future.isDone()){
+                try {
+                    future.get();
+                } catch (InterruptedException e) {
+                    AbstractOpMode.staticThrowException(e);
+                } catch (ExecutionException e) {
+                    AbstractOpMode.staticThrowException(e);
+                }
+                finishedFutures.add(future);
+            }
+        }
+
+        runningFutures.removeAll(finishedFutures);
     }
 
     // Send a named event.
     //
     // This will run all event handlers registered to this event. Each event handler will be
     // executed inside of the executor service, which means events may be handled in parallel.
-    public synchronized Future<Boolean> emit(String name) throws RuntimeException {
+    public synchronized void emit(String name) throws RuntimeException {
 
-        for (String pausedName : PausedEvents) {
-            if (pausedName.equals(name)) return new EmptyResult();
+        for (String pausedName : pausedEvents) {
+            if (pausedName.equals(name)) return;
         }
 
-        Future<Boolean> f = fire(name);
-        this.cache.put(name, f);
-        return f;
+        ArrayList<Future<Boolean>> f = fire(name);
+        cache.put(name, f);
+        runningFutures.addAll(f);
     }
 
-    public synchronized Future<Boolean> futureFor(String eventName) {
+    public synchronized ArrayList<Future<Boolean>> futuresFor(String eventName) {
         if (this.cache.contains(eventName)) {
             return this.cache.get(eventName);
         }
-        return new EmptyResult();
+        return new ArrayList<>();
     }
 
     // This does the actual firing of the event. The emit() method calls this, and caches
-    // the resulting future for cancelation.
-    protected synchronized Future<Boolean> fire(String eventName) throws RuntimeException {
-        Callable eventHandler = EventRegistry.get(eventName);
-        if (eventHandler != null) return service.submit(eventHandler);
-        // By default, we return a future that returns false.
-        return new EmptyResult();
+    // the resulting future for cancellation.
+    protected synchronized ArrayList<Future<Boolean>> fire(String eventName) throws RuntimeException {
+        ArrayList<Future<Boolean>> futures = new ArrayList<>();
+        for (Callable eventHandler : eventRegistry.get(eventName)) {
+            if (eventHandler != null) futures.add(service.submit(eventHandler));
+        }
+        return futures;
     }
 
     public synchronized void shutdown() {
-        for (Map.Entry<String, Future<Boolean>> future : cache.entrySet()) {
-            if (!futureFor(future.getKey()).isDone()) {
-                futureFor(future.getKey()).cancel(true);
+        for (ConcurrentHashMap.Entry<String, ArrayList<Future<Boolean>>> entry : cache.entrySet()) {
+            for(Future<Boolean> future : entry.getValue()) {
+                if (future.isDone()) {
+                    future.cancel(true);
+                }
             }
         }
         service.shutdownNow();
