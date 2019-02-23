@@ -12,8 +12,8 @@ public class HardwareDevices {
 
     public HardwareDevices(){
         drive = new DriveController();
-        LeftDistanceSensor = new MyRev2mDistanceSensor("distance1");
-        RightDistanceSensor = new MyRev2mDistanceSensor("distance2");
+        //LeftDistanceSensor = new MyRev2mDistanceSensor("distance1");
+        //RightDistanceSensor = new MyRev2mDistanceSensor("distance2");
     }
 
     public void setDriveY(double y) {
