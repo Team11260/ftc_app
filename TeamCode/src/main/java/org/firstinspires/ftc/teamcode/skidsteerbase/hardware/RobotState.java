@@ -15,8 +15,6 @@ public final class RobotState {
 
     public static RobotLiftState currentRobotLiftState = RobotLiftState.RAISED;
 
-    public static IntakeLiftState currentIntakeLiftState = IntakeLiftState.LOWERED;
-
     public static SamplePosition currentSamplePosition = SamplePosition.UNKNOWN;
 
     public static Path currentPath = null;
@@ -44,12 +42,6 @@ public final class RobotState {
     }
 
     public enum RobotLiftState {
-        RAISED,
-        LOWERED,
-        IN_MOTION
-    }
-
-    public enum IntakeLiftState {
         RAISED,
         LOWERED,
         IN_MOTION

@@ -48,7 +48,7 @@ public final class Constants {
     public final static double MINERAL_LIFT_SLOW_SPEED = 0.4;
 
     public final static int MINERAL_LIFT_AUTON_RAISED_POSITION = 300;
-    public final static int MINERAL_LIFT_DUMP_POSITION = 2600;
+    public final static int MINERAL_LIFT_DUMP_POSITION = 1560;
     public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 1800;
     public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 200;
 

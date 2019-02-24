@@ -17,8 +17,8 @@ public class SkidSteerTeleopTwoDriver extends AbstractTeleop {
         ////////////////Gamepad 1////////////////
 
         ////////////////Gamepad 2////////////////
-        addEventHandler("2_rb_down",robot.moveToCollectPositionCallable());
-        addEventHandler("2_rt_down",robot.moveToDumpPositionCallable());
+        addEventHandler("2_rt_down",robot.moveToCollectPositionCallable());
+        addEventHandler("2_rb_down",robot.moveToDumpPositionCallable());
         addEventHandler("2_b_down",robot.beginIntakingCallable());
         addEventHandler("2_b_up",robot.finishIntakingCallable());
         addEventHandler("2_x_down",robot.reverseIntakeCallable());

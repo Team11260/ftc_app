@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.skidsteerbase.hardware.devices.arm;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
+import org.firstinspires.ftc.teamcode.skidsteerbase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 
 public class Arm {
@@ -15,7 +14,7 @@ public class Arm {
 
     public Arm(HardwareMap hardwareMap){
         rotateMotor = new SlewDcMotor(hardwareMap.dcMotor.get("rotate_motor"));
-        rotateMotor.setSlewSpeed(Constants.DRIVE_SLEW_SPEED);
+        rotateMotor.setSlewSpeed(Constants.ARM_SLEW_SPEED);
         rotateMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rotateMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rotateMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -24,15 +23,15 @@ public class Arm {
 
         angleServo = hardwareMap.servo.get("angle_servo");
         angleServo.setDirection(Servo.Direction.FORWARD);
-        angleServo.setPosition(0);
+        angleServo.setPosition(Constants.ARM_ANGLE_FLAT);
 
         intakeServo = hardwareMap.servo.get("intake_servo");
         intakeServo.setDirection(Servo.Direction.FORWARD);
-        intakeServo.setPosition(0);
+        intakeServo.setPosition(Constants.INTAKE_STOP_POWER);
 
         gateServo = hardwareMap.servo.get("gate_servo");
         gateServo.setDirection(Servo.Direction.FORWARD);
-        gateServo.setPosition(Constants.MINERAL_LIFT_GATE_CLOSED_POSITION);
+        gateServo.setPosition(0);
     }
 
     public void setRotateMotorPower(double power){

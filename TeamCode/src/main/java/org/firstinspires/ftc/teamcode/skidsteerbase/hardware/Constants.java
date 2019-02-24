@@ -16,17 +16,23 @@ public final class Constants {
 
     ////////ARM////////
     //Rotate
-    public static final int ARM_DUMP_POSITION = 3000;
-    public static final int ARM_COLLECT_POSITION = 300;
+    public static final double ARM_SLEW_SPEED = 2;
+
+    public static final int ARM_DUMP_POSITION = 3600;
+    public static final int ARM_COLLECT_POSITION = 500;
 
     //Intake
     public static final double INTAKE_FORWARD_POWER = 1;
-    public static final double INTAKE_REVERSE_POWER = -1;
-    public static final double INTAKE_STOP_POWER = 0;
+    public static final double INTAKE_REVERSE_POWER = 0;
+    public static final double INTAKE_STOP_POWER = 0.5;
 
     //Gate
     public static final double GATE_CLOSED_POSITION = 0;
     public static final double GATE_OPEN_POSITION = 0.7;
 
-
+    //Angle
+    public static final double ARM_ANGLE_FLAT = -0.1;
+    public static final double ARM_ANGLE_INTAKE = 0.3;
+    public static final double ARM_ANGLE_HOLD = 1;
+    public static final double ARM_ANGLE_DUMP = -0.1;
 }

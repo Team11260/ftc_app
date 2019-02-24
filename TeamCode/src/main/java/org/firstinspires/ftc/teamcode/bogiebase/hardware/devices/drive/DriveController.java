@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Segment;
@@ -32,6 +33,8 @@ public class DriveController extends SubsystemController {
 
     public ElapsedTime runtime;
 
+    private ExpansionHubMonitor hub;
+
     private DecimalFormat DF;
 
     //Utility Methods
@@ -44,6 +47,8 @@ public class DriveController extends SubsystemController {
         opModeSetup();
 
         runtime = new ElapsedTime();
+        hub = new ExpansionHubMonitor("Expansion Hub 1");
+
 
         DF = new DecimalFormat("#.##");
 
@@ -381,6 +386,12 @@ public class DriveController extends SubsystemController {
         if (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) return;
 
         RobotState.currentPath.nextSegment();
+        /*while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (opModeIsActive()) && (hub.getCurrentDrawMotor0()>6000) && (hub.getCurrentDrawMotor1()>6000)) ;
+
+        if (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) return;
+
+        RobotState.currentPath.nextSegment();*/
+
     }
 
     public synchronized double getHeading() {

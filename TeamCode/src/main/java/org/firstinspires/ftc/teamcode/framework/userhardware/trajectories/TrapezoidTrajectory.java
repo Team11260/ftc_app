@@ -78,17 +78,27 @@ public class TrapezoidTrajectory extends Trajectory {
     @Override
     public double velocity(double time) {
         if (time < 0.0) {
-            return 0.0;
+            return this.isBackwards ? -0.1 : 0.1;
         } else if (time <= this.accelerationEndTime) {
-            return (this.isBackwards ? -1.0 : 1.0) * this.accelerationTrajectory.velocity(time);
+            double value = (this.isBackwards ? -1.0 : 1.0) * this.accelerationTrajectory.velocity(time);
+            if(Math.abs(value) < 0.1) value = this.isBackwards ? -0.1 : 0.1;
+            return value;
         } else if (time <= this.coastingEndTime) {
-            return (this.isBackwards ? -1.0 : 1.0) * this.coastingTrajectory.velocity(time - this.accelerationEndTime);
+            double value =  (this.isBackwards ? -1.0 : 1.0) * this.coastingTrajectory.velocity(time - this.accelerationEndTime);
+            if(Math.abs(value) < 0.1) value = this.isBackwards ? -0.1 : 0.1;
+            return value;
         } else if (time <= this.decelerationEndTime) {
             return (this.isBackwards ? -1.0 : 1.0) * this.decelerationTrajectory.velocity(time - this.coastingEndTime);
         } else {
             return 0.0;
         }
 
+    }
+
+    public double velocityForDistance(double position) {
+        double percentageDistance = position / this.distance;
+        double percentageTime = getTotalTime() * percentageDistance;
+        return velocity(percentageTime);
     }
 
     @Override
@@ -157,5 +167,9 @@ public class TrapezoidTrajectory extends Trajectory {
 
     public boolean isDone(double time) {
         return (this.distance(time) >= this.distance);
+    }
+
+    public boolean isDoneForPosition(double position) {
+        return position >= distance;
     }
 }
