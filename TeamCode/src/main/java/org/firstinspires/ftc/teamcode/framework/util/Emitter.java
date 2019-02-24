@@ -95,7 +95,7 @@ public class Emitter {
     // the resulting future for cancellation.
     protected synchronized ArrayList<Future<Boolean>> fire(String eventName) throws RuntimeException {
         ArrayList<Future<Boolean>> futures = new ArrayList<>();
-        for (Callable eventHandler : eventRegistry.get(eventName)) {
+        if(eventRegistry.get(eventName) != null) for (Callable eventHandler : eventRegistry.get(eventName)) {
             if (eventHandler != null) futures.add(service.submit(eventHandler));
         }
         return futures;
