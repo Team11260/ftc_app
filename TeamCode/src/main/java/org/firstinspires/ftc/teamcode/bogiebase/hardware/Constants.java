@@ -48,8 +48,8 @@ public final class Constants {
     public final static double MINERAL_LIFT_SLOW_SPEED = 0.4;
 
     public final static int MINERAL_LIFT_AUTON_RAISED_POSITION = 300;
-    public final static int MINERAL_LIFT_DUMP_POSITION = 1560;
-    public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 1800;
+    public final static int MINERAL_LIFT_DUMP_POSITION = 2650;
+    public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 2000;
     public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 200;
 
     public final static int MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS = 5;
@@ -98,7 +98,7 @@ public final class Constants {
     static {
         collectRightMineral.addSegment(new TurnSegment("turn to gold mineral", 150, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         collectRightMineral.addSegment(new DriveSegment("drive to minerals", 30, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        collectRightMineral.addSegment(new DriveSegment("back up from minerals", -16, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectRightMineral.addSegment(new DriveSegment("back up from minerals", -14, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
 
     public final static Path collectLeftMineral = new Path("collect left mineral");
@@ -178,7 +178,7 @@ public final class Constants {
         craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to wall", 50, 0.4, AUTON_DISTANCE_ERROR));
         craterSideToDepotDoubleSample.addSegment(new TurnSegment("turn to depot", -60, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         craterSideToDepotDoubleSample.addSegment(new DriveSegment("large drive to depot double sample", 21, AUTON_PATH_SPEED, 100, -57));
-        craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to depot double sample", 28, AUTON_PATH_SPEED, 80, 0));
+        craterSideToDepotDoubleSample.addSegment(new DriveSegment("drive to depot double sample", 26, AUTON_PATH_SPEED, 80, 0));
     }
 
     public final static Path collectRightMineralDoubleSample = new Path("collect right mineral double sample");

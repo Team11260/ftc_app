@@ -18,8 +18,8 @@ public final class Constants {
     //Rotate
     public static final double ARM_SLEW_SPEED = 2;
 
-    public static final int ARM_DUMP_POSITION = 3600;
-    public static final int ARM_COLLECT_POSITION = 500;
+    public static final int ARM_DUMP_POSITION = 3200;
+    public static final int ARM_COLLECT_POSITION = 700;
 
     //Intake
     public static final double INTAKE_FORWARD_POWER = 1;
@@ -32,7 +32,7 @@ public final class Constants {
 
     //Angle
     public static final double ARM_ANGLE_FLAT = -0.1;
-    public static final double ARM_ANGLE_INTAKE = 0.3;
+    public static final double ARM_ANGLE_INTAKE = 0.2;
     public static final double ARM_ANGLE_HOLD = 1;
-    public static final double ARM_ANGLE_DUMP = -0.1;
+    public static final double ARM_ANGLE_DUMP = 0.5;
 }

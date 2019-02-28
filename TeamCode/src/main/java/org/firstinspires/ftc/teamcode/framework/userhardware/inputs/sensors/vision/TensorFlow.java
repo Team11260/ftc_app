@@ -120,13 +120,16 @@ public class TensorFlow {
             if (updatedRecognitions != null) {
                 ArrayList<Mineral> minerals = new ArrayList<>();
                 for (Recognition recognition : updatedRecognitions) {
-                    //if (recognition.getConfidence() < 0.5) continue;
                     minerals.add(new Mineral(recognition));
                 }
 
-                if (minerals.size() >= 3) position = samplePositionFromThreeMinerals(minerals);
-                else if (minerals.size() > 0)
+                if (minerals.size() >= 3)
+                {
+                    position = samplePositionFromThreeMinerals(minerals);
+                }
+                else if (minerals.size() > 0) {
                     position = samplePositionFromOneMineral(minerals, updatedRecognitions.get(0).getImageWidth(), updatedRecognitions.get(0).getImageHeight());
+                }
             }
         }
 
@@ -199,7 +202,7 @@ public class TensorFlow {
 
         ArrayList<Mineral> silverMinerals = new ArrayList<>();
         for (Mineral mineral : minerals) {
-            if (mineral.getType() == MineralType.SILVER) silverMinerals.add(mineral);
+            if (mineral.getType() == MineralType.SILVER && mineral.getConfidence() > 0.5) silverMinerals.add(mineral);
         }
 
         if (silverMinerals.size() < 2) return null;

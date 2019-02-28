@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.trajectories.TrapezoidTrajectory;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
+import org.firstinspires.ftc.teamcode.skidsteerbase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.skidsteerbase.hardware.RobotState;
 
 import static org.firstinspires.ftc.teamcode.skidsteerbase.hardware.RobotState.*;
@@ -83,7 +84,7 @@ public class ArmController extends SubsystemController {
 
             int startPosition = arm.getRotateMotorPosition();
 
-            TrapezoidTrajectory trajectory = new TrapezoidTrajectory(startPosition - ARM_COLLECT_POSITION, 0.01, 0.0005, 1);
+            TrapezoidTrajectory trajectory = new TrapezoidTrajectory(startPosition - ARM_COLLECT_POSITION, 0.01, 0.00001, 1);
 
             while (!trajectory.isDoneForPosition(startPosition - arm.getRotateMotorPosition())) {
                 arm.setRotateMotorPower(-trajectory.velocityForDistance(startPosition - arm.getRotateMotorPosition()));
@@ -92,7 +93,7 @@ public class ArmController extends SubsystemController {
             }
         }
 
-        arm.setRotateMotorPosition(ARM_COLLECT_POSITION);
+        arm.setRotateMotorPosition(500);
         currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
 
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Done move to collect position");
@@ -112,16 +113,20 @@ public class ArmController extends SubsystemController {
     }
 
     public synchronized void openGate() {
-        arm.setGateServoPosition(GATE_OPEN_POSITION);
+        /*arm.setGateServoPosition(GATE_OPEN_POSITION);
         currentMineralGatePosition = MineralGatePosition.OPEN;
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Cycle time: " + cycleTimer.seconds());
-        cycleTimer.reset();
-        //mineralLift.setAngleServoPosition(MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION);
+        cycleTimer.reset();*/
 
+        arm.setAngleServoPosition(Constants.ARM_ANGLE_DUMP);
+        currentMineralGatePosition = MineralGatePosition.OPEN;
     }
 
     public synchronized void closeGate() {
-        arm.setGateServoPosition(GATE_CLOSED_POSITION);
+        /*arm.setGateServoPosition(GATE_CLOSED_POSITION);
+        currentMineralGatePosition = MineralGatePosition.CLOSED;*/
+
+        arm.setAngleServoPosition(Constants.ARM_ANGLE_HOLD);
         currentMineralGatePosition = MineralGatePosition.CLOSED;
     }
 

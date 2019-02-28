@@ -117,6 +117,14 @@ public class Drive {
         rightMotor.setPositionPIDFCoefficients(p);
     }
 
+    public double getLeftMotorCurrentDraw() {
+        return leftMotor.getCurrentDraw();
+    }
+
+    public double getRightMotorCurrentDraw() {
+        return rightMotor.getCurrentDraw();
+    }
+
     public double getHeading() {
         if (imu == null) return 0.0;
         return imu.getHeading();

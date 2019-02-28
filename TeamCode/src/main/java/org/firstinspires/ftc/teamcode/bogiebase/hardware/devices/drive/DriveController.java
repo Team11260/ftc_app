@@ -33,8 +33,6 @@ public class DriveController extends SubsystemController {
 
     public ElapsedTime runtime;
 
-    private ExpansionHubMonitor hub;
-
     private DecimalFormat DF;
 
     //Utility Methods
@@ -47,8 +45,6 @@ public class DriveController extends SubsystemController {
         opModeSetup();
 
         runtime = new ElapsedTime();
-        hub = new ExpansionHubMonitor("Expansion Hub 1");
-
 
         DF = new DecimalFormat("#.##");
 
@@ -369,7 +365,7 @@ public class DriveController extends SubsystemController {
     }
 
     public void autonDriveToWallSequence() {
-        int[] values = new int[5];
+        /*int[] values = new int[5];
         for (int i = 0; i < 5; i++) {
             values[i] = i * 1000000;
         }
@@ -385,13 +381,13 @@ public class DriveController extends SubsystemController {
 
         if (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) return;
 
-        RobotState.currentPath.nextSegment();
-        /*while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (opModeIsActive()) && (hub.getCurrentDrawMotor0()>6000) && (hub.getCurrentDrawMotor1()>6000)) ;
+        RobotState.currentPath.nextSegment();*/
+
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && opModeIsActive() && drive.getLeftMotorCurrentDraw()<6000 && drive.getRightMotorCurrentDraw()<6000) ;
 
         if (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) return;
 
-        RobotState.currentPath.nextSegment();*/
-
+        RobotState.currentPath.nextSegment();
     }
 
     public synchronized double getHeading() {
