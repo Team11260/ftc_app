@@ -93,6 +93,10 @@ public class ArmController extends SubsystemController {
             }
         }
 
+        //arm.setRotateMotorPower(0.0);
+
+        //while (arm.getRotateMotorPosition() > 500 && opModeIsActive());
+
         arm.setRotateMotorPosition(500);
         currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
 

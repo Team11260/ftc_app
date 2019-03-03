@@ -162,6 +162,10 @@ public class Robot extends AbstractRobot {
         return hardware.drive.getHeading();
     }
 
+    public double getPitch() {
+        return hardware.drive.getPitch();
+    }
+
     //Intake Methods
     public Callable autonIntakeSequenceCallable() {
         return () -> {

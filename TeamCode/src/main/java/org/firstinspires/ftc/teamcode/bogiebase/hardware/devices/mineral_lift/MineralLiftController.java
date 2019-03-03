@@ -35,7 +35,7 @@ public class MineralLiftController extends SubsystemController {
     }
 
     public synchronized void update() {
-        telemetry.addData(DoubleTelemetry.LogMode.INFO,"Encoder counts:"+ mineralLift.getCurrentPosition());
+        /*telemetry.addData(DoubleTelemetry.LogMode.INFO,"Encoder counts:"+ mineralLift.getCurrentPosition());
 
         if (isMovingDown) {
             int currentValue = mineralLift.getCurrentPosition();
@@ -70,8 +70,15 @@ public class MineralLiftController extends SubsystemController {
                 liftValues[4] = -1;
                 currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
                 isMovingDown = false;
-                return;
-            }
+                return; */
+
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Encoder counts:" + mineralLift.getCurrentPosition());
+
+        if (isMovingDown && mineralLift.getMotorCurrentDraw() < 4000) {
+            telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished in: " + moveTime.milliseconds());
+            mineralLift.resetPosition();
+            currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
+            isMovingDown = false;
         }
     }
 
@@ -154,7 +161,7 @@ public class MineralLiftController extends SubsystemController {
         /*mineralLift.setLiftMotorPowerNoEncoder(MINERAL_LIFT_SLOW_SPEED);
         delay(500);*/
         mineralLift.setLiftMotorPowerNoEncoder(0);
-        mineralLift.setGateServoPosition(MINERAL_LIFT_GATE_CLOSED_POSITION);
+        //mineralLift.setGateServoPosition(MINERAL_LIFT_GATE_CLOSED_POSITION);
         telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral up finished in: " + moveTime.milliseconds() + " " +  mineralLift.getCurrentPosition());
         telemetry.update();
     }

@@ -58,7 +58,7 @@ public class IntakeController extends SubsystemController {
         intake.setLiftServoPosition(INTAKE_LIFT_LOWERED_POSITION);
         intake.setIntakePower(INTAKE_REVERSE_POWER);
         delay(250);
-        intake.setIntakePower(INTAKE_FORWARD_POWER);
+        intake.setIntakePower(INTAKE_STOP_POWER);
         currentIntakeLiftState = IntakeLiftState.LOWERED;
     }
 

@@ -64,7 +64,6 @@ public class Robot extends AbstractRobot {
         };
     }
 
-
     public void reverseIntake(){
         hardware.arm.reverseIntake();
     }

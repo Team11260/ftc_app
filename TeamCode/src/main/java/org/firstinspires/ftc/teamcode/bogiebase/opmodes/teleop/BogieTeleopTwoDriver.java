@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.bogiebase.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
 @TeleOp(name = "Bogie Teleop Two Driver", group = "New")
@@ -20,6 +21,8 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
 
         ////////////////Gamepad 2////////////////
         ////////Intake////////
+
+
         addEventHandler("2_b_down", robot.beginIntakingCallable());
 
         addEventHandler("2_b_up", robot.finishIntakingCallable());
@@ -52,6 +55,9 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
         addEventHandler("2_lt_down", robot.robotLiftUpCallable());
 
         addEventHandler("2_lt_up", robot.robotLiftStopCallable());
+
+        ////////////////Other////////////////
+        addEventHandler("pitch_down", robot.lowerIntakeCallable());
     }
 
     @Override
@@ -59,6 +65,8 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
         //NEVER EVER PUT BLOCKING CODE HERE!!!
         checkBooleanInput("2_lt", gamepad2.left_trigger > 0.5);
         checkBooleanInput("2_rt", gamepad2.right_trigger > 0.5);
+
+        checkBooleanInput("pitch", robot.getPitch() < -6 && RobotState.currentIntakeLiftState == RobotState.IntakeLiftState.RAISED);
 
         robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
     }

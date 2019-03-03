@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -24,8 +25,8 @@ public class Drive {
         rightMotor = new SlewDcMotor(hardwareMap.dcMotor.get("right"));
 
         //Motor Set Up
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         leftMotor.setSlewSpeed(Constants.DRIVE_SLEW_SPEED);
         rightMotor.setSlewSpeed(Constants.DRIVE_SLEW_SPEED);
@@ -128,6 +129,10 @@ public class Drive {
     public double getHeading() {
         if (imu == null) return 0.0;
         return imu.getHeading();
+    }
+
+    public double getPitch(){
+        return imu.getPitch();
     }
 
     public boolean isGyroCalibrated() {

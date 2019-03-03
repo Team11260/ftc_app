@@ -252,7 +252,7 @@ public class DriveController extends SubsystemController {
         drive.setTargetPosition(position);
     }
 
-    public synchronized double getHeading() {
+    public double getHeading() {
         return drive.getHeading();
     }
 
@@ -311,7 +311,6 @@ public class DriveController extends SubsystemController {
     }
 
     //Util Methods
-
     private synchronized double scaleInput(double val) {
         return (range(pow(val, 3)));
     }

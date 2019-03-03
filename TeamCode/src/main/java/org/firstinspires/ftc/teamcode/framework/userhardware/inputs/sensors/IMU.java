@@ -52,6 +52,10 @@ public class IMU implements Runnable {
         return 0;
     }
 
+    public double getPitch(){
+        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle;
+    }
+
     public void resetAngleToZero() {
         imu.initialize(parameters);
 

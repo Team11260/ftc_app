@@ -61,6 +61,7 @@ public class DriveController extends SubsystemController {
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Right drive power: " + drive.getRightPower());
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Left drive position: " + drive.getLeftPosition());
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Right drive position: " + drive.getRightPosition());
+        telemetry.addData(INFO,"Drive pitch: " + drive.getPitch());
     }
 
     public synchronized void stop() {
@@ -392,6 +393,10 @@ public class DriveController extends SubsystemController {
 
     public synchronized double getHeading() {
         return drive.getHeading();
+    }
+
+    public double getPitch() {
+        return drive.getPitch();
     }
 
     public synchronized void resetAngleToZero() {
