@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor
 public class Drive {
 
     private SlewDcMotor leftMotor, rightMotor;
+    private DcMotorSimple light;
     private IMU imu;
     private Servo servoMarker;
 
@@ -44,6 +45,8 @@ public class Drive {
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 
+        light = hardwareMap.get(DcMotorSimple.class, "light");
+        light.setPower(0);
 
         servoMarker = hardwareMap.servo.get("servo_marker");
         servoMarker.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.DRIVE_TEAM_MARKER_RETRACTED : Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED);
@@ -138,6 +141,10 @@ public class Drive {
     public boolean isGyroCalibrated() {
         if (imu == null) return false;
         return imu.isGyroCalibrated();
+    }
+
+    public void setLightPower(double power) {
+        light.setPower(Math.abs(power));
     }
 
     public void stop() {

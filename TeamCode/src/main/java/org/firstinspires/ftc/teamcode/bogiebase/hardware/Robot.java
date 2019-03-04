@@ -30,6 +30,8 @@ public class Robot extends AbstractRobot {
             RobotState.currentSamplePosition = UNKNOWN;
             telemetry.addData(INFO, "Current Sample Position: " + RobotState.currentSamplePosition);
             telemetry.update();
+
+            setLightOn();
         }
     }
 
@@ -49,6 +51,7 @@ public class Robot extends AbstractRobot {
     }
 
     public void stopTensorFlow() {
+        setLightOff();
         tensorFlow.stop();
     }
 
@@ -164,6 +167,14 @@ public class Robot extends AbstractRobot {
 
     public double getPitch() {
         return hardware.drive.getPitch();
+    }
+
+    public void setLightOn() {
+        hardware.drive.setLightOn();
+    }
+
+    public void setLightOff() {
+        hardware.drive.setLightOff();
     }
 
     //Intake Methods

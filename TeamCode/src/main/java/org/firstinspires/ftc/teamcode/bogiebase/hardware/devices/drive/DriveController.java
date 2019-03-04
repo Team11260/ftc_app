@@ -534,6 +534,14 @@ public class DriveController extends SubsystemController {
         return drive.isGyroCalibrated();
     }
 
+    public void setLightOn() {
+        drive.setLightPower(1);
+    }
+
+    public void setLightOff() {
+        drive.setLightPower(0);
+    }
+
     public void dropTeamMarker() {
         //Teleop dump marker sequence
         if (RobotState.currentMatchState == MatchState.TELEOP) {
