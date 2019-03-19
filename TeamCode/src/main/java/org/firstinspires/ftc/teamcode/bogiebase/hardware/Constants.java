@@ -18,7 +18,7 @@ public final class Constants {
     public static final double DRIVE_SLEW_SPEED = 0.1;
 
     public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.7;
-    public static final double DRIVE_COUNTS_PER_INCH = 38.0;
+    public static final double DRIVE_COUNTS_PER_INCH = 49.4;// 38 *1.3
 
     public static final double DRIVE_RELEASE_WHEELS_POWER = -0.5;
 
@@ -47,10 +47,10 @@ public final class Constants {
     public final static double MINERAL_LIFT_FULL_SPEED = 1;
     public final static double MINERAL_LIFT_SLOW_SPEED = 0.4;
 
-    public final static int MINERAL_LIFT_AUTON_RAISED_POSITION = 300;
-    public final static int MINERAL_LIFT_DUMP_POSITION = 2650;
-    public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 2000;
-    public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 200;
+    public final static int MINERAL_LIFT_AUTON_RAISED_POSITION = 225;
+    public final static int MINERAL_LIFT_DUMP_POSITION = 1700;
+    public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 1424;
+    public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 230;
 
     public final static int MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS = 5;
 
@@ -61,7 +61,7 @@ public final class Constants {
 
     //Angle Servo
     public final static double MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION = 0.08;
-    public final static double MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION = 0.3;
+    public final static double MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION = 0.35;
     public final static double MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION = 0.65;
 
 

@@ -13,7 +13,8 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor
 public class Drive {
 
     private SlewDcMotor leftMotor, rightMotor;
-    private DcMotorSimple light;
+    // un comment all light methods when defining this
+    // private DcMotorSimple light;
     private IMU imu;
     private Servo servoMarker;
 
@@ -26,8 +27,8 @@ public class Drive {
         rightMotor = new SlewDcMotor(hardwareMap.dcMotor.get("right"));
 
         //Motor Set Up
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         leftMotor.setSlewSpeed(Constants.DRIVE_SLEW_SPEED);
         rightMotor.setSlewSpeed(Constants.DRIVE_SLEW_SPEED);
@@ -45,8 +46,8 @@ public class Drive {
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 
-        light = hardwareMap.get(DcMotorSimple.class, "light");
-        light.setPower(0);
+        /*light = hardwareMap.get(DcMotorSimple.class, "light");
+        light.setPower(0);*/
 
         servoMarker = hardwareMap.servo.get("servo_marker");
         servoMarker.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.DRIVE_TEAM_MARKER_RETRACTED : Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED);
@@ -144,7 +145,7 @@ public class Drive {
     }
 
     public void setLightPower(double power) {
-        light.setPower(Math.abs(power));
+        //light.setPower(Math.abs(power));
     }
 
     public void stop() {

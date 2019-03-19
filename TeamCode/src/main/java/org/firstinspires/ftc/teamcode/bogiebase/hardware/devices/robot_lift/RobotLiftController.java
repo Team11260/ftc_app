@@ -40,9 +40,13 @@ public class RobotLiftController extends SubsystemController {
     }
 
     public synchronized void robotLiftDown() {
-        robotLift.setPosition(robotLift.getTargetPosition() + ROBOT_LIFT_RELEASE_PAWL_POSITION);
+        /*robotLift.setPosition(robotLift.getTargetPosition() + ROBOT_LIFT_RELEASE_PAWL_POSITION);
         robotLift.setServoPosition(ROBOT_LIFT_PAWL_RELEASED);
         delay(1000);
+        robotLift.setLiftPower(-0.5);*/
+        robotLift.setPosition(robotLift.getCurrentPosition()+100);
+        robotLift.setServoPosition(ROBOT_LIFT_PAWL_RELEASED);
+        delay(300);
         robotLift.setLiftPower(-0.5);
     }
 

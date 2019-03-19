@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 import java.util.concurrent.Callable;
 
 import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.INFO;
+import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.TRACE;
 import static org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
 public class Robot extends AbstractRobot {
@@ -61,12 +62,14 @@ public class Robot extends AbstractRobot {
         hardware.mineralLift.update();
         hardware.robotLift.update();
 
-        telemetry.addData(INFO, "Left drive current: " + hub.getCurrentDrawMotor0());
-        telemetry.addData(INFO, "Right drive current: " + hub.getCurrentDrawMotor1());
-        telemetry.addData(INFO, "Robot lift current: " + hub.getCurrentDrawMotor2());
-        telemetry.addData(INFO, "Mineral lift current: " + hub.getCurrentDrawMotor3());
-        telemetry.addData(INFO, "Total current: " + hub.getTotalCurrentDraw());
-        telemetry.addData(INFO, "Voltage: " + hub.getVoltage());
+        telemetry.addDataPhone(TRACE, "Left drive current: " + hub.getCurrentDrawMotor0());
+        telemetry.addDataPhone(TRACE, "Right drive current: " + hub.getCurrentDrawMotor1());
+        telemetry.addDataPhone(TRACE, "Robot lift current: " + hub.getCurrentDrawMotor2());
+        telemetry.addDataPhone(TRACE, "Mineral lift current: " + hub.getCurrentDrawMotor3());
+        telemetry.addDataPhone(INFO, "Total current: " + hub.getTotalCurrentDraw());
+        telemetry.addDataPhone(INFO, "Voltage: " + hub.getVoltage());
+        telemetry.addData(INFO, "Mineral Lift Position: " + hardware.mineralLift.getMineralLiftPosition());
+        telemetry.addData(INFO, "Mineral Lift Time: " + hardware.mineralLift.getMineralLiftTime());
         telemetry.update();
     }
 
@@ -257,6 +260,7 @@ public class Robot extends AbstractRobot {
     public Callable moveMineralLiftToDumpPositionCallable() {
         return () -> {
             moveMineralLiftToDumpPosition();
+            //liftIntake();
             return true;
         };
     }

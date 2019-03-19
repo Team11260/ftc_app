@@ -61,7 +61,6 @@ public class DriveController extends SubsystemController {
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Right drive power: " + drive.getRightPower());
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Left drive position: " + drive.getLeftPosition());
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Right drive position: " + drive.getRightPosition());
-        telemetry.addData(INFO,"Drive pitch: " + drive.getPitch());
     }
 
     public synchronized void stop() {
@@ -406,12 +405,12 @@ public class DriveController extends SubsystemController {
     //TeleOp Methods
     public synchronized void setPower(double left, double right) {
 
-        if ((currentMineralLiftState == MineralLiftState.IN_MOTION ||
+        /*if ((currentMineralLiftState == MineralLiftState.IN_MOTION ||
                 currentMineralLiftState == MineralLiftState.DUMP_POSITION) &&
                 currentMatchState == MatchState.TELEOP) {
             left *= DRIVE_MINERAL_LIFT_RAISED_SCALAR;
             right *= DRIVE_MINERAL_LIFT_RAISED_SCALAR;
-        }
+        }*/
 
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -524,7 +523,7 @@ public class DriveController extends SubsystemController {
         return (range(pow(val, 3)));
     }
 
-    private synchronized double range(double val) {
+    private synchronized double range(double val){
         if (val < -1) val = -1;
         if (val > 1) val = 1;
         return val;

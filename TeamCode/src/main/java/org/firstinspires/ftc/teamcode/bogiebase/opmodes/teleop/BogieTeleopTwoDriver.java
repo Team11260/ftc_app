@@ -19,6 +19,7 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
         ////////Drive////////
         addEventHandler("1_b_down", robot.dropMarkerCallable());
 
+        addEventHandler("1_rt_down", robot.toggleMineralGateCallable());
         ////////////////Gamepad 2////////////////
         ////////Intake////////
 
@@ -40,7 +41,7 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
 
         addEventHandler("2_rb_down", robot.moveMineralLiftToDumpPositionCallable());
 
-        addEventHandler("2_y_down", robot.toggleMineralGateCallable());
+        //addEventHandler("2_y_down", robot.toggleMineralGateCallable());
 
         addEventHandler("2_dpl_down", robot.setAngleServoPositionDumpCallable());
 
@@ -52,12 +53,12 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
 
         addEventHandler("2_lb_up", robot.robotLiftStopCallable());
 
-        addEventHandler("2_lt_down", robot.robotLiftUpCallable());
+        addEventHandler("2_lt_down", robot.robotLiftDownCallable());
 
         addEventHandler("2_lt_up", robot.robotLiftStopCallable());
 
         ////////////////Other////////////////
-        addEventHandler("pitch_down", robot.lowerIntakeCallable());
+        //addEventHandler("pitch_down", robot.lowerIntakeCallable());
     }
 
     @Override
@@ -65,6 +66,7 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
         //NEVER EVER PUT BLOCKING CODE HERE!!!
         checkBooleanInput("2_lt", gamepad2.left_trigger > 0.5);
         checkBooleanInput("2_rt", gamepad2.right_trigger > 0.5);
+        checkBooleanInput("1_rt",gamepad1.right_trigger > 0.5);
 
         checkBooleanInput("pitch", robot.getPitch() < -6 && RobotState.currentIntakeLiftState == RobotState.IntakeLiftState.RAISED);
 

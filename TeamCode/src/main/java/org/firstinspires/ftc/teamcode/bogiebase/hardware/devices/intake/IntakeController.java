@@ -56,18 +56,18 @@ public class IntakeController extends SubsystemController {
     public synchronized void lowerIntake() {
         currentIntakeLiftState = IntakeLiftState.IN_MOTION;
         intake.setLiftServoPosition(INTAKE_LIFT_LOWERED_POSITION);
-        intake.setIntakePower(INTAKE_REVERSE_POWER);
+        /*intake.setIntakePower(INTAKE_REVERSE_POWER);
         delay(250);
-        intake.setIntakePower(INTAKE_STOP_POWER);
+        intake.setIntakePower(INTAKE_STOP_POWER);*/
         currentIntakeLiftState = IntakeLiftState.LOWERED;
     }
 
     public synchronized void liftIntake() {
         currentIntakeLiftState = IntakeLiftState.IN_MOTION;
         intake.setLiftServoPosition(INTAKE_LIFT_RAISED_POSITION);
-        intake.setIntakePower(INTAKE_LOWER_POWER);
+        /*intake.setIntakePower(INTAKE_LOWER_POWER);
         delay(1000);
-        intake.setIntakePower(INTAKE_STOP_POWER);
+        intake.setIntakePower(INTAKE_STOP_POWER);*/
         currentIntakeLiftState = IntakeLiftState.RAISED;
     }
 }
