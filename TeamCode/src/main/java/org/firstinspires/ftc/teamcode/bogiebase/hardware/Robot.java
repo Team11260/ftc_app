@@ -51,6 +51,10 @@ public class Robot extends AbstractRobot {
         }
     }
 
+    public void resetDriveEncoders() {
+        hardware.drive.resetEncoders();
+    }
+
     public void stopTensorFlow() {
         setLightOff();
         tensorFlow.stop();

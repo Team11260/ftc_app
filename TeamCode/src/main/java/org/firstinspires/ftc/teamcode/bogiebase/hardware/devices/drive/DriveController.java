@@ -46,11 +46,11 @@ public class DriveController extends SubsystemController {
 
         runtime = new ElapsedTime();
 
-        DF = new DecimalFormat("#.##");
+        DF = new DecimalFormat("#.###");
 
         //Put general setup here
         drive = new Drive(hardwareMap);
-        anglePID = new PIDController(15, 0.1, 150, 0.3, 0.08);
+        anglePID = new PIDController(15, 0.1, 100, 0.3, 0.08);//D was 150
         //anglePID.setLogging(true);
         straightPID = new PIDController(50, 0.5, 50, 1, 0);
         distancePID = new PIDController(0.6, 0.1, 0, 2, 0.1);
@@ -215,14 +215,32 @@ public class DriveController extends SubsystemController {
             } else if (path.getCurrentSegment().getType() == Segment.SegmentType.DRIVE) {
                 driveToSegment((DriveSegment) path.getCurrentSegment());
             }
+
+            telemetry.addData(INFO, "Finished segment: " + path.getCurrentSegment().getName() + " in path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
         }
+
+        telemetry.addData(INFO, "Finished path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
     }
 
     public synchronized void turnToSegment(TurnSegment segment) {
 
         double angle = segment.getAngle(), speed = segment.getSpeed(), error = segment.getError(), period = segment.getPeriod();
 
-        baseHeading = angle;
+        telemetry.addData(INFO, "___________________"  );
+        telemetry.addData(INFO, "");
+        telemetry.addData(INFO, "");
+        telemetry.addData(INFO, "Angle = " + segment.getAngle() + " Speed = " + segment.getSpeed()
+                                                 + " error = " + segment.getError() + " Period = " + segment.getPeriod());
+        if(angle > 180) {
+            baseHeading = angle - 360;
+        } else if(angle < -180) {
+            baseHeading = angle + 360;
+        } else {
+            baseHeading = angle;
+        }
+
+        telemetry.addData(INFO, "Angle: " + angle);
+        telemetry.addData(INFO, "Baseheading: " + baseHeading);
 
         anglePID.reset();
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -230,12 +248,12 @@ public class DriveController extends SubsystemController {
         while (opModeIsActive()) {
 
             double currentHeading;
-
+            int angleCall = 0;
             int loop = 0;
             runtime.reset();
 
             //While we are not in the error band keep turning
-            while (!atPosition(angle, currentHeading = getHeading(), error) && (angle + error > 180 ? !atPosition((((angle + error) - 180) - 180) - error, currentHeading, error) : true) && (angle - error < -180 ? !atPosition((((angle - error) + 180) + 180) + error, currentHeading, error) : true) && opModeIsActive()) {
+            while (!atPosition(baseHeading, currentHeading = getHeading(), error) && (baseHeading + error > 180 ? !atPosition((((baseHeading + error) - 180) - 180) - error, currentHeading, error) : true) && (baseHeading - error < -180 ? !atPosition((((baseHeading - error) + 180) + 180) + error, currentHeading, error) : true) && opModeIsActive()) {
 
                 if (segment.isDone()) {
                     setPower(0, 0);
@@ -247,34 +265,56 @@ public class DriveController extends SubsystemController {
                 }
 
                 //Use the PIDController class to calculate power values for the wheels
-                if (angle - currentHeading > 180) {
+                if (angle > 180) {
+                    angleCall = 1;
+                    power = anglePID.output(angle, currentHeading < 0 && currentHeading < baseHeading + 30 ? 360 + currentHeading : currentHeading);
+                } else if (angle < -180) {
+                    angleCall = 2;
+                    power = anglePID.output(angle, currentHeading > 0 && currentHeading > baseHeading - 30 ? currentHeading - 360: currentHeading);
+                } else if (angle - currentHeading > 180) {
+                    angleCall = 3;
                     power = anglePID.output(angle, 360 + currentHeading);
                 } else if (currentHeading - angle > 180) {
+                    angleCall = 4;
                     power = anglePID.output(angle, angle - (360 - (currentHeading - angle)));
                 } else {
+                    angleCall = 5;
                     power = anglePID.output(angle, currentHeading);
                 }
-                setPower(-power * speed, power * speed);
+
+                if(power > speed) power = speed;
+                if(power < -speed) power = -speed;
+
+                telemetry.addData(INFO,
+                        "                                                                                                                                 call = "
+                                + angleCall + " Power = " + DF.format(power) + " Angle = " + getHeading());
+                setPower(-power, power);
 
                 loop++;
             }
 
             while (runtime.milliseconds() < period) {
-                if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
+                if ((abs(getHeading() - baseHeading)) > error && (abs(getHeading() + baseHeading)) > error)
                     break;
             }
-            if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
+            if ((abs(getHeading() - baseHeading)) > error && (abs(getHeading() + baseHeading)) > error)
                 continue;
 
 
-            telemetry.addData(INFO, "Average loop time for turn: " + runtime.milliseconds() / loop);
-            telemetry.addData(INFO, "Left encoder position: " + drive.getLeftPosition() + "  Right encoder position: " + drive.getRightPosition());
-            telemetry.addData(INFO, "Final angle: " + getHeading());
+            telemetry.addData(INFO, "");
+            telemetry.addData(INFO, "Average loop time for turn: " + DF.format(runtime.milliseconds() / loop)
+             + " Time = " + runtime.milliseconds() + " Loops = " + loop);
+            telemetry.addData(INFO, "Left encoder position: " + DF.format(drive.getLeftPosition()) + "  Right encoder position: " + DF.format(drive.getRightPosition()));
+            telemetry.addData(INFO, "Final angle: " + DF.format(getHeading()));
             telemetry.update();
 
             drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             return;
         }
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public void resetEncoders() {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 

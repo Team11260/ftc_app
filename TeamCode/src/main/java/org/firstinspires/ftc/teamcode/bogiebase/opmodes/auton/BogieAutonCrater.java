@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.opmodes.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
@@ -14,7 +15,7 @@ import org.upacreekrobotics.dashboard.Dashboard;
 //@Disabled
 
 public class BogieAutonCrater extends AbstractAutonNew {
-
+    private AnalogInput pot;
     Robot robot;
 
     @Override
@@ -38,6 +39,7 @@ public class BogieAutonCrater extends AbstractAutonNew {
 
     @Override
     public void Init() {
+
         //Init robot
         robot = new Robot();
     }

@@ -18,7 +18,7 @@ public final class Constants {
     public static final double DRIVE_SLEW_SPEED = 0.1;
 
     public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.7;
-    public static final double DRIVE_COUNTS_PER_INCH = 49.4;// 38 *1.3
+    public static final double DRIVE_COUNTS_PER_INCH = 38;// 38 *1.3
 
     public static final double DRIVE_RELEASE_WHEELS_POWER = -0.5;
 
@@ -45,12 +45,12 @@ public final class Constants {
     ////////MINERAL LIFT////////
     //Lift
     public final static double MINERAL_LIFT_FULL_SPEED = 1;
-    public final static double MINERAL_LIFT_SLOW_SPEED = 0.4;
+    public final static double MINERAL_LIFT_SLOW_SPEED = 1;
 
     public final static int MINERAL_LIFT_AUTON_RAISED_POSITION = 225;
     public final static int MINERAL_LIFT_DUMP_POSITION = 1700;
     public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 1424;
-    public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 230;
+    public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 80;
 
     public final static int MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS = 5;
 
@@ -87,7 +87,7 @@ public final class Constants {
     //Path variables
     public final static double AUTON_PATH_SPEED = 1;
     public final static double AUTON_TURN_ERROR = 8;
-    public final static double AUTON_MINERAL_TURN_ERROR = 4;
+    public final static double AUTON_MINERAL_TURN_ERROR = 1;
     public final static int AUTON_TURN_PERIOD = 100;
     public final static int AUTON_DISTANCE_ERROR = 20;
 
@@ -104,8 +104,7 @@ public final class Constants {
     public final static Path collectLeftMineral = new Path("collect left mineral");
 
     static {
-        collectLeftMineral.addSegment(new TurnSegment("start turning", 160, AUTON_PATH_SPEED, 100, 0));
-        collectLeftMineral.addSegment(new TurnSegment("turn to gold mineral", -152, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectLeftMineral.addSegment(new TurnSegment("turn to gold mineral", 210, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         collectLeftMineral.addSegment(new DriveSegment("drive to minerals", 30, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectLeftMineral.addSegment(new DriveSegment("back up from minerals", -14, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
@@ -113,8 +112,7 @@ public final class Constants {
     public final static Path collectCenterMineral = new Path("collect center mineral");
 
     static {
-        collectCenterMineral.addSegment(new TurnSegment("start turning", 160, AUTON_PATH_SPEED, 100, 0));
-        collectCenterMineral.addSegment(new TurnSegment("turn to gold mineral", 180, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectCenterMineral.addSegment(new TurnSegment("turn to gold mineral", 181, AUTON_PATH_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         collectCenterMineral.addSegment(new DriveSegment("drive to minerals", 28, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectCenterMineral.addSegment(new DriveSegment("back up from minerals", -12, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
@@ -284,5 +282,20 @@ public final class Constants {
         collectDepotCenterMineral.addSegment(new DriveSegment("drive to minerals", 24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectDepotCenterMineral.addSegment(new TurnSegment("turn to depot", -165, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         collectDepotCenterMineral.addSegment(new DriveSegment("drive to depot", 30, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+    }
+
+    public final static Path testRightTurn = new Path ("tests right turn");
+    static {
+        testRightTurn.addSegment(new TurnSegment("turn gold right",151,0.4,AUTON_MINERAL_TURN_ERROR,AUTON_TURN_PERIOD));
+    }
+
+    public final static Path testLeftTurn = new Path ("tests left turn");
+    static {
+        testLeftTurn.addSegment(new TurnSegment("turn to gold mineral", 212, 0.4, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
+    }
+
+    public final static Path testCenterTurn = new Path ("tests center turn");
+    static {
+        testCenterTurn.addSegment(new TurnSegment("turn to gold mineral", 181, 0.4, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
     }
 }

@@ -30,7 +30,8 @@ public class Vuforia {
         } else {
             parameters = new VuforiaLocalizer.Parameters();
         }
-        parameters.vuforiaLicenseKey = "AbuxcJX/////AAABmXadAYnA80uwmb4Rhy4YmvIh7qg/f2yrRu1Nd8O7sSufbUWHSv1jDhunwDBItvFchrvkc8EjTzjh97m2kAPy8YOjBclQbEBtuR8qcIfrGofASCZh2M6vQ0/Au+YbhYh0MLLdNrond+3YjkLswv6+Se3eVGw9y9fPGamiABzIrosjUdanAOWemf8BtuQUW7EqXa4mNPtQ+2jpZQO2sqtqxGu1anHQCD0S/PvdZdB7dRkyWaH6XTZCat5gZ0fpFH/aLWMFP4yiknlgYbjT7gklUAqyDX81pNrQhWWY4dOFnz2WiWhkCt+MNZMLKH5SdsyC7gwKI/r3h51pTwgXZfyYymB60eYAFqEUpeTrL+4LmltN";
+//        parameters.vuforiaLicenseKey = "AbuxcJX/////AAABmXadAYnA80uwmb4Rhy4YmvIh7qg/f2yrRu1Nd8O7sSufbUWHSv1jDhunwDBItvFchrvkc8EjTzjh97m2kAPy8YOjBclQbEBtuR8qcIfrGofASCZh2M6vQ0/Au+YbhYh0MLLdNrond+3YjkLswv6+Se3eVGw9y9fPGamiABzIrosjUdanAOWemf8BtuQUW7EqXa4mNPtQ+2jpZQO2sqtqxGu1anHQCD0S/PvdZdB7dRkyWaH6XTZCat5gZ0fpFH/aLWMFP4yiknlgYbjT7gklUAqyDX81pNrQhWWY4dOFnz2WiWhkCt+MNZMLKH5SdsyC7gwKI/r3h51pTwgXZfyYymB60eYAFqEUpeTrL+4LmltN";
+        parameters.vuforiaLicenseKey = "AQzqV0j/////AAABmZF8sPdbkkgXrX/IX0xjSjIh0BXmJg+sDCxSUvOkRu5XxCnjsIEh/TU40jTRxDTxPfQxNuNST81YDr4WUt8Z2mW1CgPrd2JENuyKu7gDePnuM9o0tjKeM8SN4av6U91/y+IYN+IcxbJSiW0T9p98Ukklyg7wkXvI/jVds683IwbpoA0QIhCw1yg+hRp9rATRHdVvRNUf/ON5lO9aWbHbE9HdYV/LhwzlCqT4XAReK9h6ysOa6LEaXxPFwCdxcfsVYK3SMfH5AOIEMHlpk2WONbUiQ4d8ZbrksUAjS9Y4HfRKw92X0BijQQin+kkdGG43n346kKHrleWorsRVXqOkwHOHtKReHIC9NbP7ggEFm/0Q";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.getInstance().createVuforia(parameters);
         vuforia.setFrameQueueCapacity(1);
@@ -46,7 +47,8 @@ public class Vuforia {
         } else {
             parameters = new VuforiaLocalizer.Parameters();
         }
-        parameters.vuforiaLicenseKey = "AbuxcJX/////AAABmXadAYnA80uwmb4Rhy4YmvIh7qg/f2yrRu1Nd8O7sSufbUWHSv1jDhunwDBItvFchrvkc8EjTzjh97m2kAPy8YOjBclQbEBtuR8qcIfrGofASCZh2M6vQ0/Au+YbhYh0MLLdNrond+3YjkLswv6+Se3eVGw9y9fPGamiABzIrosjUdanAOWemf8BtuQUW7EqXa4mNPtQ+2jpZQO2sqtqxGu1anHQCD0S/PvdZdB7dRkyWaH6XTZCat5gZ0fpFH/aLWMFP4yiknlgYbjT7gklUAqyDX81pNrQhWWY4dOFnz2WiWhkCt+MNZMLKH5SdsyC7gwKI/r3h51pTwgXZfyYymB60eYAFqEUpeTrL+4LmltN";
+//        parameters.vuforiaLicenseKey = "AbuxcJX/////AAABmXadAYnA80uwmb4Rhy4YmvIh7qg/f2yrRu1Nd8O7sSufbUWHSv1jDhunwDBItvFchrvkc8EjTzjh97m2kAPy8YOjBclQbEBtuR8qcIfrGofASCZh2M6vQ0/Au+YbhYh0MLLdNrond+3YjkLswv6+Se3eVGw9y9fPGamiABzIrosjUdanAOWemf8BtuQUW7EqXa4mNPtQ+2jpZQO2sqtqxGu1anHQCD0S/PvdZdB7dRkyWaH6XTZCat5gZ0fpFH/aLWMFP4yiknlgYbjT7gklUAqyDX81pNrQhWWY4dOFnz2WiWhkCt+MNZMLKH5SdsyC7gwKI/r3h51pTwgXZfyYymB60eYAFqEUpeTrL+4LmltN";
+        parameters.vuforiaLicenseKey = "AQzqV0j/////AAABmZF8sPdbkkgXrX/IX0xjSjIh0BXmJg+sDCxSUvOkRu5XxCnjsIEh/TU40jTRxDTxPfQxNuNST81YDr4WUt8Z2mW1CgPrd2JENuyKu7gDePnuM9o0tjKeM8SN4av6U91/y+IYN+IcxbJSiW0T9p98Ukklyg7wkXvI/jVds683IwbpoA0QIhCw1yg+hRp9rATRHdVvRNUf/ON5lO9aWbHbE9HdYV/LhwzlCqT4XAReK9h6ysOa6LEaXxPFwCdxcfsVYK3SMfH5AOIEMHlpk2WONbUiQ4d8ZbrksUAjS9Y4HfRKw92X0BijQQin+kkdGG43n346kKHrleWorsRVXqOkwHOHtKReHIC9NbP7ggEFm/0Q";
         if (camera.equals("BACK")) {
             parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         } else if (camera.equals("FRONT")) {
