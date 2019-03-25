@@ -405,25 +405,7 @@ public class DriveController extends SubsystemController {
     }
 
     public void autonDriveToWallSequence() {
-        /*int[] values = new int[5];
-        for (int i = 0; i < 5; i++) {
-            values[i] = i * 1000000;
-        }
-
-        int error = 3;
-        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && (!atPosition(values[0], values[1], error) ||
-                !atPosition(values[1], values[2], error) || !atPosition(values[2], values[3], error) || !atPosition(values[3], values[4], error)) && opModeIsActive()) {
-            for (int i = 4; i > 0; i--) {
-                values[i] = values[i - 1];
-            }
-            values[0] = (drive.getLeftPosition() + drive.getRightPosition()) / 2;
-        }
-
-        if (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) return;
-
-        RobotState.currentPath.nextSegment();*/
-
-        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && opModeIsActive() && drive.getLeftMotorCurrentDraw()<6000 && drive.getRightMotorCurrentDraw()<6000) ;
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && opModeIsActive() && drive.getLeftMotorCurrentDraw()<8000 && drive.getRightMotorCurrentDraw()<8000) ;
 
         if (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) return;
 
