@@ -22,7 +22,9 @@ public enum MessageType {
     RETURN_VALUE,
     INFO,
     TELEMETRY,
-    LOG;
+    LOG,
+
+    SMARTDASHBOARD_PUT;
 
     public String getMessage(MessageType type) {
         return type.toString();

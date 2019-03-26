@@ -27,6 +27,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     private EventLoop eventLoop;
     private RobotStatus status;
     private dashboardtelemetry DashboardTelemtry;
+    private smartdashboard SmartDashboard;
     private String lastInputValue;
     private boolean connected = false;
     private List<VoltageSensor> voltageSensors = null;
@@ -300,6 +301,10 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         return DashboardTelemtry;
     }
 
+    public smartdashboard getSmartDashboard() {
+        return SmartDashboard;
+    }
+
     public static String getCurrentOpMode() {
         return dashboard.internalGetCurrentOpMode();
     }
@@ -464,6 +469,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         @Override
         public void run() {
             DashboardTelemtry = new dashboardtelemetry();
+            SmartDashboard = new smartdashboard();
             while (isRunning) {
                 receiveMessage();
             }
@@ -513,6 +519,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     public class dashboardtelemetry {
 
         public dashboardtelemetry() {
+            
         }
 
         public void write(String text) {
@@ -539,6 +546,29 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
         public void info(double text) {
             info(String.valueOf(text));
+        }
+    }
+    
+    public class smartdashboard {
+        
+        public smartdashboard() {
+            
+        }
+        
+        public void putValue(Object key, Object value) {
+            if (data != null && connected) data.write(new Message(MessageType.SMARTDASHBOARD_PUT, "VALUE<&#%#&>" + String.valueOf(key) + "<&#%#&>" + String.valueOf(value)));
+        }
+
+        public void putBoolean(Object key, boolean value) {
+            if (data != null && connected) data.write(new Message(MessageType.SMARTDASHBOARD_PUT, "BOOLEAN<&#%#&>" + String.valueOf(key) + "<&#%#&>" + String.valueOf(value)));
+        }
+
+        public void putButton(String key) {
+            if (data != null && connected) data.write(new Message(MessageType.SMARTDASHBOARD_PUT, "BUTTON<&#%#&>" + String.valueOf(key)));
+        }
+        
+        public void putInput(String key) {
+            if (data != null && connected) data.write(new Message(MessageType.SMARTDASHBOARD_PUT, "INPUT<&#%#&>" + String.valueOf(key)));
         }
     }
 
