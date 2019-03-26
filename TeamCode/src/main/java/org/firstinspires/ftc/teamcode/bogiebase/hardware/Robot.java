@@ -176,6 +176,13 @@ public class Robot extends AbstractRobot {
         return hardware.drive.getPitch();
     }
 
+    public Callable getPitchCallable(){
+        return () ->{
+            hardware.drive.getPitch();
+            return true;
+        };
+    }
+
     public void setLightOn() {
         hardware.drive.setLightOn();
     }

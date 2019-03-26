@@ -38,7 +38,6 @@ public class Test extends AbstractAutonNew {
         //Stop object recognition
         robot.stopTensorFlow();
         //Collect gold mineral
-        robot.resetDriveEncoders();
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
                 robot.runDrivePath(Constants.testRightTurn);

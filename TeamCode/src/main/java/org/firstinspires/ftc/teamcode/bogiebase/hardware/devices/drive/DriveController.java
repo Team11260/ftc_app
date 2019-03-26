@@ -319,6 +319,10 @@ public class DriveController extends SubsystemController {
     }
 
     public synchronized void driveToSegment(DriveSegment segment) {
+        telemetry.addData(INFO, "Drive Segment is starting");
+        telemetry.addData(INFO, "");
+        telemetry.addData(INFO, "");
+        telemetry.addData(INFO, "");
 
         //AbstractOpMode.delay(100);
 

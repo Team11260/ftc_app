@@ -54,8 +54,8 @@ public final class Constants {
     public final static int MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS = 5;
 
     //Gate
-    public final static double MINERAL_LIFT_GATE_OPEN_POSITION = 0.7;
-    public final static double MINERAL_LIFT_GATE_PUSH_POSITION = 0.35;
+    public final static double MINERAL_LIFT_GATE_OPEN_POSITION = 0.75;
+    public final static double MINERAL_LIFT_GATE_PUSH_POSITION = 0.3;
     public final static double MINERAL_LIFT_GATE_CLOSED_POSITION = 0.1;
 
     //Angle Servo
@@ -280,6 +280,7 @@ public final class Constants {
         collectDepotCenterMineral.addSegment(new DriveSegment("drive to depot", 30, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
     }
 
+    //Test Routes
     public final static Path testRightTurn = new Path ("tests right turn");
     static {
         testRightTurn.addSegment(new TurnSegment("turn gold right",151,AUTON_MINERAL_TURN_SPEED,AUTON_MINERAL_TURN_ERROR,AUTON_TURN_PERIOD));
