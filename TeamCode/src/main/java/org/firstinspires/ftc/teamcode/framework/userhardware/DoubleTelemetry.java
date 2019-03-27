@@ -91,6 +91,10 @@ public class DoubleTelemetry {
         logger.log(Dashboard.getInstance().getLogPreMessage() + String.valueOf(data));
     }
 
+    public Dashboard.smartdashboard getSmartdashboard() {
+        return Dashboard.getInstance().getSmartDashboard();
+    }
+
     public void stop() {
         logger.stop();
     }

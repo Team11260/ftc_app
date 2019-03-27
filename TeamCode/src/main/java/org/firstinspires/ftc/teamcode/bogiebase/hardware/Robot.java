@@ -51,20 +51,29 @@ public class Robot extends AbstractRobot {
         }
     }
 
-    public void resetDriveEncoders() {
-        hardware.drive.resetEncoders();
-    }
-
     public void stopTensorFlow() {
         setLightOff();
         tensorFlow.stop();
     }
 
     public void updateAll() {
-        hardware.drive.update();
-        hardware.intake.update();
-        hardware.mineralLift.update();
-        hardware.robotLift.update();
+        if(RobotState.currentMatchState == RobotState.MatchState.TELEOP) {
+            hardware.drive.update();
+            hardware.intake.update();
+            hardware.mineralLift.update();
+            hardware.robotLift.update();
+        }
+
+        telemetry.getSmartdashboard().putValue("Left drive current", hub.getCurrentDrawMotor0());
+        telemetry.getSmartdashboard().putValue("Right drive current", hub.getCurrentDrawMotor1());
+        telemetry.getSmartdashboard().putValue("Robot lift current", hub.getCurrentDrawMotor2());
+        telemetry.getSmartdashboard().putValue("Mineral lift current", hub.getCurrentDrawMotor3());
+        telemetry.getSmartdashboard().putValue("Total current", hub.getTotalCurrentDraw());
+        telemetry.getSmartdashboard().putValue("Voltage", hub.getVoltage());
+        telemetry.getSmartdashboard().putValue("Heading", hardware.drive.getHeading());
+        telemetry.getSmartdashboard().putValue("Pitch", hardware.drive.getPitch());
+        telemetry.getSmartdashboard().putValue("Left drive position", hardware.drive.getLeftPosition());
+        telemetry.getSmartdashboard().putValue("Right drive position", hardware.drive.getRightPosition());
 
         telemetry.addDataPhone(TRACE, "Left drive current: " + hub.getCurrentDrawMotor0());
         telemetry.addDataPhone(TRACE, "Right drive current: " + hub.getCurrentDrawMotor1());
@@ -72,6 +81,7 @@ public class Robot extends AbstractRobot {
         telemetry.addDataPhone(TRACE, "Mineral lift current: " + hub.getCurrentDrawMotor3());
         telemetry.addDataPhone(INFO, "Total current: " + hub.getTotalCurrentDraw());
         telemetry.addDataPhone(INFO, "Voltage: " + hub.getVoltage());
+
         telemetry.addData(INFO, "Mineral Lift Position: " + hardware.mineralLift.getMineralLiftPosition());
         telemetry.addData(INFO, "Mineral Lift Time: " + hardware.mineralLift.getMineralLiftTime());
         telemetry.update();
@@ -232,6 +242,10 @@ public class Robot extends AbstractRobot {
         hardware.intake.reverseIntake();
     }
 
+    public void slowReverseIntake() {
+        hardware.intake.slowReverseIntake();
+    }
+
     public Callable liftIntakeCallable() {
         return () -> {
             liftIntake();
@@ -321,7 +335,6 @@ public class Robot extends AbstractRobot {
         };
     }
 
-
     public void setAngleServoPositionDump() {
         hardware.mineralLift.setAngleServoPositionDump();
     }
@@ -333,7 +346,6 @@ public class Robot extends AbstractRobot {
         };
     }
 
-
     public void setAngleServoPositionVertical() {
         hardware.mineralLift.setAngleServoPositionVertical();
     }
@@ -344,7 +356,6 @@ public class Robot extends AbstractRobot {
             return true;
         };
     }
-
 
     public Callable autonLowerMineralLiftSequenceCallable() {
         return () -> {

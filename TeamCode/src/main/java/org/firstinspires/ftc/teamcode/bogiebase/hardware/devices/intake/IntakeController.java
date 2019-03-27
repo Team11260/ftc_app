@@ -53,6 +53,11 @@ public class IntakeController extends SubsystemController {
             intake.setIntakePower(INTAKE_REVERSE_POWER);
     }
 
+    public synchronized void slowReverseIntake() {
+        if (currentIntakeLiftState == IntakeLiftState.LOWERED)
+            intake.setIntakePower(0.1);
+    }
+
     public synchronized void lowerIntake() {
         currentIntakeLiftState = IntakeLiftState.IN_MOTION;
         intake.setLiftServoPosition(INTAKE_LIFT_LOWERED_POSITION);

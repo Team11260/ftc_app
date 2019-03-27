@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.opmodes.test;
 
+import android.hardware.usb.UsbManager;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
