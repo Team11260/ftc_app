@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.Potentiometer;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
@@ -17,15 +18,17 @@ public class Robot extends AbstractRobot {
     private HardwareDevices hardware;
     private TensorFlow tensorFlow;
     private ExpansionHubMonitor hub;
+    private Potentiometer pot;
+    private double scaledPotValue;
 
     //Robot Methods
     public Robot() {
         hardware = new HardwareDevices();
-
+        pot = new Potentiometer("pot");
         hub = new ExpansionHubMonitor("Expansion Hub 1");
 
         if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
-            telemetry.addData(INFO,"starting tensorflow");
+            telemetry.addData(INFO, "starting tensorflow");
             tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
 
             RobotState.currentSamplePosition = UNKNOWN;
@@ -34,6 +37,21 @@ public class Robot extends AbstractRobot {
 
             setLightOn();
         }
+    }
+
+    public double getScaledPotValue() {
+        scaledPotValue = pot.getVoltage();
+        if (scaledPotValue >= 0.0 && scaledPotValue <= 0.5) {
+            scaledPotValue = 0;
+        } else if (scaledPotValue >= 0.5 && scaledPotValue <= 1.1) {
+            scaledPotValue = 4;
+        } else if (scaledPotValue >= 1.1 && scaledPotValue <= 2.5) {
+            scaledPotValue = 6;
+        } else if (scaledPotValue >= 2.5) {
+            scaledPotValue = 8;
+        }
+        scaledPotValue = scaledPotValue * 1000;
+        return scaledPotValue;
     }
 
     public void updateSamplePosition(int loop) {
@@ -176,8 +194,8 @@ public class Robot extends AbstractRobot {
         return hardware.drive.getPitch();
     }
 
-    public Callable getPitchCallable(){
-        return () ->{
+    public Callable getPitchCallable() {
+        return () -> {
             hardware.drive.getPitch();
             return true;
         };

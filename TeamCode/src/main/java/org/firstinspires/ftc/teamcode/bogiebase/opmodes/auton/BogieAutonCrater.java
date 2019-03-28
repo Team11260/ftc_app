@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.opmodes.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.AnalogInput;
+
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
@@ -16,7 +16,7 @@ import org.upacreekrobotics.dashboard.Dashboard;
 //@Disabled
 
 public class BogieAutonCrater extends AbstractAutonNew {
-    private AnalogInput pot;
+
     Robot robot;
 
     @Override
@@ -78,7 +78,7 @@ public class BogieAutonCrater extends AbstractAutonNew {
                 break;
         }
 
-        delay(Constants.AUTON_CRATER_SIDE_PARTNER_DELAY);
+        delay( (int)robot.getScaledPotValue());
 
         //Deposit team marker and drive to crater
         robot.runDrivePath(Constants.craterSideToCrater);
