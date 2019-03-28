@@ -24,7 +24,8 @@ public enum MessageType {
     TELEMETRY,
     LOG,
 
-    SMARTDASHBOARD_PUT;
+    SMARTDASHBOARD_PUT,
+    SMARTDASHBOARD_GET;
 
     public String getMessage(MessageType type) {
         return type.toString();

@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.internal.opmode.RegisteredOpModes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +42,10 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     private double opModeInitTime = 0;
     private double opModeStartTime = 0;
     private String activeOpModeName = "";
+    private String oldSmartdashboard = "";
+    private int smartdashboardRequestID = 0;
+    private Object smartdashboardRequestIDLock = new Object();
+    private List<String> smartdashboardResponses = Collections.synchronizedList(new ArrayList<>());
 
     private OpModeManagerImpl opModeManager;
     private RobotStatus.OpModeStatus activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
@@ -185,12 +190,20 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                         } catch (NullPointerException e) {
 
                         }
-                        String[] parts = oldTelemetry.split("&#%#&");
-                        for (String part : parts) {
+                        String[] telemetryParts = oldTelemetry.split("&#%#&");
+                        for (String part : telemetryParts) {
                             if (!part.equals(" "))
                                 data.write(new Message(MessageType.TELEMETRY, part));
                         }
                         oldTelemetry = "";
+
+                        String[] smartdashboardParts = oldSmartdashboard.split("&#%#&");
+                        for (String part : smartdashboardParts) {
+                            if (!part.equals(" "))
+                                data.write(new Message(MessageType.SMARTDASHBOARD_PUT, part));
+                        }
+                        oldSmartdashboard = "";
+
                         if (batteryChecker != null) batteryChecker.pollBatteryLevel(batteryWatcher);
                         break;
                     }
@@ -228,6 +241,11 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
                     case RETURN_VALUE: {
                         lastInputValue = message.getText();
+                        break;
+                    }
+
+                    case SMARTDASHBOARD_GET: {
+                        smartdashboardResponses.add(message.getText());
                         break;
                     }
 
@@ -309,7 +327,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         return dashboard.internalGetCurrentOpMode();
     }
 
-    public String internalGetCurrentOpMode(){
+    public String internalGetCurrentOpMode() {
         return activeOpModeName;
     }
 
@@ -349,16 +367,24 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         return "";
     }
 
-    public static void startOpMode(String name){
+    public static void startOpMode(String name) {
         dashboard.internalStartOpMode(name);
     }
 
-    private void internalStartOpMode(String name){
+    private void internalStartOpMode(String name) {
         new Thread(() -> {
-            while (!opModeManager.getActiveOpModeName().equals("$Stop$Robot$"));
-            try { Thread.sleep(1000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+            while (!opModeManager.getActiveOpModeName().equals("$Stop$Robot$")) ;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             opModeManager.initActiveOpMode(name);
-            try { Thread.sleep(4000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             opModeManager.startActiveOpMode();
         }).start();
     }
@@ -426,11 +452,11 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             requestedOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
     }
 
-    public String getLogPreMessage(){
+    public String getLogPreMessage() {
         return dashboard.internalGetLogPreMessage();
     }
 
-    private String internalGetLogPreMessage(){
+    private String internalGetLogPreMessage() {
         String packet = "";
 
         if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING) ||
@@ -445,7 +471,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         return packet;
     }
 
-    private String internalGetTelemetryPreMessage(){
+    private String internalGetTelemetryPreMessage() {
         String packet = "";
 
         if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING) ||
@@ -519,14 +545,14 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     public class dashboardtelemetry {
 
         public dashboardtelemetry() {
-            
+
         }
 
         public void write(String text) {
             String packet = internalGetTelemetryPreMessage() + text;
 
             if (data != null && connected) data.write(new Message(MessageType.TELEMETRY, packet));
-            else oldTelemetry = oldTelemetry + "&#%#&" + packet;
+            else oldTelemetry += "&#%#&" + packet;
         }
 
         public void updateInfo() {
@@ -548,27 +574,197 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             info(String.valueOf(text));
         }
     }
-    
+
     public class smartdashboard {
-        
+
         public smartdashboard() {
-            
+
         }
-        
+
+        private void put(String text) {
+            if (data != null && connected)
+                data.write(new Message(MessageType.SMARTDASHBOARD_PUT, text));
+            else oldSmartdashboard += text + "#&%&#";
+        }
+
         public void putValue(Object key, Object value) {
-            if (data != null && connected) data.write(new Message(MessageType.SMARTDASHBOARD_PUT, "VALUE<&#%#&>" + String.valueOf(key) + "<&#%#&>" + String.valueOf(value)));
+            put("VALUE<&#%#&>" + String.valueOf(key) + "<&#%#&>" + String.valueOf(value));
         }
 
         public void putBoolean(Object key, boolean value) {
-            if (data != null && connected) data.write(new Message(MessageType.SMARTDASHBOARD_PUT, "BOOLEAN<&#%#&>" + String.valueOf(key) + "<&#%#&>" + String.valueOf(value)));
+            put("BOOLEAN<&#%#&>" + String.valueOf(key) + "<&#%#&>" + String.valueOf(value));
         }
 
-        public void putButton(String key) {
-            if (data != null && connected) data.write(new Message(MessageType.SMARTDASHBOARD_PUT, "BUTTON<&#%#&>" + String.valueOf(key)));
+        public void putButton(Object key) {
+            put("BUTTON<&#%#&>" + String.valueOf(key));
         }
-        
-        public void putInput(String key) {
-            if (data != null && connected) data.write(new Message(MessageType.SMARTDASHBOARD_PUT, "INPUT<&#%#&>" + String.valueOf(key)));
+
+        public void putInput(Object key) {
+            put("INPUT<&#%#&>" + String.valueOf(key));
+        }
+
+        public void putSlider(Object key, int low, int high) {
+            put("SLIDER<&#%#&>" + String.valueOf(key) + "<&#%#&>" + low + "<&#%#&>" + high);
+        }
+
+        public void get(String text) {
+            if (data != null && connected)
+                data.write(new Message(MessageType.SMARTDASHBOARD_GET, text));
+        }
+
+        public String getValue(Object key) {
+
+            int requestID = -1;
+
+            synchronized (smartdashboardRequestIDLock) {
+                get(smartdashboardRequestID + "<&#%#&>VALUE<&#%#&>" + String.valueOf(key));
+                requestID = smartdashboardRequestID;
+                smartdashboardRequestID++;
+            }
+
+            String response = null;
+
+            loop: while (connected) {
+                synchronized (smartdashboardResponses) {
+                    for (String message : smartdashboardResponses) {
+                        String[] parts = message.split("<&#%#&>");
+                        if (Integer.valueOf(parts[0]) == requestID) {
+                            response = message;
+                            break loop;
+                        }
+                    }
+                }
+            }
+
+            smartdashboardResponses.remove(response);
+
+            response = response.split("<&#%#&>")[1];
+
+            return response;
+        }
+
+        public Boolean getBoolean(Object key) {
+
+            int requestID = -1;
+
+            synchronized (smartdashboardRequestIDLock) {
+                get(smartdashboardRequestID + "<&#%#&>BOOLEAN<&#%#&>" + String.valueOf(key));
+                requestID = smartdashboardRequestID;
+                smartdashboardRequestID++;
+            }
+
+            String response = null;
+
+            loop: while (connected) {
+                synchronized (smartdashboardResponses) {
+                    for (String message : smartdashboardResponses) {
+                        String[] parts = message.split("<&#%#&>");
+                        if (Integer.valueOf(parts[0]) == requestID) {
+                            response = message;
+                            break loop;
+                        }
+                    }
+                }
+            }
+
+            smartdashboardResponses.remove(response);
+
+            response = response.split("<&#%#&>")[1];
+
+            return Boolean.valueOf(response);
+        }
+
+        public Boolean getButton(Object key) {
+
+            int requestID = -1;
+
+            synchronized (smartdashboardRequestIDLock) {
+                get(smartdashboardRequestID + "<&#%#&>BUTTON<&#%#&>" + String.valueOf(key));
+                requestID = smartdashboardRequestID;
+                smartdashboardRequestID++;
+            }
+
+            String response = null;
+
+            loop: while (connected) {
+                synchronized (smartdashboardResponses) {
+                    for (String message : smartdashboardResponses) {
+                        String[] parts = message.split("<&#%#&>");
+                        if (Integer.valueOf(parts[0]) == requestID) {
+                            response = message;
+                            break loop;
+                        }
+                    }
+                }
+            }
+
+            smartdashboardResponses.remove(response);
+
+            response = response.split("<&#%#&>")[1];
+
+            return Boolean.valueOf(response);
+        }
+
+        public String getInput(Object key) {
+
+            int requestID = -1;
+
+            synchronized (smartdashboardRequestIDLock) {
+                get(smartdashboardRequestID + "<&#%#&>INPUT<&#%#&>" + String.valueOf(key));
+                requestID = smartdashboardRequestID;
+                smartdashboardRequestID++;
+            }
+
+            String response = null;
+
+            loop: while (connected) {
+                synchronized (smartdashboardResponses) {
+                    for (String message : smartdashboardResponses) {
+                        String[] parts = message.split("<&#%#&>");
+                        if (Integer.valueOf(parts[0]) == requestID) {
+                            response = message;
+                            break loop;
+                        }
+                    }
+                }
+            }
+
+            smartdashboardResponses.remove(response);
+
+            response = response.split("<&#%#&>")[1];
+
+            return response;
+        }
+
+        public int getSlider(Object key) {
+
+            int requestID = -1;
+
+            synchronized (smartdashboardRequestIDLock) {
+                get(smartdashboardRequestID + "<&#%#&>SLIDER<&#%#&>" + String.valueOf(key));
+                requestID = smartdashboardRequestID;
+                smartdashboardRequestID++;
+            }
+
+            String response = null;
+
+            loop: while (connected) {
+                synchronized (smartdashboardResponses) {
+                    for (String message : smartdashboardResponses) {
+                        String[] parts = message.split("<&#%#&>");
+                        if (Integer.valueOf(parts[0]) == requestID) {
+                            response = message;
+                            break loop;
+                        }
+                    }
+                }
+            }
+
+            smartdashboardResponses.remove(response);
+
+            response = response.split("<&#%#&>")[1];
+
+            return Integer.valueOf(response);
         }
     }
 

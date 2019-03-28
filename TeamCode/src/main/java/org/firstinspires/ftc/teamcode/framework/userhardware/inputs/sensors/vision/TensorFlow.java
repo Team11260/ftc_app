@@ -251,7 +251,7 @@ public class TensorFlow {
 
         private MineralType mineralType;
 
-        public Mineral(Recognition recognition) {
+        private Mineral(Recognition recognition) {
             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) mineralType = MineralType.GOLD;
             else mineralType = MineralType.SILVER;
             if (orientation == CameraOrientation.VERTICAL) {
@@ -264,19 +264,19 @@ public class TensorFlow {
             this.confidence = recognition.getConfidence();
         }
 
-        public int getX() {
+        private int getX() {
             return x;
         }
 
-        public int getY() {
+        private int getY() {
             return y;
         }
 
-        public double getConfidence() {
+        private double getConfidence() {
             return confidence;
         }
 
-        public MineralType getType() {
+        private MineralType getType() {
             return mineralType;
         }
     }

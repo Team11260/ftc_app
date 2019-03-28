@@ -243,6 +243,7 @@ public class DriveController extends SubsystemController {
         telemetry.addData(INFO, "Baseheading: " + baseHeading);
 
         anglePID.reset();
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double power;
         while (opModeIsActive()) {
@@ -311,10 +312,6 @@ public class DriveController extends SubsystemController {
             drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             return;
         }
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
-    public void resetEncoders() {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
@@ -416,12 +413,20 @@ public class DriveController extends SubsystemController {
         RobotState.currentPath.nextSegment();
     }
 
-    public synchronized double getHeading() {
+    public double getHeading() {
         return drive.getHeading();
     }
 
     public double getPitch() {
         return drive.getPitch();
+    }
+
+    public int getLeftPosition() {
+        return drive.getLeftPosition();
+    }
+
+    public int getRightPosition() {
+        return drive.getRightPosition();
     }
 
     public synchronized void resetAngleToZero() {

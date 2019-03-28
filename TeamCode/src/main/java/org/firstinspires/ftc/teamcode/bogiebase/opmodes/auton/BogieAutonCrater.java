@@ -21,6 +21,12 @@ public class BogieAutonCrater extends AbstractAutonNew {
 
     @Override
     public void RegisterStates() {
+        addState(new State("telemetry", "start", () ->{
+            while (opModeIsActive()) {
+                robot.updateAll();
+            }
+            return true;
+        }));
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
@@ -34,16 +40,15 @@ public class BogieAutonCrater extends AbstractAutonNew {
         addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
         addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
-        addState(new PathState("Stop robot over crater","drive to depot",() -> {
-            if (robot.getPitch() > 6)
-                Stop();
+        addState(new PathState("stop robot on crater","drive to depot",() -> {
+            while (robot.getPitch() < 6);
+            RobotState.currentPath.nextSegment();
             return true;
         }));
     }
 
     @Override
     public void Init() {
-
         //Init robot
         robot = new Robot();
     }

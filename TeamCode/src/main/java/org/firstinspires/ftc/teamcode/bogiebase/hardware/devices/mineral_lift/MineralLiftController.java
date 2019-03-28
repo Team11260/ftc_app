@@ -37,6 +37,8 @@ public class MineralLiftController extends SubsystemController {
 
     public synchronized void update() {
 
+        telemetry.getSmartdashboard().putValue("Mineral Lift Position", mineralLift.getCurrentPosition());
+
         if (isMovingDown) {
             int currentValue = mineralLift.getCurrentPosition();
 
