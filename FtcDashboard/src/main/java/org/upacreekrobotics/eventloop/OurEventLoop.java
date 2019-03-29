@@ -60,7 +60,7 @@ public class OurEventLoop extends FtcEventLoopBase {
     //------------------------------------------------------------------------------------------------
 
     protected final Utility utility;
-    protected final OpModeManagerImpl opModeManager;
+    protected final OurOpModeManager opModeManager;
     protected UsbModuleAttachmentHandler usbModuleAttachmentHandler;
     protected final Map<String, Long> recentlyAttachedUsbDevices;  // serialNumber -> when to attach
     protected final AtomicReference<OpMode> opModeStopRequested;
@@ -86,13 +86,13 @@ public class OurEventLoop extends FtcEventLoopBase {
         this.utility = new Utility(activityContext);
     }
 
-    protected static OpModeManagerImpl createOpModeManager(Activity activityContext) {
-        return new OpModeManagerImpl(activityContext, new HardwareMap(activityContext));
+    protected static OurOpModeManager createOpModeManager(Activity activityContext) {
+        return new OurOpModeManager(activityContext, new HardwareMap(activityContext));
     }
 
     //OUR CODE
-    public static OpModeManagerImpl createUserOpModeManager(){
-        OpModeManagerImpl tempManager = new OpModeManagerImpl(activity, new HardwareMap(activity));
+    public static OurOpModeManager createUserOpModeManager(){
+        OurOpModeManager tempManager = new OurOpModeManager(activity, new HardwareMap(activity));
         tempManager.init(eventLoopManager);
         return tempManager;
     }
@@ -542,5 +542,9 @@ public class OurEventLoop extends FtcEventLoopBase {
         String nameOfUsbModule(RobotUsbModule module) {
             return HardwareFactory.getDeviceDisplayName(activityContext, module.getSerialNumber());
         }
+    }
+
+    public Gamepad[] getGamepads() {
+        return ftcEventLoopHandler.getGamepads();
     }
 }

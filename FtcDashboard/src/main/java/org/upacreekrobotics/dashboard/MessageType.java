@@ -25,7 +25,10 @@ public enum MessageType {
     LOG,
 
     SMARTDASHBOARD_PUT,
-    SMARTDASHBOARD_GET;
+    SMARTDASHBOARD_GET,
+
+    GAMEPAD_1_SET,
+    GAMEPAD_2_SET;
 
     public String getMessage(MessageType type) {
         return type.toString();

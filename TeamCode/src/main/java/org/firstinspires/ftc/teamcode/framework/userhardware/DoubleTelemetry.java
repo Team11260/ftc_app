@@ -95,6 +95,38 @@ public class DoubleTelemetry {
         return Dashboard.getInstance().getSmartDashboard();
     }
 
+    public void putString(String key, String value) {
+        dashtelem.putString(key, value);
+    }
+
+    public void putInt(String key, int value) {
+        dashtelem.putInt(key, value);
+    }
+
+    public void putFloat(String key, float value) {
+        dashtelem.putFloat(key, value);
+    }
+
+    public void putBoolean(String key, boolean value) {
+        dashtelem.putBoolean(key, value);
+    }
+
+    public String getString(String key, String defaultValue) {
+        return dashtelem.getString(key, defaultValue);
+    }
+
+    public int getInt(String key, int defaultValue) {
+        return dashtelem.getInt(key, defaultValue);
+    }
+
+    public float getFloat(String key, float defaultValue) {
+        return dashtelem.getFloat(key, defaultValue);
+    }
+
+    public boolean getBoolean(String key, boolean defaultValue) {
+        return dashtelem.getBoolean(key, defaultValue);
+    }
+
     public void stop() {
         logger.stop();
     }

@@ -1,6 +1,7 @@
 package org.upacreekrobotics.dashboard;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.EventLoop;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.util.BatteryChecker;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 import org.firstinspires.ftc.robotcore.internal.opmode.RegisteredOpModes;
+import org.upacreekrobotics.eventloop.OurEventLoop;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +54,9 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     private RobotStatus.OpModeStatus requestedOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
     private List<String> opModeList;
 
+    private static Context context;
+    private static SharedPreferences sharedPreferences;
+
     private static Dashboard dashboard;
 
     ////////////////Gradle Configuration////////////////
@@ -74,8 +79,10 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     ////////////////Passes the eventLoop, and android context to allow for opModeManager access////////////////
     ////////////////and phone battery level polling////////////////
     ////////////////called by "requestRobotSetup()" in "FtcRobotControllerActivity"////////////////
-    public static void attachEventLoop(EventLoop eventLoop, Context context) {
-        dashboard.internalAttachEventLoop(eventLoop, context);
+    public static void attachEventLoop(EventLoop eventLoop, Context ct) {
+        dashboard.internalAttachEventLoop(eventLoop, ct);
+        context = ct;
+        sharedPreferences = context.getSharedPreferences("UP_A_CREEK_FTC_PREFERENCES", Context.MODE_PRIVATE);
     }
 
     ////////////////Stops the dashboard and socket connection////////////////
@@ -246,6 +253,42 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
                     case SMARTDASHBOARD_GET: {
                         smartdashboardResponses.add(message.getText());
+                        break;
+                    }
+
+                    case GAMEPAD_1_SET: {
+                        try {
+                            if (opModeManager == null || opModeManager.getActiveOpMode() == null)
+                                return;
+                            if (message.getText().equals("default")) {
+                                if (opModeManager.getActiveOpMode().gamepad1 instanceof DashboardGamepad)
+                                    opModeManager.getActiveOpMode().gamepad1 = ((OurEventLoop) eventLoop).getGamepads()[0];
+                            } else if (opModeManager.getActiveOpMode().gamepad1 instanceof DashboardGamepad) {
+                                ((DashboardGamepad) opModeManager.getActiveOpMode().gamepad1).update(message.getText());
+                            } else {
+                                opModeManager.getActiveOpMode().gamepad1 = new DashboardGamepad();
+                                ((DashboardGamepad) opModeManager.getActiveOpMode().gamepad1).update(message.getText());
+                            }
+                        } catch (ClassCastException e) {}
+
+                        break;
+                    }
+
+                    case GAMEPAD_2_SET: {
+                        try {
+                            if (opModeManager == null || opModeManager.getActiveOpMode() == null)
+                                return;
+                            if (message.getText().equals("default")) {
+                                if (opModeManager.getActiveOpMode().gamepad2 instanceof DashboardGamepad)
+                                    opModeManager.getActiveOpMode().gamepad2 = ((OurEventLoop) eventLoop).getGamepads()[0];
+                            } else if (opModeManager.getActiveOpMode().gamepad2 instanceof DashboardGamepad) {
+                                ((DashboardGamepad) opModeManager.getActiveOpMode().gamepad2).update(message.getText());
+                            } else {
+                                opModeManager.getActiveOpMode().gamepad2 = new DashboardGamepad();
+                                ((DashboardGamepad) opModeManager.getActiveOpMode().gamepad2).update(message.getText());
+                            }
+                        } catch (ClassCastException e) {}
+                        
                         break;
                     }
 
@@ -572,6 +615,38 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
         public void info(double text) {
             info(String.valueOf(text));
+        }
+
+        public void putString(String key, String value) {
+            sharedPreferences.edit().putString(key, value).apply();
+        }
+
+        public void putInt(String key, int value) {
+            sharedPreferences.edit().putInt(key, value).apply();
+        }
+
+        public void putFloat(String key, float value) {
+            sharedPreferences.edit().putFloat(key, value).apply();
+        }
+
+        public void putBoolean(String key, boolean value) {
+            sharedPreferences.edit().putBoolean(key, value).apply();
+        }
+
+        public String getString(String key, String defaultValue) {
+            return sharedPreferences.getString(key, defaultValue);
+        }
+
+        public int getInt(String key, int defaultValue) {
+            return sharedPreferences.getInt(key, defaultValue);
+        }
+
+        public float getFloat(String key, float defaultValue) {
+            return sharedPreferences.getFloat(key, defaultValue);
+        }
+
+        public boolean getBoolean(String key, boolean defaultValue) {
+            return sharedPreferences.getBoolean(key, defaultValue);
         }
     }
 
