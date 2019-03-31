@@ -47,11 +47,11 @@ public final class Constants {
     public final static double MINERAL_LIFT_SLOW_SPEED = 1;
 
     public final static int MINERAL_LIFT_AUTON_RAISED_POSITION = 225;
-    public final static int MINERAL_LIFT_DUMP_POSITION = 1700;
-    public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 1424;
-    public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 80;
+    public final static int MINERAL_LIFT_DUMP_POSITION = 1150;
+    public final static int MINERAL_LIFT_DUMP_ANGLE_TRIGGER_POSITION = 800;
+    public final static int MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION = 100;
 
-    public final static int MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS = 5;
+    public final static int MINERAL_LIFT_DOWN_DETECT_ENCODER_COUNTS = 4;
 
     //Gate
     public final static double MINERAL_LIFT_GATE_OPEN_POSITION = 0.75;
@@ -60,7 +60,7 @@ public final class Constants {
 
     //Angle Servo
     public final static double MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION = 0.08;
-    public final static double MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION = 0.35;
+    public final static double MINERAL_LIFT_ANGLE_SERVO_DUMP_POSITION = 0.42;
     public final static double MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION = 0.65;
 
 

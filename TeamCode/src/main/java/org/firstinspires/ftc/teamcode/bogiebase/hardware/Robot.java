@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
-import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.Potentiometer;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
@@ -18,13 +17,10 @@ public class Robot extends AbstractRobot {
     private HardwareDevices hardware;
     private TensorFlow tensorFlow;
     private ExpansionHubMonitor hub;
-    private Potentiometer pot;
-    private double scaledPotValue;
 
     //Robot Methods
     public Robot() {
         hardware = new HardwareDevices();
-        pot = new Potentiometer("pot");
         hub = new ExpansionHubMonitor("Expansion Hub 1");
 
         if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
@@ -37,21 +33,6 @@ public class Robot extends AbstractRobot {
 
             setLightOn();
         }
-    }
-
-    public double getScaledPotValue() {
-        scaledPotValue = pot.getVoltage();
-        if (scaledPotValue >= 0.0 && scaledPotValue <= 0.5) {
-            scaledPotValue = 0;
-        } else if (scaledPotValue >= 0.5 && scaledPotValue <= 1.1) {
-            scaledPotValue = 4;
-        } else if (scaledPotValue >= 1.1 && scaledPotValue <= 2.5) {
-            scaledPotValue = 6;
-        } else if (scaledPotValue >= 2.5) {
-            scaledPotValue = 8;
-        }
-        scaledPotValue = scaledPotValue * 1000;
-        return scaledPotValue;
     }
 
     public void updateSamplePosition(int loop) {
@@ -82,6 +63,10 @@ public class Robot extends AbstractRobot {
             hardware.robotLift.update();
         }
 
+        updateTelemetry();
+    }
+
+    public void updateTelemetry() {
         telemetry.getSmartdashboard().putValue("Left drive current", hub.getCurrentDrawMotor0());
         telemetry.getSmartdashboard().putValue("Right drive current", hub.getCurrentDrawMotor1());
         telemetry.getSmartdashboard().putValue("Robot lift current", hub.getCurrentDrawMotor2());
@@ -100,8 +85,8 @@ public class Robot extends AbstractRobot {
         telemetry.addDataPhone(INFO, "Total current: " + hub.getTotalCurrentDraw());
         telemetry.addDataPhone(INFO, "Voltage: " + hub.getVoltage());
 
-        telemetry.addData(INFO, "Mineral Lift Position: " + hardware.mineralLift.getMineralLiftPosition());
-        telemetry.addData(INFO, "Mineral Lift Time: " + hardware.mineralLift.getMineralLiftTime());
+        telemetry.addDataPhone(INFO, "Mineral Lift Position: " + hardware.mineralLift.getMineralLiftPosition());
+        telemetry.addDataPhone(INFO, "Mineral Lift Time: " + hardware.mineralLift.getMineralLiftTime());
         telemetry.update();
     }
 

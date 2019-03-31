@@ -35,9 +35,7 @@ public class MineralLiftController extends SubsystemController {
         moveTime.reset();
     }
 
-    public synchronized void update() {
-
-        telemetry.getSmartdashboard().putValue("Mineral Lift Position", mineralLift.getCurrentPosition());
+    public void update() {
 
         if (isMovingDown) {
             int currentValue = mineralLift.getCurrentPosition();
@@ -73,14 +71,6 @@ public class MineralLiftController extends SubsystemController {
                 currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
                 isMovingDown = false;
                 return;
-
-        /*telemetry.addData(DoubleTelemetry.LogMode.INFO, "Encoder counts:" + mineralLift.getCurrentPosition());
-
-        if (isMovingDown && mineralLift.getMotorCurrentDraw() < 4000) {
-            telemetry.addData(DoubleTelemetry.LogMode.INFO, "Mineral lift down finished in: " + moveTime.milliseconds());
-            mineralLift.resetPosition();
-            currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
-            isMovingDown = false;*/
             }
         }
     }

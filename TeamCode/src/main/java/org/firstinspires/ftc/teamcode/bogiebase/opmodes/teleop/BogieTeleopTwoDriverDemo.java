@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
-@TeleOp(name = "Bogie Teleop Two Driver", group = "New")
+@TeleOp(name = "Bogie Teleop Two Driver Demo", group = "New")
 //@Disabled
 
-public class BogieTeleopTwoDriver extends AbstractTeleop {
+public class BogieTeleopTwoDriverDemo extends AbstractTeleop {
 
     private Robot robot;
 
@@ -54,7 +54,7 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
         checkBooleanInput("2_lt", gamepad2.left_trigger > 0.5);
         checkBooleanInput("2_rt", gamepad2.right_trigger > 0.5);
 
-        robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
+        robot.setDrivePower((-gamepad1.left_stick_y) + gamepad1.left_stick_x, (-gamepad1.left_stick_y) - gamepad1.left_stick_x);
     }
 
     @Override

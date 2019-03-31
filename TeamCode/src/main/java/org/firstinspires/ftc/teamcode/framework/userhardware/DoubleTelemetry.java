@@ -78,6 +78,15 @@ public class DoubleTelemetry {
         }
     }
 
+    public void addDataPhone(LogMode mode, Object caption, Object data) {
+        String message = "[" + mode.toString() + "] " + String.valueOf(caption) + ": " + String.valueOf(data);
+        log(message);
+        if (loggingMode.shouldLog(mode)) {
+            telemetry.addData(String.valueOf(caption), String.valueOf(data));
+            dashtelem.info(message);
+        }
+    }
+
     public void update() {
         try {
             telemetry.update();
