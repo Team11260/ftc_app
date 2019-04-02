@@ -34,7 +34,7 @@ public class MineralLift {
 
         angleServo = hardwareMap.servo.get("sorter_angle");
         angleServo.setDirection(Servo.Direction.REVERSE);
-        angleServo.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION : Constants.MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
+        if(RobotState.currentMatchState == RobotState.MatchState.TELEOP) angleServo.setPosition(Constants.MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
 
         distanceSensor = new DistanceSensor2m("Distance1");
     }

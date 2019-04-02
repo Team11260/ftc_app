@@ -617,6 +617,10 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             info(String.valueOf(text));
         }
 
+        public void setMatch(int match) {
+            opModeManager.setMatchNumber(match);
+        }
+
         public void putString(String key, String value) {
             sharedPreferences.edit().putString(key, value).apply();
         }

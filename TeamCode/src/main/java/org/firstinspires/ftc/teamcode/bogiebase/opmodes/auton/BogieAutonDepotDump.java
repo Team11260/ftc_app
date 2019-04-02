@@ -10,10 +10,10 @@ import org.firstinspires.ftc.teamcode.framework.util.PathState;
 import org.firstinspires.ftc.teamcode.framework.util.State;
 import org.upacreekrobotics.dashboard.Dashboard;
 
-@Autonomous(name = "Bogie Auton Camera Test", group = "util")
+@Autonomous(name = "Bogie Auton Depot Dump", group = "New")
 //@Disabled
 
-public class BoogieAutonCameraTest extends AbstractAutonNew {
+public class BogieAutonDepotDump extends AbstractAutonNew {
 
     Robot robot;
 
@@ -31,6 +31,31 @@ public class BoogieAutonCameraTest extends AbstractAutonNew {
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "drive to depot", robot.finishIntakingCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
+        addState(new PathState("raise lift", "drive away from depot", robot.autonMoveMineralLiftToDumpPositionSequenceCallable()));
+        addState(new PathState("dump pause", "drive to lander", () -> {
+            RobotState.currentPath.pause();
+            delay(Constants.DUMP_MINERAL_DELAY);
+            RobotState.currentPath.resume();
+            return true;
+        }));
+        addState(new PathState("open mineral gate", "drive to lander", robot.openMineralGateCallable()));
+        addState(new PathState("lower lift", "turn to wall", robot.autonMoveMineralLiftToCollectPositionSequenceCallable()));
+        addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
+        addState(new PathState("finish driving", "turn to crater", () -> {
+            while (robot.getPitch() > -6);
+            RobotState.currentPath.nextSegment();
+            return true;
+        }));
+        addState(new PathState("intake", "drive into crater", () -> {
+            RobotState.currentPath.pause();
+            robot.beginIntaking();
+            delay(1000);
+            robot.reverseIntake();
+            delay(1000);
+            robot.finishIntaking();
+            RobotState.currentPath.resume();
+            return true;
+        }));
     }
 
     @Override
@@ -50,7 +75,7 @@ public class BoogieAutonCameraTest extends AbstractAutonNew {
 
         //Stop object recognition
         robot.stopTensorFlow();
-        delay(5000);
+
         //Lower robot
         robot.moveRobotLiftToBottom();
 
@@ -71,7 +96,10 @@ public class BoogieAutonCameraTest extends AbstractAutonNew {
         }
 
         //Deposit team marker and drive to crater
-        robot.runDrivePath(Constants.depotSideToCrater);
+        robot.runDrivePath(Constants.depotSideToCraterDump);
+
+        //Drives into crater and intakes minerals
+        robot.runDrivePath(Constants.pickupMinerals);
     }
 
     @Override
