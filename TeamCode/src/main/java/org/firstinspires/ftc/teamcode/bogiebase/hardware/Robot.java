@@ -18,14 +18,11 @@ public class Robot extends AbstractRobot {
     private HardwareDevices hardware;
     private TensorFlow tensorFlow;
     private ExpansionHubMonitor hub;
-    private double scaledPotValue;
-    private Potentiometer pot;
 
     //Robot Methods
     public Robot() {
         hardware = new HardwareDevices();
         hub = new ExpansionHubMonitor("Expansion Hub 1");
-        pot = new Potentiometer("pot");
 
         if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
             telemetry.addData(INFO, "starting tensorflow");
