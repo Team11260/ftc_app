@@ -57,16 +57,16 @@ public class BoogieAutonCameraTest extends AbstractAutonNew {
         //Collect gold mineral
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
-                robot.runDrivePath(Constants.collectDepotDumpRightMineral);
+                robot.runDrivePath(Constants.collectDepotRightMineral);
                 break;
             case LEFT:
-                robot.runDrivePath(Constants.collectDepotDumpLeftMineral);
+                robot.runDrivePath(Constants.collectDepotLeftMineral);
                 break;
             case CENTER:
-                robot.runDrivePath(Constants.collectDepotDumpCenterMineral);
+                robot.runDrivePath(Constants.collectDepotCenterMineral);
                 break;
             default:
-                robot.runDrivePath(Constants.collectDepotDumpCenterMineral);
+                robot.runDrivePath(Constants.collectDepotCenterMineral);
                 break;
         }
 
