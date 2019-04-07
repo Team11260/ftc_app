@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.Potentiometer;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Segment;
@@ -35,6 +36,9 @@ public class DriveController extends SubsystemController {
 
     private DecimalFormat DF;
 
+    private Potentiometer pot;
+    private double scaledPotValue;
+
     //Utility Methods
     public DriveController() {
         init();
@@ -47,7 +51,7 @@ public class DriveController extends SubsystemController {
         runtime = new ElapsedTime();
 
         DF = new DecimalFormat("#.###");
-
+        pot = new Potentiometer("Pot");
         //Put general setup here
         drive = new Drive(hardwareMap);
         anglePID = new PIDController(15, 0.1, 100, 0.3, 0.08);//D was 150
@@ -590,5 +594,20 @@ public class DriveController extends SubsystemController {
         drive.setMarkerServo(DRIVE_TEAM_MARKER_RETRACTED);
         currentPath.resume();
         telemetry.addData(INFO, "Marker dumped");
+    }
+
+    public double getScaledPotValue() {
+        scaledPotValue = pot.getVoltage();
+        if (scaledPotValue >= 0 && scaledPotValue <= .5) {
+            scaledPotValue = 0;
+        } else if (scaledPotValue >= .5 && scaledPotValue <= 1.1) {
+            scaledPotValue = 4;
+        } else if (scaledPotValue >= 1.1 && scaledPotValue <= 2.5) {
+            scaledPotValue = 6;
+        } else if (scaledPotValue >= 2.5) {
+            scaledPotValue = 8;
+        }
+        scaledPotValue= scaledPotValue * 1000;
+        return scaledPotValue;
     }
 }

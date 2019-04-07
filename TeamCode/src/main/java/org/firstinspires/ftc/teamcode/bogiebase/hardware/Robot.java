@@ -66,6 +66,10 @@ public class Robot extends AbstractRobot {
         updateTelemetry();
     }
 
+    public double getScaledPotValue() {
+        return hardware.drive.getScaledPotValue();
+    }
+
     public void updateTelemetry() {
         telemetry.getSmartdashboard().putValue("Left drive current", hub.getCurrentDrawMotor0());
         telemetry.getSmartdashboard().putValue("Right drive current", hub.getCurrentDrawMotor1());
@@ -87,6 +91,7 @@ public class Robot extends AbstractRobot {
 
         telemetry.addDataPhone(INFO, "Mineral Lift Position: " + hardware.mineralLift.getMineralLiftPosition());
         telemetry.addDataPhone(INFO, "Mineral Lift Time: " + hardware.mineralLift.getMineralLiftTime());
+        telemetry.addDataPhone(INFO, "Potentiometer Delay" + getScaledPotValue());
         telemetry.update();
     }
 

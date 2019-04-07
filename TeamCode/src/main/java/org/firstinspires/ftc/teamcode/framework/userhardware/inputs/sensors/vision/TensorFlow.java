@@ -120,7 +120,11 @@ public class TensorFlow {
             if (updatedRecognitions != null) {
                 ArrayList<Mineral> minerals = new ArrayList<>();
                 for (Recognition recognition : updatedRecognitions) {
-                    minerals.add(new Mineral(recognition));
+                    Mineral mineral = new Mineral(recognition);
+                    telemetry.addData(DoubleTelemetry.LogMode.TRACE,"x pos. :"+ mineral.getX()+" y pos. :"+mineral.getY());
+                    if ((mineral.getX() < 40 && mineral.getX()>30) && (mineral.getY()<145 && mineral.getY()>135 ))  continue;
+
+                    minerals.add(mineral);
                 }
 
                 if (minerals.size() >= 3)
