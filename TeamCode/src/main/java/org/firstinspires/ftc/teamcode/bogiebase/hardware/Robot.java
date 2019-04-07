@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.Potentiometer;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
@@ -17,11 +18,14 @@ public class Robot extends AbstractRobot {
     private HardwareDevices hardware;
     private TensorFlow tensorFlow;
     private ExpansionHubMonitor hub;
+    private double scaledPotValue;
+    private Potentiometer pot;
 
     //Robot Methods
     public Robot() {
         hardware = new HardwareDevices();
         hub = new ExpansionHubMonitor("Expansion Hub 1");
+        pot = new Potentiometer("pot");
 
         if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
             telemetry.addData(INFO, "starting tensorflow");
@@ -34,6 +38,7 @@ public class Robot extends AbstractRobot {
             setLightOn();
         }
     }
+
 
     public void updateSamplePosition(int loop) {
 
@@ -114,6 +119,12 @@ public class Robot extends AbstractRobot {
     }
 
     public void setDrivePower(double l, double r) {
+        if(hub.getTotalCurrentDraw() > 18) {
+            if(l > 0.3) l = 0.3;
+            if(l < -0.3) l = -0.3;
+            if(r > 0.3) r = 0.3;
+            if(r < -0.3) r = -0.3;
+        }
         hardware.drive.setPower(l, r);
     }
 

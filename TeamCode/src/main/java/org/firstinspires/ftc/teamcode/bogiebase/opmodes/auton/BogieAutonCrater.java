@@ -82,7 +82,8 @@ public class BogieAutonCrater extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectCenterMineral);
                 break;
         }
-
+        //delay(telemetry.getInt("delay",1000));
+        robot.delayScaledPotValue();
         //Deposit team marker and drive to crater
         delay((int)robot.getScaledPotValue());
         robot.runDrivePath(Constants.craterSideToCrater);

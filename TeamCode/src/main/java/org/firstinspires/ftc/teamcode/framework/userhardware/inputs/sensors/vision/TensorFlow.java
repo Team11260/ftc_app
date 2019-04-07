@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision;
 
+import android.os.Trace;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
