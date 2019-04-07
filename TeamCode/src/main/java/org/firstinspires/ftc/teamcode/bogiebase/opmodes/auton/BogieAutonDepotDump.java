@@ -67,14 +67,14 @@ public class BogieAutonDepotDump extends AbstractAutonNew {
     @Override
     public void InitLoop(int loop) {
         //Update the sample position using tensorflow
-        robot.updateSamplePosition(loop);
+        //robot.updateSamplePosition(loop);
     }
 
     @Override
     public void Run() {
 
         //Stop object recognition
-        robot.stopTensorFlow();
+        //robot.stopTensorFlow();
 
         //Lower robot
         robot.moveRobotLiftToBottom();
@@ -104,7 +104,7 @@ public class BogieAutonDepotDump extends AbstractAutonNew {
 
     @Override
     public void Stop() {
-        robot.stop();
+        //robot.stop();
 
         //Start Teleop mode
         Dashboard.startOpMode(Constants.OPMODE_TO_START_AFTER_AUTON);

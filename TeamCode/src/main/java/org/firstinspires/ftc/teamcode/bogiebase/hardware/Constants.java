@@ -44,7 +44,7 @@ public final class Constants {
     ////////MINERAL LIFT////////
     //Lift
     public final static double MINERAL_LIFT_FULL_SPEED = 1;
-    public final static double MINERAL_LIFT_SLOW_SPEED = 1;
+    public final static double MINERAL_LIFT_SLOW_SPEED = 0.5;// was 1 before
 
     public final static int MINERAL_LIFT_AUTON_RAISED_POSITION = 225;
     public final static int MINERAL_LIFT_DUMP_POSITION = 1000;
