@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
-import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.Potentiometer;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
-import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.TensorFlow;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.TensorFlowImpl;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 
@@ -16,7 +15,7 @@ import static org.firstinspires.ftc.teamcode.framework.userhardware.inputs.senso
 public class Robot extends AbstractRobot {
 
     private HardwareDevices hardware;
-    private TensorFlow tensorFlow;
+    private TensorFlowImpl tensorFlow;
     private ExpansionHubMonitor hub;
 
     //Robot Methods
@@ -26,7 +25,7 @@ public class Robot extends AbstractRobot {
 
         if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
             telemetry.addData(INFO, "starting tensorflow");
-            tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
+            tensorFlow = new TensorFlowImpl(TensorFlowImpl.CameraOrientation.VERTICAL, "Webcam 1", false);
 
             RobotState.currentSamplePosition = UNKNOWN;
             telemetry.addData(INFO, "Current Sample Position: " + RobotState.currentSamplePosition);

@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision;
-
-import android.os.Trace;
+package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.support.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.vuforia.VuforiaImpl;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABE
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
 
-public class TensorFlow {
+public class TensorFlowImpl {
 
     DoubleTelemetry telemetry = AbstractOpMode.getTelemetry();
 
@@ -28,23 +28,23 @@ public class TensorFlow {
 
     private CameraOrientation orientation;
 
-    public TensorFlow() {
+    public TensorFlowImpl() {
         this(CameraOrientation.VERTICAL);
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation) {
+    public TensorFlowImpl(CameraOrientation cameraOrientation) {
         this(cameraOrientation, true);
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation, String camera) {
+    public TensorFlowImpl(CameraOrientation cameraOrientation, String camera) {
         this(cameraOrientation, camera, true);
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation, boolean led) {
+    public TensorFlowImpl(CameraOrientation cameraOrientation, boolean led) {
         this(cameraOrientation, "BACK", led);
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation, String camera, boolean led) {
+    public TensorFlowImpl(CameraOrientation cameraOrientation, String camera, boolean led) {
         orientation = cameraOrientation;
 
         do {
@@ -59,7 +59,7 @@ public class TensorFlow {
         }
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation, String camera, boolean led, boolean viewer) {
+    public TensorFlowImpl(CameraOrientation cameraOrientation, String camera, boolean led, boolean viewer) {
         orientation = cameraOrientation;
 
         do {
@@ -79,14 +79,14 @@ public class TensorFlow {
                 "tfodMonitorViewId", "id", AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minimumConfidence = 0.50;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia.getVuforia());
+        tfod = new TensorFlow(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
     private void initTfodWithoutViewer() {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
         tfodParameters.minimumConfidence = 0.50;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia.getVuforia());
+        tfod = new TensorFlow(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
