@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
+import android.telecom.Call;
+
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.TensorFlowImpl;
@@ -34,7 +36,6 @@ public class Robot extends AbstractRobot {
             setLightOn();
         }
     }
-
 
     public void updateSamplePosition(int loop) {
 
@@ -92,7 +93,6 @@ public class Robot extends AbstractRobot {
 
         telemetry.addDataPhone(INFO, "Mineral Lift Position: " + hardware.mineralLift.getMineralLiftPosition());
         telemetry.addDataPhone(INFO, "Mineral Lift Time: " + hardware.mineralLift.getMineralLiftTime());
-        telemetry.addDataPhone(INFO, "Potentiometer Delay" + getScaledPotValue());
         telemetry.update();
     }
 
@@ -294,20 +294,17 @@ public class Robot extends AbstractRobot {
     public void moveMineralLiftToCollectPosition() {
         hardware.mineralLift.closeGate();
         hardware.mineralLift.moveToCollectPosition();
-        hardware.drive.setInverted(false);
     }
 
     public Callable moveMineralLiftToDumpPositionCallable() {
         return () -> {
             moveMineralLiftToDumpPosition();
-            //liftIntake();
             return true;
         };
     }
 
     public void moveMineralLiftToDumpPosition() {
         hardware.mineralLift.moveToDumpPosition();
-        hardware.drive.setInverted(true);
     }
 
     public Callable openMineralGateCallable() {
@@ -337,6 +334,17 @@ public class Robot extends AbstractRobot {
             hardware.mineralLift.toggleGate();
             return true;
         };
+    }
+
+    public Callable toggleAngleServoTiltAngleCallable() {
+        return () -> {
+            toggleAngleServoTiltAngle();
+            return true;
+        };
+    }
+
+    public void toggleAngleServoTiltAngle() {
+        hardware.mineralLift.toggleTiltAngle();
     }
 
     public void setAngleServoPositionHorizontal() {

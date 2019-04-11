@@ -15,7 +15,6 @@ public class BogieTeleopOneDriver extends AbstractTeleop {
 
     @Override
     public void RegisterEvents() {
-        addEventHandler("1_lsb_down", robot.toggleDriveInvertedCallable());
 
         addEventHandler("1_lb_down", robot.dropMarkerCallable());
 

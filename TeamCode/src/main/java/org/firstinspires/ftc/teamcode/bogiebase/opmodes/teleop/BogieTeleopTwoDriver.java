@@ -16,6 +16,8 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
     public void RegisterEvents() {
         ////////////////Gamepad 1////////////////
         ////////Drive////////
+        addEventHandler("1_a_down", robot.toggleAngleServoTiltAngleCallable());
+
         addEventHandler("1_b_down", robot.dropMarkerCallable());
 
         addEventHandler("1_rt_down", robot.toggleMineralGateCallable());
