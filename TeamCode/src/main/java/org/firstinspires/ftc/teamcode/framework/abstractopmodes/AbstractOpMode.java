@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public abstract class AbstractOpMode extends LinearOpMode {
 
@@ -25,6 +24,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
     private static LinearOpMode linearOpMode;
     public static DoubleTelemetry telemetry;
     private static AbstractOpMode thisOpMode;
+    private static org.upacreekrobotics.HardwareMap hwMap;
 
     public static DoubleTelemetry getTelemetry() {
         return telemetry;
@@ -32,6 +32,10 @@ public abstract class AbstractOpMode extends LinearOpMode {
 
     public static HardwareMap getHardwareMap() {
         return opmode.hardwareMap;
+    }
+
+    public static org.upacreekrobotics.HardwareMap getHwMap() {
+        return hwMap;
     }
 
     public static OpMode getOpModeInstance() {
@@ -44,6 +48,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
         opmode = this;
         linearOpMode = this;
         telemetry = new DoubleTelemetry(super.telemetry, Dashboard.getInstance().getTelemetry(), new Logger(Dashboard.getCurrentOpMode()));
+        hwMap = new org.upacreekrobotics.HardwareMap(hardwareMap);
     }
 
     @Override

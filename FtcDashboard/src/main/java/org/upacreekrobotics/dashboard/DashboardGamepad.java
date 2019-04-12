@@ -12,7 +12,7 @@ public class DashboardGamepad extends Gamepad {
     public void update(String string) {
         String[] parts = string.split("<:-:>");
 
-        for(int i=0; i<parts.length; i++) {
+        for (int i = 0; i < parts.length; i++) {
             String part = parts[i];
 
             String key = part.split(":")[0];

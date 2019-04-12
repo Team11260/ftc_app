@@ -7,8 +7,6 @@ import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
-import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
-import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.Potentiometer;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Segment;
@@ -17,9 +15,23 @@ import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 import java.text.DecimalFormat;
 
-import static java.lang.Math.*;
-import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.*;
-import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.*;
+import static java.lang.Math.abs;
+import static java.lang.Math.pow;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_COUNTS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_DUMP_TEAM_MARKER_DELAY;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_MINERAL_LIFT_RAISED_SCALAR;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_RELEASE_WHEELS_POWER;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_RELEASE_WHEEL_DELAY;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_TEAM_MARKER_EXTENDED;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_TEAM_MARKER_RETRACTED;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.DriveDirection;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.MatchState;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.MineralLiftState;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentDriveDirection;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentMatchState;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentMineralLiftState;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentPath;
 import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.INFO;
 
 public class DriveController extends SubsystemController {
@@ -36,7 +48,6 @@ public class DriveController extends SubsystemController {
 
     private DecimalFormat DF;
 
-    private Potentiometer pot;
     private double scaledPotValue;
 
     //Utility Methods
@@ -51,7 +62,6 @@ public class DriveController extends SubsystemController {
         runtime = new ElapsedTime();
 
         DF = new DecimalFormat("#.###");
-        pot = new Potentiometer("Pot");
         //Put general setup here
         drive = new Drive(hardwareMap);
         anglePID = new PIDController(15, 0.1, 100, 0.3, 0.08);//D was 150
@@ -600,7 +610,7 @@ public class DriveController extends SubsystemController {
     }
 
     public double getScaledPotValue() {
-        scaledPotValue = pot.getVoltage();
+        scaledPotValue = drive.getPotVoltage();
         if (scaledPotValue >= 0 && scaledPotValue <= .5) {
             scaledPotValue = 0;
         } else if (scaledPotValue >= .5 && scaledPotValue <= 1.1) {

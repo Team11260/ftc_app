@@ -269,7 +269,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                                 opModeManager.getActiveOpMode().gamepad1 = new DashboardGamepad();
                                 ((DashboardGamepad) opModeManager.getActiveOpMode().gamepad1).update(message.getText());
                             }
-                        } catch (ClassCastException e) {}
+                        } catch (ClassCastException e) {
+                        }
 
                         break;
                     }
@@ -287,8 +288,9 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                                 opModeManager.getActiveOpMode().gamepad2 = new DashboardGamepad();
                                 ((DashboardGamepad) opModeManager.getActiveOpMode().gamepad2).update(message.getText());
                             }
-                        } catch (ClassCastException e) {}
-                        
+                        } catch (ClassCastException e) {
+                        }
+
                         break;
                     }
 
@@ -699,7 +701,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
             String response = null;
 
-            loop: while (connected) {
+            loop:
+            while (connected) {
                 synchronized (smartdashboardResponses) {
                     for (String message : smartdashboardResponses) {
                         String[] parts = message.split("<&#%#&>");
@@ -730,7 +733,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
             String response = null;
 
-            loop: while (connected) {
+            loop:
+            while (connected) {
                 synchronized (smartdashboardResponses) {
                     for (String message : smartdashboardResponses) {
                         String[] parts = message.split("<&#%#&>");
@@ -761,7 +765,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
             String response = null;
 
-            loop: while (connected) {
+            loop:
+            while (connected) {
                 synchronized (smartdashboardResponses) {
                     for (String message : smartdashboardResponses) {
                         String[] parts = message.split("<&#%#&>");
@@ -792,7 +797,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
             String response = null;
 
-            loop: while (connected) {
+            loop:
+            while (connected) {
                 synchronized (smartdashboardResponses) {
                     for (String message : smartdashboardResponses) {
                         String[] parts = message.split("<&#%#&>");
@@ -823,7 +829,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
             String response = null;
 
-            loop: while (connected) {
+            loop:
+            while (connected) {
                 synchronized (smartdashboardResponses) {
                     for (String message : smartdashboardResponses) {
                         String[] parts = message.split("<&#%#&>");

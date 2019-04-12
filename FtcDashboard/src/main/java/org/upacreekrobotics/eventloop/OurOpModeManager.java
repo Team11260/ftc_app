@@ -53,22 +53,25 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
     //------------------------------------------------------------------------------------------------
 
     class OpModeStateTransition {
-        String      queuedOpModeName     = null;
-        Boolean     opModeSwapNeeded     = null;
-        Boolean     callToInitNeeded     = null;
-        Boolean     gamepadResetNeeded   = null;
-        Boolean     telemetryClearNeeded = null;
-        Boolean     callToStartNeeded    = null;
+        String queuedOpModeName = null;
+        Boolean opModeSwapNeeded = null;
+        Boolean callToInitNeeded = null;
+        Boolean gamepadResetNeeded = null;
+        Boolean telemetryClearNeeded = null;
+        Boolean callToStartNeeded = null;
 
         void apply() {
-            if (queuedOpModeName != null)     OurOpModeManager.this.queuedOpModeName = queuedOpModeName;
+            if (queuedOpModeName != null) OurOpModeManager.this.queuedOpModeName = queuedOpModeName;
 
             // We never clear state here; that's done in runActiveOpMode()
-            if (opModeSwapNeeded != null)     OurOpModeManager.this.opModeSwapNeeded     = opModeSwapNeeded;
-            if (callToInitNeeded != null)     OurOpModeManager.this.callToInitNeeded     = callToInitNeeded;
-            if (gamepadResetNeeded != null)   OurOpModeManager.this.gamepadResetNeeded   = gamepadResetNeeded;
-            if (telemetryClearNeeded != null) OurOpModeManager.this.telemetryClearNeeded = telemetryClearNeeded;
-            if (callToStartNeeded != null)    OurOpModeManager.this.callToStartNeeded    = callToStartNeeded;
+            if (opModeSwapNeeded != null) OurOpModeManager.this.opModeSwapNeeded = opModeSwapNeeded;
+            if (callToInitNeeded != null) OurOpModeManager.this.callToInitNeeded = callToInitNeeded;
+            if (gamepadResetNeeded != null)
+                OurOpModeManager.this.gamepadResetNeeded = gamepadResetNeeded;
+            if (telemetryClearNeeded != null)
+                OurOpModeManager.this.telemetryClearNeeded = telemetryClearNeeded;
+            if (callToStartNeeded != null)
+                OurOpModeManager.this.callToStartNeeded = callToStartNeeded;
         }
 
         OpModeStateTransition copy() {
@@ -89,30 +92,30 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
 
     public static final String TAG = "OpModeManager";
 
-    public static final String DEFAULT_OP_MODE_NAME    = OpModeManager.DEFAULT_OP_MODE_NAME;
-    public static final OpMode DEFAULT_OP_MODE         = new DefaultOpMode();
+    public static final String DEFAULT_OP_MODE_NAME = OpModeManager.DEFAULT_OP_MODE_NAME;
+    public static final OpMode DEFAULT_OP_MODE = new DefaultOpMode();
 
-    protected enum OpModeState { INIT, LOOPING }
+    protected enum OpModeState {INIT, LOOPING}
 
-    protected static int            matchNumber          = 0;
-    protected Context               context;
-    protected String                activeOpModeName     = DEFAULT_OP_MODE_NAME;
-    protected OpMode                activeOpMode         = DEFAULT_OP_MODE;
-    protected String                queuedOpModeName     = DEFAULT_OP_MODE_NAME;
-    protected HardwareMap           hardwareMap          = null;
-    protected EventLoopManager      eventLoopManager     = null;
+    protected static int matchNumber = 0;
+    protected Context context;
+    protected String activeOpModeName = DEFAULT_OP_MODE_NAME;
+    protected OpMode activeOpMode = DEFAULT_OP_MODE;
+    protected String queuedOpModeName = DEFAULT_OP_MODE_NAME;
+    protected HardwareMap hardwareMap = null;
+    protected EventLoopManager eventLoopManager = null;
     protected final WeakReferenceSet<OpModeManagerNotifier.Notifications> listeners = new WeakReferenceSet<OpModeManagerNotifier.Notifications>();
-    protected OpModeStuckCodeMonitor stuckMonitor        = null;
+    protected OpModeStuckCodeMonitor stuckMonitor = null;
 
-    protected OpModeState           opModeState          = OpModeState.INIT;
-    protected boolean               opModeSwapNeeded     = false;
-    protected boolean               callToInitNeeded     = false;
-    protected boolean               callToStartNeeded    = false;
-    protected boolean               gamepadResetNeeded   = false;
-    protected boolean               telemetryClearNeeded = false;
+    protected OpModeState opModeState = OpModeState.INIT;
+    protected boolean opModeSwapNeeded = false;
+    protected boolean callToInitNeeded = false;
+    protected boolean callToStartNeeded = false;
+    protected boolean gamepadResetNeeded = false;
+    protected boolean telemetryClearNeeded = false;
     protected AtomicReference<OpModeStateTransition> nextOpModeState = new AtomicReference<>(null);
 
-    protected static final WeakHashMap<Activity,OurOpModeManager> mapActivityToOpModeManager = new WeakHashMap<>();
+    protected static final WeakHashMap<Activity, OurOpModeManager> mapActivityToOpModeManager = new WeakHashMap<>();
 
     //------------------------------------------------------------------------------------------------
     // Construction
@@ -194,7 +197,9 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
     //------------------------------------------------------------------------------------------------
 
     // called on DS receive thread, event loop thread
-    public String getActiveOpModeName() { return activeOpModeName; }
+    public String getActiveOpModeName() {
+        return activeOpModeName;
+    }
 
     // called on the event loop thread
     public OpMode getActiveOpMode() {
@@ -231,7 +236,7 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
 
         doMatchLoggingWork(name);
 
-        if(nextOpModeState == null) nextOpModeState = new AtomicReference<>(null);
+        if (nextOpModeState == null) nextOpModeState = new AtomicReference<>(null);
 
         // We *insist* on becoming the new state
         nextOpModeState.set(newState);
@@ -241,7 +246,7 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
     public void startActiveOpMode() {
         // We're happy to modify an existing (init?) state to then do a start
         OpModeStateTransition existingState = null;
-        for (;;) {
+        for (; ; ) {
             OpModeStateTransition newState;
             if (existingState != null) {
                 newState = existingState.copy();
@@ -272,14 +277,16 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
             transition.apply();
 
         activeOpMode.time = activeOpMode.getRuntime();
-        if(!(activeOpMode.gamepad1 instanceof DashboardGamepad)) activeOpMode.gamepad1 = gamepads[0];
-        if(!(activeOpMode.gamepad2 instanceof DashboardGamepad)) activeOpMode.gamepad2 = gamepads[1];
+        if (!(activeOpMode.gamepad1 instanceof DashboardGamepad))
+            activeOpMode.gamepad1 = gamepads[0];
+        if (!(activeOpMode.gamepad2 instanceof DashboardGamepad))
+            activeOpMode.gamepad2 = gamepads[1];
 
         // Robustly ensure that gamepad state from previous opmodes doesn't
         // leak into new opmodes.
         if (gamepadResetNeeded) {
-            if(!(activeOpMode.gamepad1 instanceof DashboardGamepad)) activeOpMode.gamepad1.reset();
-            if(!(activeOpMode.gamepad2 instanceof DashboardGamepad)) activeOpMode.gamepad2.reset();
+            if (!(activeOpMode.gamepad1 instanceof DashboardGamepad)) activeOpMode.gamepad1.reset();
+            if (!(activeOpMode.gamepad2 instanceof DashboardGamepad)) activeOpMode.gamepad2.reset();
             gamepadResetNeeded = false;
         }
 
@@ -306,8 +313,10 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
         }
 
         if (callToInitNeeded) {
-            if(!(activeOpMode.gamepad1 instanceof DashboardGamepad)) activeOpMode.gamepad1    = gamepads[0];
-            if(!(activeOpMode.gamepad2 instanceof DashboardGamepad)) activeOpMode.gamepad2    = gamepads[1];
+            if (!(activeOpMode.gamepad1 instanceof DashboardGamepad))
+                activeOpMode.gamepad1 = gamepads[0];
+            if (!(activeOpMode.gamepad2 instanceof DashboardGamepad))
+                activeOpMode.gamepad2 = gamepads[1];
             activeOpMode.hardwareMap = hardwareMap;
             activeOpMode.internalOpModeServices = this;
 
@@ -332,9 +341,9 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
             NetworkConnectionHandler.getInstance().sendCommand(new Command(RobotCoreCommandList.CMD_NOTIFY_RUN_OP_MODE, activeOpModeName)); // send *truth* to DS
         }
 
-        if (opModeState==OpModeState.INIT)
+        if (opModeState == OpModeState.INIT)
             callActiveOpModeInitLoop();
-        else if (opModeState==OpModeState.LOOPING)
+        else if (opModeState == OpModeState.LOOPING)
             callActiveOpModeLoop();
     }
 
@@ -352,8 +361,7 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
         OpMode opMode = RegisteredOpModes.getInstance().getOpMode(queuedOpModeName);
         if (opMode != null) {
             setActiveOpMode(opMode, queuedOpModeName);
-        }
-        else {
+        } else {
             failedToSwapOpMode();
         }
     }
@@ -370,9 +378,11 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
 
     protected void callActiveOpModeStop() {
         detectStuck(activeOpMode.msStuckDetectStop, "stop()", new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 activeOpMode.stop();
-            }});
+            }
+        });
         synchronized (this.listeners) {
             for (OpModeManagerNotifier.Notifications listener : this.listeners) {
                 listener.onOpModePostStop(activeOpMode);
@@ -380,7 +390,7 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
         }
         for (HardwareDevice device : this.hardwareMap) {
             if (device instanceof OpModeManagerNotifier.Notifications) {
-                ((OpModeManagerNotifier.Notifications)device).onOpModePostStop(activeOpMode);
+                ((OpModeManagerNotifier.Notifications) device).onOpModePostStop(activeOpMode);
             }
         }
     }
@@ -398,19 +408,25 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
         }
     }
 
-    /** A utility class that detects infinite loops in user code */
+    /**
+     * A utility class that detects infinite loops in user code
+     */
     protected class OpModeStuckCodeMonitor {
         ExecutorService executorService = ThreadPool.newSingleThreadExecutor("OpModeStuckCodeMonitor");
-        Semaphore       stopped         = new Semaphore(0);
-        CountDownLatch  acquired        = null;
-        boolean         debuggerDetected = false;
-        int             msTimeout;
-        String          method;
+        Semaphore stopped = new Semaphore(0);
+        CountDownLatch acquired = null;
+        boolean debuggerDetected = false;
+        int msTimeout;
+        String method;
 
         public void startMonitoring(int msTimeout, String method, boolean resetDebuggerCheck) {
             // Wait for any previous monitoring to drain
             if (acquired != null) {
-                try { acquired.await(); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+                try {
+                    acquired.await();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
             this.msTimeout = msTimeout;
             this.method = method;
@@ -438,7 +454,8 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
         }
 
         protected class Runner implements Runnable {
-            @Override public void run() {
+            @Override
+            public void run() {
                 boolean errorWasSet = false;
                 try {
                     // We won't bother timing if a debugger is attached because single stepping
@@ -487,15 +504,17 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
         }
         for (HardwareDevice device : this.hardwareMap) {
             if (device instanceof OpModeManagerNotifier.Notifications) {
-                ((OpModeManagerNotifier.Notifications)device).onOpModePreInit(activeOpMode);
+                ((OpModeManagerNotifier.Notifications) device).onOpModePreInit(activeOpMode);
             }
         }
 
         activeOpMode.internalPreInit();
         detectStuck(activeOpMode.msStuckDetectInit, "init()", new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 activeOpMode.init();
-            }}, true);
+            }
+        }, true);
     }
 
     protected void callActiveOpModeStart() {
@@ -506,28 +525,34 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
         }
         for (HardwareDevice device : this.hardwareMap) {
             if (device instanceof OpModeManagerNotifier.Notifications) {
-                ((OpModeManagerNotifier.Notifications)device).onOpModePreStart(activeOpMode);
+                ((OpModeManagerNotifier.Notifications) device).onOpModePreStart(activeOpMode);
             }
         }
         detectStuck(activeOpMode.msStuckDetectStart, "start()", new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 activeOpMode.start();
-            }});
+            }
+        });
     }
 
     protected void callActiveOpModeInitLoop() {
         detectStuck(activeOpMode.msStuckDetectInitLoop, "init_loop()", new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 activeOpMode.init_loop();
-            }});
+            }
+        });
         activeOpMode.internalPostInitLoop();
     }
 
     protected void callActiveOpModeLoop() {
         detectStuck(activeOpMode.msStuckDetectLoop, "loop()", new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 activeOpMode.loop();
-            }});
+            }
+        });
         activeOpMode.internalPostLoop();
     }
 
@@ -539,15 +564,18 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
         opMode.internalUpdateTelemetryNow(telemetry);
     }
 
-    @Override public void refreshUserTelemetry(TelemetryMessage telemetry, double sInterval) {
+    @Override
+    public void refreshUserTelemetry(TelemetryMessage telemetry, double sInterval) {
         this.eventLoopManager.getEventLoop().refreshUserTelemetry(telemetry, sInterval);
     }
 
     /**
      * Requests that an OpMode be stopped.
+     *
      * @see OpMode#requestOpModeStop()
      */
-    @Override public void requestOpModeStop(OpMode opModeToStopIfActive) {
+    @Override
+    public void requestOpModeStop(OpMode opModeToStopIfActive) {
         // We have two basic concerns: (a) is the indicated opMode the active one, and (b) we might
         // here be running on literally any thread, including the loop() thread or a linear OpMode's
         // thread.
@@ -614,14 +642,15 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
         private boolean isLynxDevice(HardwareDevice device) {
             return device.getManufacturer() == HardwareDevice.Manufacturer.Lynx;
         }
+
         private boolean isLynxDevice(Object o) {
-            return isLynxDevice((HardwareDevice)o);
+            return isLynxDevice((HardwareDevice) o);
         }
 
         /***
          * Initiate the robot safe mode by setting motors off (including CR Servos)
          */
-        private void startSafe()  {
+        private void startSafe() {
 
             // Set all motor powers to zero. The implementation here will also stop any CRServos.
             for (DcMotorSimple motor : hardwareMap.getAll(DcMotorSimple.class)) {
@@ -636,8 +665,7 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
                 firstTimeRun = false;
                 nanoNextSafe = System.nanoTime();
                 blinkerTimer.reset();
-            }
-            else
+            } else
                 nanoNextSafe = System.nanoTime() + SAFE_WAIT_NANOS;
         }
 

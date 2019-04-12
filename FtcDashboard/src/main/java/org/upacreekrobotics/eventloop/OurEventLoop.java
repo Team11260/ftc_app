@@ -91,7 +91,7 @@ public class OurEventLoop extends FtcEventLoopBase {
     }
 
     //OUR CODE
-    public static OurOpModeManager createUserOpModeManager(){
+    public static OurOpModeManager createUserOpModeManager() {
         OurOpModeManager tempManager = new OurOpModeManager(activity, new HardwareMap(activity));
         tempManager.init(eventLoopManager);
         return tempManager;
