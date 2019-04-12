@@ -73,8 +73,8 @@ public class MineralLift {
     public double getMotorCurrentDraw(){ return liftMotor.getCurrentDraw();}
 
     public void setLiftMotorPowerNoEncoder(double power) {
-        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftMotor.setPower(power);
+        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void resetPosition() {

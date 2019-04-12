@@ -89,7 +89,7 @@ public class VuforiaFrameGenerator implements FrameGenerator {
                     for (int b = 0; b < bytes.length; b++) {
                         int x = b % cameraInformation.size.width;
                         int y = b / cameraInformation.size.width;
-                        if (y < cameraInformation.size.height / 3.0 || y > (cameraInformation.size.height / 3.0) * 2) {
+                        if (y < cameraInformation.size.height * 0.6 || y > cameraInformation.size.height * 1.3) {
                             bytes[b] = 0;
                         }
                     }

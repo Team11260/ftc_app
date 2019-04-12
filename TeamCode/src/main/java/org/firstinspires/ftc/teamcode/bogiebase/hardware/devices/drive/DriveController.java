@@ -410,7 +410,10 @@ public class DriveController extends SubsystemController {
     }
 
     public void autonDriveToWallSequence() {
-        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && opModeIsActive() && drive.getLeftMotorCurrentDraw()<8000 && drive.getRightMotorCurrentDraw()<8000) ;
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && opModeIsActive() && drive.getLeftMotorCurrentDraw() < 8000 && drive.getRightMotorCurrentDraw() < 8000) {
+            telemetry.addDataPhone(INFO, "LEFT:" + drive.getLeftMotorCurrentDraw());
+            telemetry.addDataPhone(INFO, "RIGHT: " + drive.getRightMotorCurrentDraw());
+        }
 
         if (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")) return;
 

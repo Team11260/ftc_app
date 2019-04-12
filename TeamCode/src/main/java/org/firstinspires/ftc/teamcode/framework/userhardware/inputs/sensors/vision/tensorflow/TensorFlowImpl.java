@@ -78,14 +78,16 @@ public class TensorFlowImpl {
         int tfodMonitorViewId = AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.50;
+        tfodParameters.minimumConfidence = 0.25;
+        tfodParameters.useObjectTracker = false;
         tfod = new TensorFlow(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
     private void initTfodWithoutViewer() {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
-        tfodParameters.minimumConfidence = 0.50;
+        tfodParameters.minimumConfidence = 0.25;
+        tfodParameters.useObjectTracker = false;
         tfod = new TensorFlow(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
@@ -123,8 +125,9 @@ public class TensorFlowImpl {
                 ArrayList<Mineral> minerals = new ArrayList<>();
                 for (Recognition recognition : updatedRecognitions) {
                     Mineral mineral = new Mineral(recognition);
-                    telemetry.addData(DoubleTelemetry.LogMode.TRACE,"x pos. :"+ mineral.getX()+" y pos. :"+mineral.getY());
-                    if ((mineral.getX() < 40 && mineral.getX()>30) && (mineral.getY()<145 && mineral.getY()>135 ))  continue;
+                    telemetry.addData(DoubleTelemetry.LogMode.TRACE,"x pos. :"+ mineral.getX()+" y pos. :"+mineral.getY() + " "+ mineral.mineralType);
+
+                    //if ((mineral.getX() < 40 && mineral.getX()>30) && (mineral.getY()<145 && mineral.getY() > 135))  continue;
 
                     minerals.add(mineral);
                 }

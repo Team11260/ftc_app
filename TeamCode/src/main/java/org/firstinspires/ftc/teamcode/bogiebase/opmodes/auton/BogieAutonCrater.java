@@ -79,7 +79,7 @@ public class BogieAutonCrater extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectCenterMineral);
                 break;
             default:
-                robot.runDrivePath(Constants.collectCenterMineral);
+                robot.runDrivePath(Constants.collectRightMineral);
                 break;
         }
         //Deposit team marker and drive to crater

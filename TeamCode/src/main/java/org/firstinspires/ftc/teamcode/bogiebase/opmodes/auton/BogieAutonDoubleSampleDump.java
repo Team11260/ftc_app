@@ -80,7 +80,7 @@ public class BogieAutonDoubleSampleDump extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectCenterMineral);
                 break;
             default:
-                robot.runDrivePath(Constants.collectCenterMineral);
+                robot.runDrivePath(Constants.collectRightMineral);
                 break;
         }
 
@@ -99,7 +99,7 @@ public class BogieAutonDoubleSampleDump extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectCenterMineralDoubleSample);
                 break;
             default:
-                robot.runDrivePath(Constants.collectCenterMineralDoubleSample);
+                robot.runDrivePath(Constants.collectRightMineralDoubleSample);
                 break;
         }
 
@@ -118,7 +118,7 @@ public class BogieAutonDoubleSampleDump extends AbstractAutonNew {
                 robot.runDrivePath(Constants.doubleSampleLanderToCraterCenter);
                 break;
             default:
-                robot.runDrivePath(Constants.doubleSampleLanderToCraterCenter);
+                robot.runDrivePath(Constants.doubleSampleLanderToCraterRight);
                 break;
         }
     }

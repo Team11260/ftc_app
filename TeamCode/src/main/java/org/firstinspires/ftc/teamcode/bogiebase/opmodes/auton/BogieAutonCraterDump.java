@@ -88,7 +88,7 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectCenterMineralDump);
                 break;
             default:
-                robot.runDrivePath(Constants.collectCenterMineralDump);
+                robot.runDrivePath(Constants.collectRightMineralDump);
                 break;
         }
 

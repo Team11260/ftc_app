@@ -68,7 +68,7 @@ public class BogieAutonDepot extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectDepotCenterMineral);
                 break;
             default:
-                robot.runDrivePath(Constants.collectDepotCenterMineral);
+                robot.runDrivePath(Constants.collectDepotRightMineral);
                 break;
         }
 
