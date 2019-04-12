@@ -11,11 +11,12 @@ public class AnalogInputChannel extends AnalogInput {
         super(null, 0);
         this.input = input;
         offset = (Math.random() * 2) - 1;
+        new Thread(this::test).start();
     }
 
     public void test() {
         try {
-            Thread.sleep(500);
+            Thread.sleep(2);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
