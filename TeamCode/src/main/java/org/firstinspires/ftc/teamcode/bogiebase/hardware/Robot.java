@@ -90,6 +90,10 @@ public class Robot extends AbstractRobot {
         telemetry.addDataPhone(TRACE, "Mineral lift current: " + hub.getCurrentDrawMotor3());
         telemetry.addDataPhone(INFO, "Total current: " + hub.getTotalCurrentDraw());
         telemetry.addDataPhone(INFO, "Voltage: " + hub.getVoltage());
+        telemetry.addDataPhone(INFO, "Delay: " + hardware.drive.getScaledPotValue());
+        telemetry.addDataPhone(INFO, "Pot Voltage: " + hardware.drive.getPotVoltage());
+
+        telemetry.addDataPhone(INFO, "Limit Switch: " + hardware.mineralLift.getBottomLimitSwitchPressed());
 
         telemetry.addDataPhone(INFO, "Mineral Lift Position: " + hardware.mineralLift.getMineralLiftPosition());
         telemetry.addDataPhone(INFO, "Mineral Lift Time: " + hardware.mineralLift.getMineralLiftTime());
@@ -259,28 +263,6 @@ public class Robot extends AbstractRobot {
 
     public void slowReverseIntake() {
         hardware.intake.slowReverseIntake();
-    }
-
-    public Callable liftIntakeCallable() {
-        return () -> {
-            liftIntake();
-            return true;
-        };
-    }
-
-    public void liftIntake() {
-        hardware.intake.liftIntake();
-    }
-
-    public Callable lowerIntakeCallable() {
-        return () -> {
-            lowerIntake();
-            return true;
-        };
-    }
-
-    public void lowerIntake() {
-        hardware.intake.lowerIntake();
     }
 
     //Mineral Lift Methods

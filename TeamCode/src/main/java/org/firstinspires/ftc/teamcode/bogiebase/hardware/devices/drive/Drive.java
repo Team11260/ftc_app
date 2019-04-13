@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,12 +14,11 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor
 public class Drive {
 
     private SlewDcMotor leftMotor, rightMotor;
-    private Potentiometer pot;
-
-    // un comment all light methods when defining this
-    // private DcMotorSimple light;
-    private IMU imu;
+    private DcMotorSimple light;
     private Servo servoMarker;
+
+    private IMU imu;
+    private Potentiometer pot;
 
     public Drive(HardwareMap hardwareMap) {
 
@@ -48,8 +48,8 @@ public class Drive {
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 
-        /*light = hardwareMap.get(DcMotorSimple.class, "light");
-        light.setPower(0);*/
+        light = hardwareMap.get(DcMotorSimple.class, "light");
+        light.setPower(0);
 
         servoMarker = hardwareMap.servo.get("servo_marker");
         servoMarker.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.DRIVE_TEAM_MARKER_RETRACTED : Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED);
@@ -149,7 +149,7 @@ public class Drive {
     }
 
     public void setLightPower(double power) {
-        //light.setPower(Math.abs(power));
+        light.setPower(Math.abs(power));
     }
 
     public double getPotVoltage() {

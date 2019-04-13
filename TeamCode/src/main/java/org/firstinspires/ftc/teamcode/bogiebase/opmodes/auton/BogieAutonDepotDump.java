@@ -32,13 +32,13 @@ public class BogieAutonDepotDump extends AbstractAutonNew {
         addState(new PathState("finish intaking", "drive to depot", robot.finishIntakingCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
         addState(new PathState("raise lift", "drive away from depot", robot.autonMoveMineralLiftToDumpPositionSequenceCallable()));
-        addState(new PathState("dump pause", "drive to lander", () -> {
+        addState(new PathState("dump pause", "turn away from lander", () -> {
             RobotState.currentPath.pause();
             delay(Constants.DUMP_MINERAL_DELAY);
             RobotState.currentPath.resume();
             return true;
         }));
-        addState(new PathState("open mineral gate", "drive to lander", robot.openMineralGateCallable()));
+        addState(new PathState("open mineral gate", "turn away from lander", robot.openMineralGateCallable()));
         addState(new PathState("lower lift", "turn to wall", robot.autonMoveMineralLiftToCollectPositionSequenceCallable()));
         addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
         addState(new PathState("finish driving", "turn to crater", () -> {

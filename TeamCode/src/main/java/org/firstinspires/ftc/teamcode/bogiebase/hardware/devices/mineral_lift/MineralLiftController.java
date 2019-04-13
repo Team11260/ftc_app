@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.mineral_lift;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
@@ -40,21 +41,6 @@ public class MineralLiftController extends SubsystemController {
 
     public void update() {
 
-        if (isMovingDown) {
-            int currentValue = mineralLift.getCurrentPosition();
-
-            if (mineralLift.getPower() == -1 && currentValue < MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION) {
-                mineralLift.setLiftMotorPowerNoEncoder(-MINERAL_LIFT_SLOW_SPEED);
-            }
-
-            if (mineralLift.getMotorCurrentDraw() > MINERAL_LIFT_DOWN_DETECT_CURRENT) {
-                delay(200);
-                mineralLift.resetPosition();
-                currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
-                isMovingDown = false;
-                return;
-            }
-        }
     }
 
     public synchronized void stop() {
@@ -116,6 +102,18 @@ public class MineralLiftController extends SubsystemController {
         mineralLift.setLiftMotorPowerNoEncoder(-MINERAL_LIFT_FULL_SPEED);
         isMovingDown = true;
         mineralLift.setAngleServoPosition(MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
+
+        while (mineralLift.getCurrentPosition() > MINERAL_LIFT_SLOW_SPEED_TRIGGER_POSITION && !getBottomLimitSwitchPressed() && moveTime.milliseconds() < 2000 && opModeIsActive());
+
+        mineralLift.setLiftMotorPowerNoEncoder(-MINERAL_LIFT_AUTON_SPEED);
+
+        while (!getBottomLimitSwitchPressed() && moveTime.milliseconds() < 2000 && opModeIsActive());
+
+        delay(500);
+
+        mineralLift.resetPosition();
+        currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
+        isMovingDown = false;
     }
 
     public synchronized void moveToDumpPosition() {
@@ -175,6 +173,10 @@ public class MineralLiftController extends SubsystemController {
 
     public synchronized void setAngleServoPositionVertical() {
         mineralLift.setAngleServoPosition(Constants.MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION);
+    }
+
+    public boolean getBottomLimitSwitchPressed() {
+        return mineralLift.getBottomLimitSwitchPressed();
     }
 
     public synchronized void setAngleServoPosition(double position) {

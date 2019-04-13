@@ -46,7 +46,7 @@ public final class Constants {
     //Lift
     public final static double MINERAL_LIFT_FULL_SPEED = 1;
     public final static double MINERAL_LIFT_AUTON_SPEED = 0.5;
-    public final static double MINERAL_LIFT_SLOW_SPEED = 0.1;// was 1 before
+    public final static double MINERAL_LIFT_SLOW_SPEED = 0.1;
 
     public final static int MINERAL_LIFT_AUTON_RAISED_POSITION = 225;
     public final static int MINERAL_LIFT_DUMP_POSITION = 950;
@@ -290,9 +290,9 @@ public final class Constants {
         collectDepotDumpRightMineral.addSegment(new TurnSegment("turn to gold mineral", 152, AUTON_MINERAL_TURN_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         collectDepotDumpRightMineral.addSegment(new DriveSegment("drive to minerals", 34, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectDepotDumpRightMineral.addSegment(new TurnSegment("turn to depot", -145, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
-        collectDepotDumpRightMineral.addSegment(new DriveSegment("drive to depot", 27, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        collectDepotDumpRightMineral.addSegment(new DriveSegment("drive away from depot", -27, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        collectDepotDumpRightMineral.addSegment(new TurnSegment("turn to lander", 152, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectDepotDumpRightMineral.addSegment(new DriveSegment("drive to depot", 18, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectDepotDumpRightMineral.addSegment(new DriveSegment("drive away from depot", -18, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectDepotDumpRightMineral.addSegment(new TurnSegment("turn to lander", 150, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         collectDepotDumpRightMineral.addSegment(new DriveSegment("drive to lander", -36, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
 
     }
@@ -314,10 +314,10 @@ public final class Constants {
 
     static {
         collectDepotDumpCenterMineral.addSegment(new TurnSegment("turn to gold mineral", 181, AUTON_MINERAL_TURN_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
-        collectDepotDumpCenterMineral.addSegment(new DriveSegment("drive to minerals", 24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectDepotDumpCenterMineral.addSegment(new DriveSegment("drive to minerals", 22, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectDepotDumpCenterMineral.addSegment(new TurnSegment("turn to depot", -165, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
-        collectDepotDumpCenterMineral.addSegment(new DriveSegment("drive to depot", 28, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        collectDepotDumpCenterMineral.addSegment(new DriveSegment("drive away from depot", -28, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectDepotDumpCenterMineral.addSegment(new DriveSegment("drive to depot", 24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        collectDepotDumpCenterMineral.addSegment(new DriveSegment("drive away from depot", -22, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectDepotDumpCenterMineral.addSegment(new TurnSegment("turn to lander", 175, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         collectDepotDumpCenterMineral.addSegment(new DriveSegment("drive to lander", -26, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
 
@@ -327,7 +327,7 @@ public final class Constants {
 
     static {
         depotSideToCraterDump.addSegment(new TurnSegment("turn away from lander", 181, AUTON_MINERAL_TURN_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
-        depotSideToCraterDump.addSegment(new DriveSegment("drive away from lander", 18, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+        depotSideToCraterDump.addSegment(new DriveSegment("drive away from lander", 14, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         depotSideToCraterDump.addSegment(new TurnSegment("turn to wall", -90, AUTON_MINERAL_TURN_SPEED, AUTON_MINERAL_TURN_ERROR, AUTON_TURN_PERIOD));
         depotSideToCraterDump.addSegment(new DriveSegment("large drive to wall", 44, AUTON_PATH_SPEED, 500));
         depotSideToCraterDump.addSegment(new DriveSegment("drive to wall", 50, 0.4, AUTON_DISTANCE_ERROR));

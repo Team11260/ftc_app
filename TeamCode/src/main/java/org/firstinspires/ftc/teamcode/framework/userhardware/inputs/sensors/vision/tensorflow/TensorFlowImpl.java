@@ -211,7 +211,7 @@ public class TensorFlowImpl {
 
         ArrayList<Mineral> silverMinerals = new ArrayList<>();
         for (Mineral mineral : minerals) {
-            if (mineral.getType() == MineralType.SILVER && mineral.getConfidence() > 0.5) silverMinerals.add(mineral);
+            if (mineral.getType() == MineralType.SILVER && mineral.getConfidence() > 0.25) silverMinerals.add(mineral);
         }
 
         if (silverMinerals.size() < 2) return null;

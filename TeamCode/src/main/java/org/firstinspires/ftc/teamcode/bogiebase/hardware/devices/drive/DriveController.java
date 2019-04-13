@@ -623,4 +623,8 @@ public class DriveController extends SubsystemController {
         scaledPotValue= scaledPotValue * 1000;
         return scaledPotValue;
     }
+
+    public double getPotVoltage() {
+        return drive.getPotVoltage();
+    }
 }

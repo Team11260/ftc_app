@@ -48,11 +48,17 @@ public abstract class AbstractOpMode extends LinearOpMode {
         opmode = this;
         linearOpMode = this;
         telemetry = new DoubleTelemetry(super.telemetry, Dashboard.getInstance().getTelemetry(), new Logger(Dashboard.getCurrentOpMode()));
-        hwMap = new org.upacreekrobotics.HardwareMap(hardwareMap);
     }
 
     @Override
-    public abstract void runOpMode();
+    public void runOpMode() {
+
+        hwMap = new org.upacreekrobotics.HardwareMap(hardwareMap);
+
+        runOpmode();
+    }
+
+    public abstract void runOpmode();
 
     public static void delay(int millis) {
         if(Thread.currentThread().isInterrupted()) return;
