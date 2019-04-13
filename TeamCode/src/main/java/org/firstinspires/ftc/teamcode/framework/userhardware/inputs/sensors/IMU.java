@@ -42,7 +42,7 @@ public class IMU implements Runnable {
     public double getHeading() {
         while (AbstractOpMode.isOpModeActive()) {
             synchronized (lock) {
-                if(newValue == true) {
+                if(newValue) {
                     newValue = false;
                     return heading;
                 }
@@ -59,7 +59,7 @@ public class IMU implements Runnable {
     public void resetAngleToZero() {
         imu.initialize(parameters);
 
-        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000) ;
+        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000 && AbstractOpMode.isOpModeActive());
     }
 
     public boolean isGyroCalibrated() {

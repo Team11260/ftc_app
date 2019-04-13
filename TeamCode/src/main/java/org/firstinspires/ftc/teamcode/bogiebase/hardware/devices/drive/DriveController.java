@@ -453,12 +453,12 @@ public class DriveController extends SubsystemController {
     //TeleOp Methods
     public synchronized void setPower(double left, double right) {
 
-        /*if ((currentMineralLiftState == MineralLiftState.IN_MOTION ||
+        if ((currentMineralLiftState == MineralLiftState.IN_MOTION ||
                 currentMineralLiftState == MineralLiftState.DUMP_POSITION) &&
                 currentMatchState == MatchState.TELEOP) {
             left *= DRIVE_MINERAL_LIFT_RAISED_SCALAR;
             right *= DRIVE_MINERAL_LIFT_RAISED_SCALAR;
-        }*/
+        }
 
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

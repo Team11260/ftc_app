@@ -13,6 +13,6 @@ public class Potentiometer {
     }
 
     public double getVoltage() {
-        return (pot.getVoltage());
+        return pot.getVoltage();
     }
 }

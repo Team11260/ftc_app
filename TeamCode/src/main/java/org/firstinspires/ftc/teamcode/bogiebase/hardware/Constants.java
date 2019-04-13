@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
-import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
@@ -18,7 +17,7 @@ public final class Constants {
     ////////DRIVE////////
     public static final double DRIVE_SLEW_SPEED = 0.1;
 
-    public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.7;
+    public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.65;
     public static final double DRIVE_COUNTS_PER_INCH = 38;// 38 *1.3
 
     public static final double DRIVE_RELEASE_WHEELS_POWER = -0.5;

@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.bogiebase.opmodes.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
 @TeleOp(name = "Boogie Teleop One Driver", group = "New")
-@Disabled
+//@Disabled
 
 public class BogieTeleopOneDriver extends AbstractTeleop {
 
@@ -15,8 +14,6 @@ public class BogieTeleopOneDriver extends AbstractTeleop {
 
     @Override
     public void RegisterEvents() {
-
-        addEventHandler("1_lb_down", robot.dropMarkerCallable());
 
         ////////Intake////////
         addEventHandler("1_a_down", robot.finishIntakingCallable());
@@ -28,7 +25,11 @@ public class BogieTeleopOneDriver extends AbstractTeleop {
         ///////Mineral Lift////////
         addEventHandler("1_rt_down", robot.moveMineralLiftToDumpPositionCallable());
 
+        addEventHandler("2_rb_down", robot.moveMineralLiftToDumpPositionCallable());
+
         addEventHandler("1_y_down", robot.toggleMineralGateCallable());
+
+        addEventHandler("1_dpd_down", robot.toggleAngleServoTiltAngleCallable());
 
         ////////Robot Lift////////
         addEventHandler("1_lb_down", robot.robotLiftUpCallable());
@@ -38,6 +39,9 @@ public class BogieTeleopOneDriver extends AbstractTeleop {
         addEventHandler("1_lt_down", robot.robotLiftDownCallable());
 
         addEventHandler("1_lt_up", robot.robotLiftStopCallable());
+
+        ////////Other////////
+        addEventHandler("1_dpu_down", robot.dropMarkerCallable());
     }
 
     @Override

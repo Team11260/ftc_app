@@ -37,6 +37,7 @@ public class BogieTeleopTwoDriver extends AbstractTeleop {
 
         addEventHandler("2_rb_down", robot.moveMineralLiftToDumpPositionCallable());
 
+        addEventHandler("2_dpd_down", robot.toggleAngleServoTiltAngleCallable());
 
         ////////Robot Lift////////
         addEventHandler("2_lb_down", robot.robotLiftUpCallable());
