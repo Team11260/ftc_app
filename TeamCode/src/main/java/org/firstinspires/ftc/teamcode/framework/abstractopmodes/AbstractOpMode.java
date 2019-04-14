@@ -24,7 +24,6 @@ public abstract class AbstractOpMode extends LinearOpMode {
     private static LinearOpMode linearOpMode;
     public static DoubleTelemetry telemetry;
     private static AbstractOpMode thisOpMode;
-    private static org.upacreekrobotics.HardwareMap hwMap;
 
     public static DoubleTelemetry getTelemetry() {
         return telemetry;
@@ -32,10 +31,6 @@ public abstract class AbstractOpMode extends LinearOpMode {
 
     public static HardwareMap getHardwareMap() {
         return opmode.hardwareMap;
-    }
-
-    public static org.upacreekrobotics.HardwareMap getHwMap() {
-        return hwMap;
     }
 
     public static OpMode getOpModeInstance() {
@@ -52,9 +47,6 @@ public abstract class AbstractOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
-        hwMap = new org.upacreekrobotics.HardwareMap(hardwareMap);
-
         runOpmode();
     }
 

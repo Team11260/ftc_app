@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
-import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
@@ -42,7 +41,7 @@ public class DriveController extends SubsystemController {
 
     private double turnY = 0, turn_z = 0, leftPower = 0, rightPower = 0, Drive_Power = 1.0;
 
-    public ElapsedTime runtime;
+    private ElapsedTime runtime;
 
     private DecimalFormat DF;
 
@@ -327,6 +326,12 @@ public class DriveController extends SubsystemController {
     }
 
     //TeleOp Methods
+    public synchronized void setPowerNoEncoder(double left, double right) {
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        drive.setPower(range(left), range(right));
+    }
+
     public synchronized void setPower(double left, double right) {
 
         if ((currentMineralLiftState == MineralLiftState.IN_MOTION ||
@@ -406,5 +411,9 @@ public class DriveController extends SubsystemController {
         drive.setMarkerServo(DRIVE_TEAM_MARKER_RETRACTED);
         currentPath.resume();
         telemetry.addData(INFO, "Marker dumped");
+    }
+
+    public void resetPosition() {
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }

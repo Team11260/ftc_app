@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
-import android.telecom.Call;
-
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.TensorFlowImpl;
@@ -92,6 +90,14 @@ public class Robot extends AbstractRobot {
         telemetry.update();
     }
 
+    public double getVoltage() {
+        return hub.getVoltage();
+    }
+
+    public double getCurrent() {
+        return hub.getTotalCurrentDraw();
+    }
+
     public void stop() {
         if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) stopTensorFlow();
         hardware.stop();
@@ -110,6 +116,10 @@ public class Robot extends AbstractRobot {
         hardware.drive.updateYZDrive();
     }
 
+    public void setDrivePowerNoEncoder(double l, double r) {
+        hardware.drive.setPowerNoEncoder(l, r);
+    }
+
     public void setDrivePower(double l, double r) {
         hardware.drive.setPower(l, r);
     }
@@ -118,8 +128,20 @@ public class Robot extends AbstractRobot {
         hardware.drive.runDrivePath(path);
     }
 
-    public void setPosition(int position, double power) {
+    public void setDrivePosition(int position, double power) {
         hardware.drive.setPosition(position, power);
+    }
+
+    public int getLeftDrivePosition() {
+        return hardware.drive.getLeftPosition();
+    }
+
+    public int getRightDrivePosition() {
+        return hardware.drive.getRightPosition();
+    }
+
+    public void resetDrivePosition() {
+        hardware.drive.resetPosition();
     }
 
     public boolean isGyroCalibrated() {
@@ -276,6 +298,10 @@ public class Robot extends AbstractRobot {
         hardware.mineralLift.toggleTiltAngle();
     }
 
+    public int getMineralLiftPosition() {
+       return hardware.mineralLift.getMineralLiftPosition();
+    }
+
     public void setAngleServoPositionHorizontal() {
         hardware.mineralLift.setAngleServoPositionHorizontal();
     }
@@ -345,24 +371,36 @@ public class Robot extends AbstractRobot {
     //robot lift methods
     public Callable robotLiftUpCallable() {
         return () -> {
-            hardware.robotLift.robotLiftUp();
+            robotLiftUp();
             return true;
         };
 
+    }
+
+    public void robotLiftUp() {
+        hardware.robotLift.robotLiftUp();
     }
 
     public Callable robotLiftDownCallable() {
         return () -> {
-            hardware.robotLift.robotLiftDown();
+            robotLiftDown();
             return true;
         };
     }
 
+    public void robotLiftDown() {
+        hardware.robotLift.robotLiftDown();
+    }
+
     public Callable robotLiftStopCallable() {
         return () -> {
-            hardware.robotLift.robotLiftStop();
+            robotLiftStop();
             return true;
         };
+    }
+
+    public void robotLiftStop() {
+        hardware.robotLift.robotLiftStop();
     }
 
     public void moveRobotLiftToBottom() {

@@ -22,4 +22,8 @@ public class Speech {
     public boolean isSpeaking() {
         return mTTS.isSpeaking();
     }
+
+    public void stop() {
+        mTTS.stop();
+    }
 }
