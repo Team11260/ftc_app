@@ -281,7 +281,7 @@ public final class Constants {
         collectDepotDumpRightMineral.addSegment(new TurnSegment("turn to depot", -145, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         collectDepotDumpRightMineral.addSegment(new DriveSegment("drive to depot", 18, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectDepotDumpRightMineral.addSegment(new DriveSegment("drive away from depot", -18, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-        collectDepotDumpRightMineral.addSegment(new TurnSegment("turn to lander", 143, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
+        collectDepotDumpRightMineral.addSegment(new TurnSegment("turn to lander", 145, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         collectDepotDumpRightMineral.addSegment(new DriveSegment("drive to lander", -35, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
 
     }
