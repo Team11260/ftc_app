@@ -18,7 +18,6 @@ public class Drive {
     private Servo servoMarker;
 
     private IMU imu;
-    private Potentiometer pot;
 
     public Drive(HardwareMap hardwareMap) {
 
@@ -53,8 +52,6 @@ public class Drive {
 
         servoMarker = hardwareMap.servo.get("servo_marker");
         servoMarker.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.DRIVE_TEAM_MARKER_RETRACTED : Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED);
-
-        pot = new Potentiometer("Pot");
     }
 
     public void setSlewSpeed(double ss) {
@@ -150,10 +147,6 @@ public class Drive {
 
     public void setLightPower(double power) {
         light.setPower(Math.abs(power));
-    }
-
-    public double getPotVoltage() {
-        return pot.getVoltage();
     }
 
     public void stop() {

@@ -56,7 +56,7 @@ public class PIDController {
     }
 
     public void logControl(DoubleTelemetry.LogMode mode, String line) {
-        AbstractOpMode.getTelemetry().addData(mode, line );
+        //AbstractOpMode.getTelemetry().addData(mode, line);
     }
 
     public double output(double target, double current) {

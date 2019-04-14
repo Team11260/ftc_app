@@ -7,8 +7,6 @@ public final class RobotState {
 
     public static MatchState currentMatchState = MatchState.UNKNOWN;
 
-    public static DriveDirection currentDriveDirection = DriveDirection.FORWARD;
-
     public static MineralLiftState currentMineralLiftState = MineralLiftState.COLLECT_POSITION;
 
     public static MineralGatePosition currentMineralGatePosition = MineralGatePosition.CLOSED;
@@ -23,11 +21,6 @@ public final class RobotState {
         AUTONOMOUS,
         TELEOP,
         UNKNOWN
-    }
-
-    public enum DriveDirection {
-        FORWARD,
-        REVERSED
     }
 
     public enum MineralLiftState {

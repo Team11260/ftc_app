@@ -9,7 +9,8 @@ public class Potentiometer {
     private AnalogInput pot;
 
     public Potentiometer(String name) {
-        pot = AbstractOpMode.getHwMap().analogInput.get(name);
+      //  pot = AbstractOpMode.getHwMap().analogInput.get(name);
+        pot = AbstractOpMode.getHardwareMap().analogInput.get(name);
     }
 
     public double getVoltage() {

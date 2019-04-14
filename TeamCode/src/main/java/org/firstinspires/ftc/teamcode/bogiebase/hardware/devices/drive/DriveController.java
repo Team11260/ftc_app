@@ -25,10 +25,8 @@ import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_TEAM_MARKER_EXTENDED;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_TEAM_MARKER_RETRACTED;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED;
-import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.DriveDirection;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.MatchState;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.MineralLiftState;
-import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentDriveDirection;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentMatchState;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentMineralLiftState;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentPath;
@@ -48,8 +46,6 @@ public class DriveController extends SubsystemController {
 
     private DecimalFormat DF;
 
-    private double scaledPotValue;
-
     //Utility Methods
     public DriveController() {
         init();
@@ -64,7 +60,7 @@ public class DriveController extends SubsystemController {
         DF = new DecimalFormat("#.###");
         //Put general setup here
         drive = new Drive(hardwareMap);
-        anglePID = new PIDController(15, 0.1, 100, 0.3, 0.08);//D was 150
+        anglePID = new PIDController(15, 0.1, 250, 0.3, 0.08);//D was 150
         //anglePID.setLogging(true);
         straightPID = new PIDController(50, 0.5, 50, 1, 0);
         distancePID = new PIDController(0.6, 0.1, 0, 2, 0.1);
@@ -82,126 +78,6 @@ public class DriveController extends SubsystemController {
     }
 
     //Autonomous Methods
-    public synchronized void turnTo(double angle, double speed, double error, int period) {
-        AbstractOpMode.delay(100);
-
-        baseHeading = angle;
-
-        telemetry.addData("starting turn segment---------------------------");
-        anglePID.reset();
-        anglePID.setMinimumOutput(0);
-        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double power;
-        while (opModeIsActive()) {
-            //While we are not in the error band keep turning
-            while (!atPosition(angle, drive.getHeading(), error) && opModeIsActive()) {
-                telemetry.addDataDB("--------------------");
-                //Use the PIDController class to calculate power values for the wheels
-                if (angle - getHeading() > 180) {
-                    power = anglePID.output(angle, 180 + (180 + getHeading()));
-                    telemetry.addData("How Far", 180 + (180 + getHeading()));
-                } else {
-                    power = anglePID.output(angle, getHeading());
-                    telemetry.addData("How Far", getHeading());
-                }
-                setPower(-power * speed, power * speed);
-                telemetry.addData("Heading", getHeading());
-                telemetry.addData("Power", power);
-                telemetry.update();
-            }
-            runtime.reset();
-            while (runtime.milliseconds() < period) {
-                if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
-                    break;
-            }
-            if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
-                continue;
-            telemetry.addData("Final heading", getHeading());
-            telemetry.update();
-            drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            return;
-        }
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
-    public synchronized void driveTo(double distance, double speed) {
-        driveTo(distance, speed, (int) baseHeading);
-    }
-
-    public synchronized void driveTo(double distance, double speed, int angle) {
-        baseHeading = angle;
-
-        AbstractOpMode.delay(100);
-
-        telemetry.addData("starting drive segment---------------------------");
-        straightPID.reset(); //Resets the PID values in the PID class to make sure we do not have any left over values from the last segment
-        distancePID.reset();
-        straightPID.setMinimumOutput(0);
-        int position = (int) (distance * DRIVE_COUNTS_PER_INCH); //
-        telemetry.addData("Encoder counts: " + position);
-        double turn;
-        speed = range(speed);
-        telemetry.addData("Speed: " + speed);
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        drive.setPosisionP(5);
-        double startHeading = angle;
-        telemetry.addData("Start Heading: " + startHeading);
-        telemetry.update();
-        double leftPower, rightPower;
-        double power;
-        while ((!atPosition(position, drive.getLeftPosition(), 15) && !atPosition(position, drive.getRightPosition(), 15)) && opModeIsActive()) {
-            power = range(distancePID.output(position, drive.getRightPosition()));
-
-            turn = straightPID.output(startHeading, getHeading());
-
-            if (power > 0) {
-                leftPower = range(power * (speed - turn));
-                rightPower = range(power * (speed + turn));
-            } else {
-                leftPower = range(power * (speed + turn));
-                rightPower = range(power * (speed - turn));
-            }
-
-            drive.setPower(leftPower, rightPower);
-
-            telemetry.addData("Encoder counts: " + position);
-            telemetry.addData("Left Position: " + drive.getLeftPosition());
-            telemetry.addData("Right Position: " + drive.getRightPosition());
-            telemetry.addData("Left Power: " + leftPower);
-            telemetry.addData("Right Power: " + rightPower);
-            telemetry.addData("Heading: " + getHeading());
-            telemetry.addData("PID Output: " + turn);
-            telemetry.update();
-        }
-
-        for (int i = 0; i < 5; i++) {
-            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition()) / 2));
-
-            turn = straightPID.output(startHeading, getHeading());
-
-            if (power > 0) {
-                leftPower = range(power * (speed - turn));
-                rightPower = range(power * (speed + turn));
-            } else {
-                leftPower = range(power * (speed + turn));
-                rightPower = range(power * (speed - turn));
-            }
-
-            drive.setPower(leftPower, rightPower);
-
-            telemetry.addData("Encoder counts: " + position);
-            telemetry.addData("Left Position: " + drive.getLeftPosition());
-            telemetry.addData("Right Position: " + drive.getRightPosition());
-            telemetry.addData("Left Power: " + leftPower);
-            telemetry.addData("Right Power: " + rightPower);
-            telemetry.addData("Heading: " + getHeading());
-            telemetry.update();
-        }
-
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
     public synchronized void runDrivePath(Path path) {
 
         boolean lastPathPaused = false;
@@ -213,7 +89,7 @@ public class DriveController extends SubsystemController {
         currentPath = path;
         currentPath.reset();
 
-        if(lastPathPaused) currentPath.pause();
+        if (lastPathPaused) currentPath.pause();
 
         telemetry.addData(INFO, "Starting path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
 
@@ -240,14 +116,14 @@ public class DriveController extends SubsystemController {
 
         double angle = segment.getAngle(), speed = segment.getSpeed(), error = segment.getError(), period = segment.getPeriod();
 
-        telemetry.addData(INFO, "___________________"  );
+        telemetry.addData(INFO, "___________________");
         telemetry.addData(INFO, "");
         telemetry.addData(INFO, "");
         telemetry.addData(INFO, "Angle = " + segment.getAngle() + " Speed = " + segment.getSpeed()
-                                                 + " error = " + segment.getError() + " Period = " + segment.getPeriod());
-        if(angle > 180) {
+                + " error = " + segment.getError() + " Period = " + segment.getPeriod());
+        if (angle > 180) {
             baseHeading = angle - 360;
-        } else if(angle < -180) {
+        } else if (angle < -180) {
             baseHeading = angle + 360;
         } else {
             baseHeading = angle;
@@ -285,7 +161,7 @@ public class DriveController extends SubsystemController {
                     power = anglePID.output(angle, currentHeading < 0 && currentHeading < baseHeading + 30 ? 360 + currentHeading : currentHeading);
                 } else if (angle < -180) {
                     angleCall = 2;
-                    power = anglePID.output(angle, currentHeading > 0 && currentHeading > baseHeading - 30 ? currentHeading - 360: currentHeading);
+                    power = anglePID.output(angle, currentHeading > 0 && currentHeading > baseHeading - 30 ? currentHeading - 360 : currentHeading);
                 } else if (angle - currentHeading > 180) {
                     angleCall = 3;
                     power = anglePID.output(angle, 360 + currentHeading);
@@ -297,28 +173,28 @@ public class DriveController extends SubsystemController {
                     power = anglePID.output(angle, currentHeading);
                 }
 
-                if(power > speed) power = speed;
-                if(power < -speed) power = -speed;
+                if (power > speed) power = speed;
+                if (power < -speed) power = -speed;
 
-                telemetry.addData(INFO,
+                /*telemetry.addData(INFO,
                         "                                                                                                                                 call = "
-                                + angleCall + " Power = " + DF.format(power) + " Angle = " + getHeading());
+                                + angleCall + " Power = " + DF.format(power) + " Angle = " + getHeading());*/
                 setPower(-power, power);
 
                 loop++;
             }
 
+            runtime.reset();
+
             while (runtime.milliseconds() < period) {
-                if ((abs(getHeading() - baseHeading)) > error && (abs(getHeading() + baseHeading)) > error)
-                    break;
+                if ((abs(getHeading() - baseHeading)) > error && (abs(getHeading() + baseHeading)) > error) break;
             }
-            if ((abs(getHeading() - baseHeading)) > error && (abs(getHeading() + baseHeading)) > error)
-                continue;
+            if ((abs(getHeading() - baseHeading)) > error && (abs(getHeading() + baseHeading)) > error) continue;
 
 
             telemetry.addData(INFO, "");
             telemetry.addData(INFO, "Average loop time for turn: " + DF.format(runtime.milliseconds() / loop)
-             + " Time = " + runtime.milliseconds() + " Loops = " + loop);
+                    + " Time = " + runtime.milliseconds() + " Loops = " + loop);
             telemetry.addData(INFO, "Left encoder position: " + DF.format(drive.getLeftPosition()) + "  Right encoder position: " + DF.format(drive.getRightPosition()));
             telemetry.addData(INFO, "Final angle: " + DF.format(getHeading()));
             telemetry.update();
@@ -420,7 +296,7 @@ public class DriveController extends SubsystemController {
     }
 
     public void autonDriveToWallSequence() {
-        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && opModeIsActive() && drive.getLeftMotorCurrentDraw() < 8000 && drive.getRightMotorCurrentDraw() < 8000) {
+        while (RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && opModeIsActive() && drive.getLeftMotorCurrentDraw() < 10000 && drive.getRightMotorCurrentDraw() < 10000) {
             telemetry.addDataPhone(INFO, "LEFT:" + drive.getLeftMotorCurrentDraw());
             telemetry.addDataPhone(INFO, "RIGHT: " + drive.getRightMotorCurrentDraw());
         }
@@ -489,94 +365,17 @@ public class DriveController extends SubsystemController {
         drive.setPower(leftPower, rightPower);
     }
 
-    public synchronized void setInverted(boolean inverted) {
-        if (inverted) currentDriveDirection = DriveDirection.REVERSED;
-        else currentDriveDirection = DriveDirection.FORWARD;
-    }
-
-    public synchronized void toggleInverted() {
-        if (currentDriveDirection == DriveDirection.FORWARD)
-            currentDriveDirection = DriveDirection.REVERSED;
-        else currentDriveDirection = DriveDirection.FORWARD;
-    }
-
     //Util Methods
-    public synchronized int[][] recordPath(int numSamples, int timeInterval) {
-        drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        int[][] values = new int[2][numSamples];
-        runtime.reset();
-        for (int i = 0; i < numSamples; i++) {
-            while (runtime.milliseconds() < timeInterval && opModeIsActive()) ;
-            values[0][i] = drive.getLeftPosition();
-            values[1][i] = drive.getRightPosition();
-            if (!opModeIsActive()) break;
-            runtime.reset();
-        }
-        drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        return values;
-    }
-
-    public synchronized void runPath(int[] left, int[] right, int timeInterval) {
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.setPower(1, 1);
-        runtime.reset();
-        for (int i = 0; i < (left.length - right.length <= 0 ? right.length : left.length); i++) {
-            while (runtime.milliseconds() < timeInterval && opModeIsActive()) ;
-            drive.setTargetPosition(left[i], right[i]);
-            if (!opModeIsActive()) break;
-            runtime.reset();
-        }
-    }
-
-    public synchronized int[] recordPathWithHeading(int numSamples, int timeInterval) {
-        drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        int[] values = new int[numSamples * 3];
-        runtime.reset();
-        for (int i = 0; i < numSamples * 3; i += 3) {
-            while (runtime.milliseconds() < timeInterval && opModeIsActive()) ;
-            telemetry.addData(drive.getHeading());
-            telemetry.update();
-            values[i] = (int) drive.getHeading();
-            values[i + 1] = drive.getLeftPosition();
-            values[i + 2] = drive.getRightPosition();
-            if (!opModeIsActive()) break;
-            runtime.reset();
-        }
-        drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        return values;
-    }
-
-    public synchronized void runPathWithHeading(int[] values, int timeInterval, double speed) {
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.setPower(1, 1);
-        runtime.reset();
-        double turn;
-        for (int i = 0; i < values.length; i += 3) {
-            while (runtime.milliseconds() < timeInterval && opModeIsActive()) ;
-            turn = anglePID.output(values[i], getHeading());
-            drive.setPower(speed - turn, speed + turn);
-            drive.setTargetPosition(values[i + 1], values[i + 2]);
-            if (!opModeIsActive()) break;
-            runtime.reset();
-        }
-    }
-
     private synchronized double scaleInput(double val) {
         return (range(pow(val, 3)));
     }
 
-    private synchronized double range(double val){
+    private synchronized double range(double val) {
         if (val < -1) val = -1;
         if (val > 1) val = 1;
         return val;
     }
-    
+
     public synchronized boolean isGyroCalibrated() {
         return drive.isGyroCalibrated();
     }
@@ -607,24 +406,5 @@ public class DriveController extends SubsystemController {
         drive.setMarkerServo(DRIVE_TEAM_MARKER_RETRACTED);
         currentPath.resume();
         telemetry.addData(INFO, "Marker dumped");
-    }
-
-    public double getScaledPotValue() {
-        scaledPotValue = drive.getPotVoltage();
-        if (scaledPotValue >= 0 && scaledPotValue <= .5) {
-            scaledPotValue = 0;
-        } else if (scaledPotValue >= .5 && scaledPotValue <= 1.1) {
-            scaledPotValue = 4;
-        } else if (scaledPotValue >= 1.1 && scaledPotValue <= 2.5) {
-            scaledPotValue = 6;
-        } else if (scaledPotValue >= 2.5) {
-            scaledPotValue = 8;
-        }
-        scaledPotValue= scaledPotValue * 1000;
-        return scaledPotValue;
-    }
-
-    public double getPotVoltage() {
-        return drive.getPotVoltage();
     }
 }

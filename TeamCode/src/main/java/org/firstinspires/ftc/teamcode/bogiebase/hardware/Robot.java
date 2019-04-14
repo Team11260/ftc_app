@@ -65,11 +65,7 @@ public class Robot extends AbstractRobot {
             hardware.robotLift.update();
         }
 
-        updateTelemetry();
-    }
-
-    public double getScaledPotValue() {
-        return hardware.drive.getScaledPotValue();
+        //updateTelemetry();
     }
 
     public void updateTelemetry() {
@@ -90,13 +86,9 @@ public class Robot extends AbstractRobot {
         telemetry.addDataPhone(TRACE, "Mineral lift current: " + hub.getCurrentDrawMotor3());
         telemetry.addDataPhone(INFO, "Total current: " + hub.getTotalCurrentDraw());
         telemetry.addDataPhone(INFO, "Voltage: " + hub.getVoltage());
-        telemetry.addDataPhone(INFO, "Delay: " + hardware.drive.getScaledPotValue());
-        telemetry.addDataPhone(INFO, "Pot Voltage: " + hardware.drive.getPotVoltage());
-
         telemetry.addDataPhone(INFO, "Limit Switch: " + hardware.mineralLift.getBottomLimitSwitchPressed());
 
         telemetry.addDataPhone(INFO, "Mineral Lift Position: " + hardware.mineralLift.getMineralLiftPosition());
-        telemetry.addDataPhone(INFO, "Mineral Lift Time: " + hardware.mineralLift.getMineralLiftTime());
         telemetry.update();
     }
 
@@ -128,43 +120,8 @@ public class Robot extends AbstractRobot {
         hardware.drive.setPower(l, r);
     }
 
-    public Callable toggleDriveInvertedCallable() {
-        return () -> {
-            hardware.drive.toggleInverted();
-            return true;
-        };
-    }
-
-    public void turnTo(double angle, double speed, double error, int period) {
-        hardware.drive.turnTo(angle, speed, error, period);
-    }
-
     public void runDrivePath(Path path) {
         hardware.drive.runDrivePath(path);
-    }
-
-    public int[][] recordPath(int numSamples, int timeInterval) {
-        return hardware.drive.recordPath(numSamples, timeInterval);
-    }
-
-    public void runPath(int[] left, int[] right, int timeInterval) {
-        hardware.drive.runPath(left, right, timeInterval);
-    }
-
-    public void driveTo(double distance, double speed) {
-        hardware.drive.driveTo(distance, speed);
-    }
-
-    public void driveTo(double distance, double speed, int angle) {
-        hardware.drive.driveTo(distance, speed, angle);
-    }
-
-    public int[] recordPathWithHeading(int numSamples, int timeInterval) {
-        return hardware.drive.recordPathWithHeading(numSamples, timeInterval);
-    }
-
-    public void runPathWithHeading(int[] values, int timeInterval, double speed) {
-        hardware.drive.runPathWithHeading(values, timeInterval, speed);
     }
 
     public void setPosition(int position, double power) {
@@ -259,10 +216,6 @@ public class Robot extends AbstractRobot {
 
     public void reverseIntake() {
         hardware.intake.reverseIntake();
-    }
-
-    public void slowReverseIntake() {
-        hardware.intake.slowReverseIntake();
     }
 
     //Mineral Lift Methods
@@ -414,20 +367,6 @@ public class Robot extends AbstractRobot {
     public Callable robotLiftStopCallable() {
         return () -> {
             hardware.robotLift.robotLiftStop();
-            return true;
-        };
-    }
-
-    public Callable moveRobotLiftToTopCallable() {
-        return () -> {
-            hardware.robotLift.raiseLift();
-            return true;
-        };
-    }
-
-    public Callable moveRobotLiftToBottomCallable() {
-        return () -> {
-            moveRobotLiftToBottom();
             return true;
         };
     }

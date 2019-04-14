@@ -49,9 +49,9 @@ public class BogieAutonDepotDump extends AbstractAutonNew {
         addState(new PathState("intake", "drive into crater", () -> {
             RobotState.currentPath.pause();
             robot.beginIntaking();
-            delay(1000);
+            delay(1500);
             robot.reverseIntake();
-            delay(1000);
+            delay(1500);
             robot.finishIntaking();
             RobotState.currentPath.resume();
             return true;

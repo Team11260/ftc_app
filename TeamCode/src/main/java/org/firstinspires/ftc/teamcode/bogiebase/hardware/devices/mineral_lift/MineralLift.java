@@ -94,6 +94,10 @@ public class MineralLift {
         gateServo.setPosition(position);
     }
 
+    public double getGateServoPosition() {
+        return gateServo.getPosition();
+    }
+
     public void setAngleServoPosition(double position) {
         angleServo.setPosition(position);
     }

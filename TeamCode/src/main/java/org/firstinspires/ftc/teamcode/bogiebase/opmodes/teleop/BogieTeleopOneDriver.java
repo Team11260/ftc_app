@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
-@TeleOp(name = "Boogie Teleop One Driver", group = "New")
+@TeleOp(name = "Bogie Teleop One Driver", group = "New")
 //@Disabled
 
 public class BogieTeleopOneDriver extends AbstractTeleop {
@@ -23,9 +23,9 @@ public class BogieTeleopOneDriver extends AbstractTeleop {
         addEventHandler("1_x_down", robot.reverseIntakeCallable());
 
         ///////Mineral Lift////////
-        addEventHandler("1_rt_down", robot.moveMineralLiftToDumpPositionCallable());
+        addEventHandler("1_rt_down", robot.moveMineralLiftToCollectPositionCallable());
 
-        addEventHandler("2_rb_down", robot.moveMineralLiftToDumpPositionCallable());
+        addEventHandler("1_rb_down", robot.moveMineralLiftToDumpPositionCallable());
 
         addEventHandler("1_y_down", robot.toggleMineralGateCallable());
 
