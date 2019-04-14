@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.opmodes.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.teamcode.framework.util.PathState;
 import org.firstinspires.ftc.teamcode.framework.util.State;
 
 @Autonomous(name = "Auto Intake Test", group = "New")
-//@Disabled
+@Disabled
 
 public class TestAutoIntake extends AbstractAutonNew {
 

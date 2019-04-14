@@ -58,6 +58,9 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
 
     @Override
     public void Init() {
+
+        telemetry.putBoolean("teleop_position", false);
+
         //Init robot
         robot = new Robot();
     }

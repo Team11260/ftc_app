@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.framework.util.State;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 @Autonomous(name = "Test Smart Dashboard", group = "New")
-//@Disabled
+@Disabled
 
 public class TestSmartDashboard extends AbstractAutonNew {
 

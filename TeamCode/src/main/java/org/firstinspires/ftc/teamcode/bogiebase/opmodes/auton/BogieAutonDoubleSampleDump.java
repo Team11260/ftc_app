@@ -51,6 +51,9 @@ public class BogieAutonDoubleSampleDump extends AbstractAutonNew {
 
     @Override
     public void Init() {
+
+        telemetry.putBoolean("teleop_position", false);
+
         robot = new Robot();
     }
 

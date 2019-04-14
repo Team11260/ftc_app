@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.bogiebase.opmodes.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
 @TeleOp(name = "Bogie Teleop Two Driver Demo", group = "New")
-//@Disabled
+@Disabled
 
 public class BogieTeleopTwoDriverDemo extends AbstractTeleop {
 

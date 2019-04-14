@@ -111,12 +111,6 @@ public class Robot extends AbstractRobot {
     }
 
     public void setDrivePower(double l, double r) {
-        if(hub.getTotalCurrentDraw() > 18) {
-            if(l > 0.3) l = 0.3;
-            if(l < -0.3) l = -0.3;
-            if(r > 0.3) r = 0.3;
-            if(r < -0.3) r = -0.3;
-        }
         hardware.drive.setPower(l, r);
     }
 

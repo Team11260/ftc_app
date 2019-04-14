@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.opmodes.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.framework.util.State;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 @Autonomous(name = "Bogie Auton Camera Test", group = "util")
-//@Disabled
+@Disabled
 
 public class BoogieAutonCameraTest extends AbstractAutonNew {
 

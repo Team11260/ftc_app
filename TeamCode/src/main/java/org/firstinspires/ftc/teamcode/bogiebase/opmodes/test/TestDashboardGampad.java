@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.bogiebase.opmodes.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
 @TeleOp(name = "Test Dashboard Gamepad", group = "New")
-//@Disabled
+@Disabled
 
 public class TestDashboardGampad extends AbstractTeleop {
 
