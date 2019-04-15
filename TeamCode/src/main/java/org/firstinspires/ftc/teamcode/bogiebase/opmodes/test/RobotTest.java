@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.bogiebase.opmodes.test;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
+import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.Speech;
 
 @TeleOp(name = "Robot Test", group = "Test")
@@ -21,12 +23,17 @@ public class RobotTest extends AbstractAutonNew {
 
     @Override
     public void Init() {
+
+        RobotState.currentMatchState = RobotState.MatchState.TELEOP;
+
         robot = new Robot();
         speech = new Speech(hardwareMap);
     }
 
     @Override
     public void Run() {
+
+        telemetry.setDefaultLogMode(DoubleTelemetry.LogMode.INFO);
 
         telemetry.addDataPhone("To run test follow instructions");
         telemetry.addDataPhone("");
@@ -44,8 +51,6 @@ public class RobotTest extends AbstractAutonNew {
         diagnostics();
 
         testDrive();
-
-        testMineralLift();
 
         testMineralLift();
 
@@ -97,12 +102,12 @@ public class RobotTest extends AbstractAutonNew {
 
                 robot.setDrivePowerNoEncoder(0, 0);
 
+                delay(2000);
+
                 telemetry.addDataPhone("Drive left position for segment 1: " + robot.getLeftDrivePosition());
                 telemetry.addDataPhone("Drive right position for segment 1: " + robot.getRightDrivePosition());
 
-                if(robot.getLeftDrivePosition() < 10000 || robot.getLeftDrivePosition() > 20000 || robot.getRightDrivePosition() < 10000 || robot.getRightDrivePosition() > 20000 || Math.abs(robot.getLeftDrivePosition() - robot.getRightDrivePosition()) > 500) testText = "Test failed on segment 1";
-
-                delay(2000);
+                if(robot.getLeftDrivePosition() < 10000 || robot.getLeftDrivePosition() > 20000 || robot.getRightDrivePosition() < 10000 || robot.getRightDrivePosition() > 20000 || Math.abs(robot.getLeftDrivePosition() - robot.getRightDrivePosition()) > 5000) testText = "Test failed on segment 1";
 
                 robot.resetDrivePosition();
 
@@ -112,11 +117,13 @@ public class RobotTest extends AbstractAutonNew {
 
                 robot.setDrivePowerNoEncoder(0, 0);
 
+                delay(2000);
+
                 telemetry.addDataPhone("");
                 telemetry.addDataPhone("Drive left position for segment 2: " + robot.getLeftDrivePosition());
                 telemetry.addDataPhone("Drive right position for segment 2: " + robot.getRightDrivePosition());
 
-                if(robot.getLeftDrivePosition() > -10000 || robot.getLeftDrivePosition() < -20000 || robot.getRightDrivePosition() > -10000 || robot.getRightDrivePosition() < -20000 || Math.abs(robot.getLeftDrivePosition() - robot.getRightDrivePosition()) > 500) testText = "Test failed on segment 2";
+                if(robot.getLeftDrivePosition() > -10000 || robot.getLeftDrivePosition() < -20000 || robot.getRightDrivePosition() > -10000 || robot.getRightDrivePosition() < -20000 || Math.abs(robot.getLeftDrivePosition() - robot.getRightDrivePosition()) > 5000) testText = "Test failed on segment 2";
 
                 robot.setDrivePowerNoEncoder(1, 1);
                 delay(500);
@@ -193,6 +200,7 @@ public class RobotTest extends AbstractAutonNew {
                 telemetry.addDataPhone(testText);
                 telemetry.addDataPhone("");
                 telemetry.addDataPhone("Press (a) to continue");
+                telemetry.update();
 
                 speech.speak("Mineral lift " + testText + " press a to continue");
 
@@ -230,17 +238,17 @@ public class RobotTest extends AbstractAutonNew {
 
                 while (gamepad1.a);
 
-                robot.robotLiftDown();
+                robot.robotLiftUp();
 
-                delay(500);
+                delay(1000);
 
                 robot.robotLiftStop();
 
                 telemetry.addDataPhone("Robot lift position for lower: " + robot.getMineralLiftPosition());
 
-                robot.robotLiftUp();
+                robot.robotLiftDown();
 
-                delay(500);
+                delay(1400);
 
                 robot.robotLiftStop();
 
@@ -251,6 +259,7 @@ public class RobotTest extends AbstractAutonNew {
                 telemetry.addDataPhone(testText);
                 telemetry.addDataPhone("");
                 telemetry.addDataPhone("Press (a) to continue");
+                telemetry.update();
 
                 speech.speak("Robot lift " + testText + " press a to continue");
 

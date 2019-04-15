@@ -103,7 +103,6 @@ public class MineralLift {
     }
 
     public boolean getBottomLimitSwitchPressed() {
-        AbstractOpMode.getTelemetry().addDataPhone(DoubleTelemetry.LogMode.INFO, "Limit switch voltage: " + bottomLimitSwitch.getVoltage());
         return bottomLimitSwitch.getVoltage() > 1;
     }
 
