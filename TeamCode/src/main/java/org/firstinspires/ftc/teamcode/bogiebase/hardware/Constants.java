@@ -1,7 +1,13 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
+import com.qualcomm.hardware.motors.NeveRest20Gearmotor;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
+import org.firstinspires.ftc.teamcode.framework.userhardware.paths.SplineSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
 
 public final class Constants {
@@ -28,6 +34,20 @@ public final class Constants {
 
     public static final int DRIVE_RELEASE_WHEEL_DELAY = 1000;
     public static final int DRIVE_DUMP_TEAM_MARKER_DELAY = 1000;
+
+    private static final MotorConfigurationType MOTOR_CONFIG =
+            MotorConfigurationType.getMotorType(NeveRest20Gearmotor.class);
+    private static final double TICKS_PER_REV = MOTOR_CONFIG.getTicksPerRev();
+
+    public static double WHEEL_RADIUS = 2; // in
+    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 1; // in
+
+    public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(30.0, 30.0, Math.PI / 2, Math.PI / 2);
+
+    public static double kV = 0;
+    public static double kA = 0;
+    public static double kStatic = 0;
 
 
     ////////INTAKE////////
@@ -283,5 +303,12 @@ public final class Constants {
         collectDepotCenterMineral.addSegment(new DriveSegment("drive to minerals", 24, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         collectDepotCenterMineral.addSegment(new TurnSegment("turn to depot", -165, AUTON_PATH_SPEED, AUTON_TURN_ERROR, AUTON_TURN_PERIOD));
         collectDepotCenterMineral.addSegment(new DriveSegment("drive to depot", 30, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+    }
+
+    //Test routes
+    public final static Path splineTest = new Path("spline test");
+
+    static {
+        splineTest.addSegment(new SplineSegment("spline", new Pose2d(10, 20, 180)));
     }
 }

@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Segment;
+import org.firstinspires.ftc.teamcode.framework.userhardware.paths.SplineSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
@@ -213,6 +214,8 @@ public class DriveController extends SubsystemController {
                 turnToSegment((TurnSegment) path.getCurrentSegment());
             } else if (path.getCurrentSegment().getType() == Segment.SegmentType.DRIVE) {
                 driveToSegment((DriveSegment) path.getCurrentSegment());
+            } else if (path.getCurrentSegment().getType() == Segment.SegmentType.SPLINE) {
+                splineToSegment((SplineSegment) path.getCurrentSegment());
             }
         }
     }
@@ -238,6 +241,7 @@ public class DriveController extends SubsystemController {
 
                 if (segment.isDone()) {
                     setPower(0, 0);
+                    drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     return;
                 }
                 if (!segment.isRunning()) {
@@ -279,8 +283,6 @@ public class DriveController extends SubsystemController {
 
     public synchronized void driveToSegment(DriveSegment segment) {
 
-        //AbstractOpMode.delay(100);
-
         double distance = segment.getDistance(), speed = segment.getSpeed(), angle = baseHeading;
         if (segment.getAngle() != null) angle = segment.getAngle();
         int error = segment.getError();
@@ -309,6 +311,7 @@ public class DriveController extends SubsystemController {
 
             if (segment.isDone()) {
                 setPower(0, 0);
+                drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 return;
             }
             if (!segment.isRunning()) {
@@ -347,6 +350,29 @@ public class DriveController extends SubsystemController {
         telemetry.update();
 
         drive.setPower(0, 0);
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public synchronized void splineToSegment(SplineSegment segment) {
+
+        drive.followTrajectory(drive.trajectoryBuilder().splineTo(segment.getFinalLocation()).build());
+
+        while (drive.isFollowingTrajectory()) {
+
+            if (segment.isDone()) {
+                setPower(0, 0);
+                drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                return;
+            }
+            if (!segment.isRunning()) {
+                setPower(0, 0);
+                continue;
+            }
+
+            drive.update();
+        }
+
+        setPower(0, 0);
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
