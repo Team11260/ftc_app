@@ -23,7 +23,6 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
             while (opModeIsActive()) {
                 robot.updateAll();
             }
-            return true;
         }));
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
@@ -32,18 +31,14 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
             RobotState.currentPath.pause();
             delay(Constants.DUMP_ROUTE_INTAKING_DELAY);
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
         addState(new PathState("raise lift", "back up from minerals", robot.autonMoveMineralLiftToDumpPositionSequenceCallable()));
-        //TODO Add timeout
-        //addState(new PathState("dump timeout", "turn to minerals", robot.autonMoveMineralLiftToDumpPositionSequenceCallable()));
         addState(new PathState("dump pause", "drive to lander", () -> {
             RobotState.currentPath.pause();
             delay(Constants.DUMP_MINERAL_DELAY);
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new PathState("open mineral gate", "drive to lander", robot.openMineralGateCallable()));
         addState(new PathState("lower lift", "turn to wall", robot.autonMoveMineralLiftToCollectPositionSequenceCallable()));
@@ -52,7 +47,6 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
         addState(new PathState("stop robot on crater","drive to depot",() -> {
             while (robot.getPitch() < 6);
             RobotState.currentPath.nextSegment();
-            return true;
         }));
     }
 

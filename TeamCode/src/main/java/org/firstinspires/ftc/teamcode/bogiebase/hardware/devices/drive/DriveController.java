@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Segment;
+import org.firstinspires.ftc.teamcode.framework.userhardware.paths.SplineSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
@@ -103,6 +104,8 @@ public class DriveController extends SubsystemController {
                 turnToSegment((TurnSegment) path.getCurrentSegment());
             } else if (path.getCurrentSegment().getType() == Segment.SegmentType.DRIVE) {
                 driveToSegment((DriveSegment) path.getCurrentSegment());
+            } else if (path.getCurrentSegment().getType() == Segment.SegmentType.SPLINE) {
+                splineToSegment((SplineSegment) path.getCurrentSegment());
             }
 
             telemetry.addData(INFO, "Finished segment: " + path.getCurrentSegment().getName() + " in path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
@@ -278,6 +281,19 @@ public class DriveController extends SubsystemController {
         telemetry.update();
 
         drive.setPower(0, 0);
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public synchronized void splineToSegment(SplineSegment segment) {
+
+        if(segment.getStartingPosition() != null) drive.setPoseEstimate(segment.getStartingPosition());
+
+        drive.followTrajectory(drive.trajectoryBuilder().splineTo(segment.getTrajectory()).build());
+
+        while (drive.isFollowingTrajectory() && opModeIsActive()) {
+            drive.update();
+        }
+
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 

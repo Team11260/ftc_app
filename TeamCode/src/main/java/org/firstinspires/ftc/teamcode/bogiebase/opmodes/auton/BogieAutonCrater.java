@@ -34,7 +34,6 @@ public class BogieAutonCrater extends AbstractAutonNew {
             RobotState.currentPath.pause();
             delay(Constants.NORMAL_INTAKING_DELAY);
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
@@ -43,7 +42,6 @@ public class BogieAutonCrater extends AbstractAutonNew {
         addState(new PathState("stop robot on crater","drive to depot",() -> {
             while (robot.getPitch() < 6);
             RobotState.currentPath.nextSegment();
-            return true;
         }));
     }
 

@@ -18,16 +18,10 @@ public class TestSmartDashboard extends AbstractAutonNew {
     @Override
     public void RegisterStates() {
         addState(new State("button", "start", () ->{
-            while (opModeIsActive()) {
-                smartdashboard.putBoolean("Button Pressed", smartdashboard.getButton("Run"));
-            }
-            return true;
+            while (opModeIsActive()) smartdashboard.putBoolean("Button Pressed", smartdashboard.getButton("Run"));
         }));
         addState(new State("slider", "start", () ->{
-            while (opModeIsActive()) {
-                smartdashboard.putValue("Slider Value", smartdashboard.getSlider("P"));
-            }
-            return true;
+            while (opModeIsActive()) smartdashboard.putValue("Slider Value", smartdashboard.getSlider("P"));
         }));
     }
 

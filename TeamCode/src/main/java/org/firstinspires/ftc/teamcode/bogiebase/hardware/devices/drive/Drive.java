@@ -1,17 +1,22 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive;
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.IMU;
-import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.Potentiometer;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
+import org.jetbrains.annotations.NotNull;
 
-public class Drive {
+import java.util.Arrays;
+import java.util.List;
+
+public class Drive extends TankDriveImpl{
 
     private SlewDcMotor leftMotor, rightMotor;
     private DcMotorSimple light;
@@ -153,5 +158,34 @@ public class Drive {
         //Stops Update Threads
         leftMotor.stop();
         rightMotor.stop();
+    }
+
+    @Override
+    public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {
+        PIDFCoefficients coefficients = leftMotor.getPIDFCoefficients(runMode);
+        return new PIDCoefficients(coefficients.p, coefficients.i, coefficients.d);
+    }
+
+    @Override
+    public void setPIDCoefficients(DcMotor.RunMode runMode, PIDCoefficients coefficients) {
+        leftMotor.setPIDFCoefficients(runMode, new PIDFCoefficients(coefficients.kP, coefficients.kI, coefficients.kD, 1));
+        rightMotor.setPIDFCoefficients(runMode, new PIDFCoefficients(coefficients.kP, coefficients.kI, coefficients.kD, 1));
+    }
+
+    @Override
+    public double getExternalHeading() {
+        return getHeading();
+    }
+
+    @NotNull
+    @Override
+    public List<Double> getWheelPositions() {
+        return Arrays.asList(leftMotor.getCurrentPosition() / Constants.DRIVE_COUNTS_PER_INCH, rightMotor.getCurrentPosition() / Constants.DRIVE_COUNTS_PER_INCH);
+    }
+
+    @Override
+    public void setMotorPowers(double v, double v1) {
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setPower(v, v1);
     }
 }

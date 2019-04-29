@@ -10,8 +10,6 @@ import org.firstinspires.ftc.teamcode.framework.util.PathState;
 import org.firstinspires.ftc.teamcode.framework.util.State;
 import org.upacreekrobotics.dashboard.Dashboard;
 
-import java.util.ConcurrentModificationException;
-
 @Autonomous(name = "Bogie Auton Depot", group = "New")
 //@Disabled
 
@@ -28,7 +26,6 @@ public class BogieAutonDepot extends AbstractAutonNew {
             RobotState.currentPath.pause();
             delay(Constants.NORMAL_INTAKING_DELAY);
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "drive to depot", robot.finishIntakingCallable()));

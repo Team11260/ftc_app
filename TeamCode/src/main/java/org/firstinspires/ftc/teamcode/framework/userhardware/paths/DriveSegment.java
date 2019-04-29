@@ -5,16 +5,13 @@ public class DriveSegment extends Segment {
     private final double distance, speed, angle;
     private final int error;
 
-    private boolean hasAngle;
 
     public DriveSegment(String name, double distance, double speed, int error) {
-        this(name, distance, speed, error, 0);
-        hasAngle = false;
+        this(name, distance, speed, error, -210000);
     }
 
     public DriveSegment(String name, double distance, double speed, int error, double angle) {
         super(name, SegmentType.DRIVE);
-        hasAngle = true;
         this.distance = distance;
         this.speed = speed;
         this.error = error;
@@ -34,7 +31,7 @@ public class DriveSegment extends Segment {
     }
 
     public Double getAngle() {
-        if (!hasAngle) return null;
+        if(angle == -210000) return null;
         return angle;
     }
 }

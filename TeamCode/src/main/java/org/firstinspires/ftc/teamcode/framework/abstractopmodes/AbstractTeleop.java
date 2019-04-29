@@ -2,14 +2,10 @@ package org.firstinspires.ftc.teamcode.framework.abstractopmodes;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.util.Emitter;
+import org.firstinspires.ftc.teamcode.framework.util.RobotCallable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -167,6 +163,13 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
     public void addEventHandler(String name, Callable event) {
         emitter.on(name, event);
+    }
+
+    public void addEventHandler(String name, RobotCallable event) {
+        emitter.on(name, () -> {
+            event.call();
+            return true;
+        });
     }
 
     public void pauseEvent(String name) {

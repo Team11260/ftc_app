@@ -308,12 +308,12 @@ class TfodFrameManager implements Runnable {
 
     while (!Thread.currentThread().isInterrupted()) {
       // First, grab the frame.
-      timer.start("TfodFrameManager.run - Waiting for frame");
+      timer.start("TfodFrameManager.call - Waiting for frame");
       final YuvRgbFrame frame;
       try {
         frame = frameGenerator.getFrame();
       } catch (IllegalStateException e) {
-        Log.e(TAG, "TfodFrameManager.run - could not get image from frame generator");
+        Log.e(TAG, "TfodFrameManager.call - could not get image from frame generator");
         continue;
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
@@ -321,7 +321,7 @@ class TfodFrameManager implements Runnable {
       }
       timer.end();
 
-      //Log.d(frame.getTag(), "TfodFrameManager.run - got an image from frame generator");
+      //Log.d(frame.getTag(), "TfodFrameManager.call - got an image from frame generator");
       AnnotatedYuvRgbFrame annotatedFrame = new AnnotatedYuvRgbFrame(frame, new ArrayList<Recognition>());
 
       if (!active) {
@@ -331,14 +331,14 @@ class TfodFrameManager implements Runnable {
 
       // Then determine if we've waited long enough to submit the frame
       if (enoughInterFrameTimeElapsed(frame.getFrameTimeNanos())) {
-        //Log.i(frame.getTag(), "TfodFrameManager.run - trying to submit recognition task
+        //Log.i(frame.getTag(), "TfodFrameManager.call - trying to submit recognition task
         //(pending interpreter)");
         Timer frameTimer = new Timer(frame.getTag());
-        frameTimer.start("TfodFrameManager.run - submitting recognition task");
+        frameTimer.start("TfodFrameManager.call - submitting recognition task");
         submitRecognitionTask(annotatedFrame);
         frameTimer.end();
       } else {
-        //Log.d(frame.getTag(), "TfodFrameManager.run - not enough time has elapsed");
+        //Log.d(frame.getTag(), "TfodFrameManager.call - not enough time has elapsed");
       }
 
       // If the tracker isn't disabled, feed it the newest frame, and then pass the results back up.
@@ -347,7 +347,7 @@ class TfodFrameManager implements Runnable {
         tracker.printResults();
 
         Timer frameTimer = new Timer(annotatedFrame.getTag());
-        frameTimer.start("TfodFrameManager.run - preprocessing for tracker in main loop");
+        frameTimer.start("TfodFrameManager.call - preprocessing for tracker in main loop");
 
         // Map the recognitions back to original coordinates.
         final List<Recognition> recognitions =

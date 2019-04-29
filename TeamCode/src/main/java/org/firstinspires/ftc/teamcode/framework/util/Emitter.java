@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -31,7 +30,7 @@ public class Emitter {
     }
 
     // Register a new event handler.
-    // An event handler is a Runnable that is run on an Executor.
+    // An event handler is a Runnable that is call on an Executor.
     public synchronized void on(String eventName, Callable eventHandler) {
         if(eventRegistry.get(eventName) == null) eventRegistry.put(eventName, new ArrayList<>());
         eventRegistry.get(eventName).add(eventHandler);
@@ -71,7 +70,7 @@ public class Emitter {
 
     // Send a named event.
     //
-    // This will run all event handlers registered to this event. Each event handler will be
+    // This will call all event handlers registered to this event. Each event handler will be
     // executed inside of the executor service, which means events may be handled in parallel.
     public synchronized void emit(String name) throws RuntimeException {
 

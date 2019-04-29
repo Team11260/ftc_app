@@ -20,15 +20,12 @@ public class TestAutoIntake extends AbstractAutonNew {
     @Override
     public void RegisterStates() {
         addState(new State("pitch", "start", () -> {
-            while (opModeIsActive()) {
+            while (opModeIsActive())
                 telemetry.getSmartdashboard().putValue("Pitch", robot.getPitch());
-            }
-            return true;
-        }));
+            }));
         addState(new State("finish driving", "start", () -> {
             while (robot.getPitch() > -6);
             RobotState.currentPath.nextSegment();
-            return true;
         }));
         addState(new PathState("intake", "drive into crater", () -> {
             RobotState.currentPath.pause();
@@ -38,14 +35,12 @@ public class TestAutoIntake extends AbstractAutonNew {
             delay(1000);
             robot.finishIntaking();
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new State("drive into crater", "start", () -> {
             while (robot.getPitch() < 6);
             while (robot.getPitch() > -6);
             while (robot.getPitch() < 2);
             RobotState.currentPath.nextSegment();
-            return true;
         }));
     }
 

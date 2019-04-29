@@ -28,7 +28,6 @@ public class BogieAutonDoubleSample extends AbstractAutonNew {
             RobotState.currentPath.pause();
             delay(Constants.NORMAL_INTAKING_DELAY);
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
         addState(new PathState("finish intaking", "orient at depot", robot.finishIntakingCallable()));

@@ -5,8 +5,7 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.visi
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.TensorFlowImpl;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
-
-import java.util.concurrent.Callable;
+import org.firstinspires.ftc.teamcode.framework.util.RobotCallable;
 
 import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.INFO;
 import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.TRACE;
@@ -56,7 +55,7 @@ public class Robot extends AbstractRobot {
     }
 
     public void updateAll() {
-        if(RobotState.currentMatchState == RobotState.MatchState.TELEOP) {
+        if (RobotState.currentMatchState == RobotState.MatchState.TELEOP) {
             hardware.drive.update();
             hardware.intake.update();
             hardware.mineralLift.update();
@@ -148,11 +147,8 @@ public class Robot extends AbstractRobot {
         return hardware.drive.isGyroCalibrated();
     }
 
-    public Callable autonReleaseWheelsSequenceCallable() {
-        return () -> {
-            hardware.drive.autonReleaseWheelsSequence();
-            return true;
-        };
+    public RobotCallable autonReleaseWheelsSequenceCallable() {
+        return () -> hardware.drive.autonReleaseWheelsSequence();
     }
 
     public void autonReleaseWheelsSequence() {
@@ -163,11 +159,8 @@ public class Robot extends AbstractRobot {
         hardware.drive.autonDriveToWallSequence();
     }
 
-    public Callable autonDriveToWallSequenceCallable() {
-        return () -> {
-            hardware.drive.autonDriveToWallSequence();
-            return true;
-        };
+    public RobotCallable autonDriveToWallSequenceCallable() {
+        return () -> hardware.drive.autonDriveToWallSequence();
     }
 
     public double getHeading() {
@@ -178,11 +171,8 @@ public class Robot extends AbstractRobot {
         return hardware.drive.getPitch();
     }
 
-    public Callable getPitchCallable() {
-        return () -> {
-            hardware.drive.getPitch();
-            return true;
-        };
+    public RobotCallable getPitchCallable() {
+        return () -> hardware.drive.getPitch();
     }
 
     public void setLightOn() {
@@ -194,40 +184,28 @@ public class Robot extends AbstractRobot {
     }
 
     //Intake Methods
-    public Callable autonIntakeSequenceCallable() {
-        return () -> {
-            hardware.intake.autonIntakeSequence();
-            return true;
-        };
+    public RobotCallable autonIntakeSequenceCallable() {
+        return () -> hardware.intake.autonIntakeSequence();
     }
 
-    public Callable beginIntakingCallable() {
-        return () -> {
-            beginIntaking();
-            return true;
-        };
+    public RobotCallable beginIntakingCallable() {
+        return () -> beginIntaking();
     }
 
     public void beginIntaking() {
         hardware.intake.beginIntaking();
     }
 
-    public Callable finishIntakingCallable() {
-        return () -> {
-            finishIntaking();
-            return true;
-        };
+    public RobotCallable finishIntakingCallable() {
+        return () -> finishIntaking();
     }
 
     public void finishIntaking() {
         hardware.intake.finishIntaking();
     }
 
-    public Callable reverseIntakeCallable() {
-        return () -> {
-            reverseIntake();
-            return true;
-        };
+    public RobotCallable reverseIntakeCallable() {
+        return () -> reverseIntake();
     }
 
     public void reverseIntake() {
@@ -235,11 +213,8 @@ public class Robot extends AbstractRobot {
     }
 
     //Mineral Lift Methods
-    public Callable moveMineralLiftToCollectPositionCallable() {
-        return () -> {
-            moveMineralLiftToCollectPosition();
-            return true;
-        };
+    public RobotCallable moveMineralLiftToCollectPositionCallable() {
+        return () -> moveMineralLiftToCollectPosition();
     }
 
     public void moveMineralLiftToCollectPosition() {
@@ -247,51 +222,36 @@ public class Robot extends AbstractRobot {
         hardware.mineralLift.moveToCollectPosition();
     }
 
-    public Callable moveMineralLiftToDumpPositionCallable() {
-        return () -> {
-            moveMineralLiftToDumpPosition();
-            return true;
-        };
+    public RobotCallable moveMineralLiftToDumpPositionCallable() {
+        return () -> moveMineralLiftToDumpPosition();
     }
 
     public void moveMineralLiftToDumpPosition() {
         hardware.mineralLift.moveToDumpPosition();
     }
 
-    public Callable openMineralGateCallable() {
-        return () -> {
-            openMineralGate();
-            return true;
-        };
+    public RobotCallable openMineralGateCallable() {
+        return () -> openMineralGate();
     }
 
     public void openMineralGate() {
         hardware.mineralLift.openGate();
     }
 
-    public Callable closeMineralGateCallable() {
-        return () -> {
-            closeMineralGate();
-            return true;
-        };
+    public RobotCallable closeMineralGateCallable() {
+        return () -> closeMineralGate();
     }
 
     public void closeMineralGate() {
         hardware.mineralLift.closeGate();
     }
 
-    public Callable toggleMineralGateCallable() {
-        return () -> {
-            hardware.mineralLift.toggleGate();
-            return true;
-        };
+    public RobotCallable toggleMineralGateCallable() {
+        return () -> hardware.mineralLift.toggleGate();
     }
 
-    public Callable toggleAngleServoTiltAngleCallable() {
-        return () -> {
-            toggleAngleServoTiltAngle();
-            return true;
-        };
+    public RobotCallable toggleAngleServoTiltAngleCallable() {
+        return () -> toggleAngleServoTiltAngle();
     }
 
     public void toggleAngleServoTiltAngle() {
@@ -299,69 +259,51 @@ public class Robot extends AbstractRobot {
     }
 
     public int getMineralLiftPosition() {
-       return hardware.mineralLift.getMineralLiftPosition();
+        return hardware.mineralLift.getMineralLiftPosition();
     }
 
     public void setAngleServoPositionHorizontal() {
         hardware.mineralLift.setAngleServoPositionHorizontal();
     }
 
-    public Callable setAngleServoPositionHorizontalCallable() {
-        return () -> {
-            hardware.mineralLift.setAngleServoPositionHorizontal();
-            return true;
-        };
+    public RobotCallable setAngleServoPositionHorizontalCallable() {
+        return () -> hardware.mineralLift.setAngleServoPositionHorizontal();
     }
 
     public void setAngleServoPositionDump() {
         hardware.mineralLift.setAngleServoPositionDump();
     }
 
-    public Callable setAngleServoPositionDumpCallable() {
-        return () -> {
-            hardware.mineralLift.setAngleServoPositionDump();
-            return true;
-        };
+    public RobotCallable setAngleServoPositionDumpCallable() {
+        return () -> hardware.mineralLift.setAngleServoPositionDump();
     }
 
     public void setAngleServoPositionVertical() {
         hardware.mineralLift.setAngleServoPositionVertical();
     }
 
-    public Callable setAngleServoPositionVerticalCallable() {
-        return () -> {
-            hardware.mineralLift.setAngleServoPositionVertical();
-            return true;
-        };
+    public RobotCallable setAngleServoPositionVerticalCallable() {
+        return hardware.mineralLift::setAngleServoPositionVertical;
     }
 
-    public Callable autonLowerMineralLiftSequenceCallable() {
-        return () -> {
-            autonLowerMineralLiftSequence();
-            return true;
-        };
+    public RobotCallable autonLowerMineralLiftSequenceCallable() {
+        return () -> autonLowerMineralLiftSequence();
     }
 
     public void autonLowerMineralLiftSequence() {
         hardware.mineralLift.autonLowerLiftSequence();
     }
 
-    public Callable autonMoveMineralLiftToCollectPositionSequenceCallable() {
-        return () -> {
-            autonMoveMineralLiftToCollectPositionSequence();
-            return true;
-        };
+    public RobotCallable autonMoveMineralLiftToCollectPositionSequenceCallable() {
+        return () -> autonMoveMineralLiftToCollectPositionSequence();
     }
 
     public void autonMoveMineralLiftToCollectPositionSequence() {
         hardware.mineralLift.autonMoveToCollectPositionSequence();
     }
 
-    public Callable autonMoveMineralLiftToDumpPositionSequenceCallable() {
-        return () -> {
-            autonMoveMineralLiftToDumpPositionSequence();
-            return true;
-        };
+    public RobotCallable autonMoveMineralLiftToDumpPositionSequenceCallable() {
+        return () -> autonMoveMineralLiftToDumpPositionSequence();
     }
 
     public void autonMoveMineralLiftToDumpPositionSequence() {
@@ -369,11 +311,8 @@ public class Robot extends AbstractRobot {
     }
 
     //robot lift methods
-    public Callable robotLiftUpCallable() {
-        return () -> {
-            robotLiftUp();
-            return true;
-        };
+    public RobotCallable robotLiftUpCallable() {
+        return () -> robotLiftUp();
 
     }
 
@@ -381,22 +320,16 @@ public class Robot extends AbstractRobot {
         hardware.robotLift.robotLiftUp();
     }
 
-    public Callable robotLiftDownCallable() {
-        return () -> {
-            robotLiftDown();
-            return true;
-        };
+    public RobotCallable robotLiftDownCallable() {
+        return () -> robotLiftDown();
     }
 
     public void robotLiftDown() {
         hardware.robotLift.robotLiftDown();
     }
 
-    public Callable robotLiftStopCallable() {
-        return () -> {
-            robotLiftStop();
-            return true;
-        };
+    public RobotCallable robotLiftStopCallable() {
+        return () -> robotLiftStop();
     }
 
     public void robotLiftStop() {
@@ -407,24 +340,15 @@ public class Robot extends AbstractRobot {
         hardware.robotLift.autonLowerLiftSequence();
     }
 
-    public Callable finishRobotLiftToBottomSequenceCallable() {
-        return () -> {
-            hardware.robotLift.autonFinishLowerLiftSequence();
-            return true;
-        };
+    public RobotCallable finishRobotLiftToBottomSequenceCallable() {
+        return () -> hardware.robotLift.autonFinishLowerLiftSequence();
     }
 
-    public Callable dropMarkerCallable() {
-        return () -> {
-            hardware.drive.dropTeamMarker();
-            return true;
-        };
+    public RobotCallable dropMarkerCallable() {
+        return () -> hardware.drive.dropTeamMarker();
     }
 
-    public Callable resetLiftPositionCallable() {
-        return () -> {
-            hardware.robotLift.resetLiftPosition();
-            return true;
-        };
+    public RobotCallable resetLiftPositionCallable() {
+        return () -> hardware.robotLift.resetLiftPosition();
     }
 }

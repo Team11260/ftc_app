@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
+
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
+import org.firstinspires.ftc.teamcode.framework.userhardware.paths.SplineSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
 
 public final class Constants {
@@ -18,7 +22,7 @@ public final class Constants {
     public static final double DRIVE_SLEW_SPEED = 0.1;
 
     public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.55;
-    public static final double DRIVE_COUNTS_PER_INCH = 38;// 38 *1.3
+    public static final double DRIVE_COUNTS_PER_INCH = 38.0;// 38 *1.3
 
     public static final double DRIVE_RELEASE_WHEELS_POWER = -0.5;
 
@@ -28,6 +32,15 @@ public final class Constants {
 
     public static final int DRIVE_RELEASE_WHEEL_DELAY = 1000;
     public static final int DRIVE_DUMP_TEAM_MARKER_DELAY = 1000;
+
+    //Roadrunner
+    public static double TRACK_WIDTH = 17; // in
+
+    public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(30.0, 40.0, Math.PI / 2, Math.PI);
+
+    public static double kV = 1;
+    public static double kA = 0;
+    public static double kStatic = 0;
 
 
     ////////INTAKE////////
@@ -347,5 +360,12 @@ public final class Constants {
     static {
         pickupMinerals.addSegment(new DriveSegment("drive to crater", 100, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         pickupMinerals.addSegment(new DriveSegment("drive into crater", 22, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
+    }
+
+    public final static Path splineToDepot = new Path("spline to depot");
+
+    static {
+        splineToDepot.addSegment(new SplineSegment("spline to wall", new Pose2d(5, 5, 45), new Pose2d(-10, 60, 180)));
+        splineToDepot.addSegment(new SplineSegment("spline to depot", new Pose2d(-60, 60, 180)));
     }
 }

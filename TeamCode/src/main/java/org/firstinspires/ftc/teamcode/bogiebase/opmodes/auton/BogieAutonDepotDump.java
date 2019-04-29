@@ -26,7 +26,6 @@ public class BogieAutonDepotDump extends AbstractAutonNew {
             RobotState.currentPath.pause();
             delay(Constants.NORMAL_INTAKING_DELAY);
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "drive to depot", robot.finishIntakingCallable()));
@@ -36,7 +35,6 @@ public class BogieAutonDepotDump extends AbstractAutonNew {
             RobotState.currentPath.pause();
             delay(Constants.DUMP_MINERAL_DELAY);
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new PathState("open mineral gate", "turn away from lander", robot.openMineralGateCallable()));
         addState(new PathState("lower lift", "turn to wall", robot.autonMoveMineralLiftToCollectPositionSequenceCallable()));
@@ -44,7 +42,6 @@ public class BogieAutonDepotDump extends AbstractAutonNew {
         addState(new PathState("finish driving", "turn to crater", () -> {
             while (robot.getPitch() > -6);
             RobotState.currentPath.nextSegment();
-            return true;
         }));
         addState(new PathState("intake", "drive into crater", () -> {
             RobotState.currentPath.pause();
@@ -54,7 +51,6 @@ public class BogieAutonDepotDump extends AbstractAutonNew {
             delay(1500);
             robot.finishIntaking();
             RobotState.currentPath.resume();
-            return true;
         }));
     }
 
