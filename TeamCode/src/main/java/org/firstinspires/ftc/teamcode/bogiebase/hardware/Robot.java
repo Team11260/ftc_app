@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.TensorFlowImpl;
@@ -125,6 +128,18 @@ public class Robot extends AbstractRobot {
 
     public void runDrivePath(Path path) {
         hardware.drive.runDrivePath(path);
+    }
+
+    public void driveRunPath(org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Path path) {
+        hardware.drive.runPath(path);
+    }
+
+    public void runDriveTrajectory(Trajectory trajectory) {
+        hardware.drive.runTrajectory(trajectory);
+    }
+
+    public TrajectoryBuilder getDriveTrajectoryBuilder() {
+        return hardware.drive.getTrajectoryBuilder();
     }
 
     public void setDrivePosition(int position, double power) {

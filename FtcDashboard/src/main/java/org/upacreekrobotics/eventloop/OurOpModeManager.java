@@ -264,7 +264,11 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
     // called on the event loop thread
     public void stopActiveOpMode() {
         callActiveOpModeStop();
-        RobotLog.stopMatchLogging();
+        try {
+            RobotLog.stopMatchLogging();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         initActiveOpMode(DEFAULT_OP_MODE_NAME);
     }
 
@@ -400,7 +404,11 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
     }
 
     protected void detectStuck(int msTimeout, String method, Runnable runnable, boolean resetDebuggerCheck) {
-        stuckMonitor.startMonitoring(msTimeout, method, resetDebuggerCheck);
+        try {
+            stuckMonitor.startMonitoring(msTimeout, method, resetDebuggerCheck);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             runnable.run();
         } finally {

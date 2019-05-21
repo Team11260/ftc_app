@@ -41,8 +41,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     private Date date;
     private String oldTelemetry = "";
     private String infoText = "";
-    private double opModeInitTime = 0;
-    private double opModeStartTime = 0;
+    private long opModeInitTime = 0;
+    private long opModeStartTime = 0;
     private String activeOpModeName = "";
     private String oldSmartdashboard = "";
     private int smartdashboardRequestID = 0;
@@ -126,7 +126,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
         date = new Date();
 
-        opModeList = new ArrayList<>();
+        opModeList = Collections.synchronizedList(new ArrayList<>());
 
         dataThread = new Thread(new DataHandler());
         dataThread.start();
@@ -497,6 +497,22 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             requestedOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
     }
 
+    public int internalGetTimeSinceInit() {
+        return (int)(System.currentTimeMillis() - opModeInitTime);
+    }
+
+    public static int getTimeSinceInit() {
+        return dashboard.internalGetTimeSinceInit();
+    }
+
+    public int internalGetTimeSinceStart() {
+        return (int)(System.currentTimeMillis() - opModeStartTime);
+    }
+
+    public static int getTimeSinceStart() {
+        return dashboard.internalGetTimeSinceStart();
+    }
+
     public String getLogPreMessage() {
         return dashboard.internalGetLogPreMessage();
     }
@@ -506,10 +522,10 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
         if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING) ||
                 activeOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
-            double currentTime = (System.currentTimeMillis() - opModeStartTime) / 1000;
+            double currentTime = internalGetTimeSinceStart() / 1000.0;
             packet = date.getDateTime().replace(": ", "") + "%&&%&&%Time since start: " + currentTime + "%&&%&&%";
         } else if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
-            double currentTime = (System.currentTimeMillis() - opModeInitTime) / 1000;
+            double currentTime = internalGetTimeSinceInit() / 1000.0;
             packet = date.getDateTime().replace(": ", "") + "%&&%&&%Time since init: " + currentTime + "%&&%&&%";
         } else packet = date.getDateTime().replace(": ", "") + "%&&%&&%Stopped%&&%&&%";
 
@@ -521,10 +537,10 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
         if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING) ||
                 activeOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
-            double currentTime = (System.currentTimeMillis() - opModeStartTime) / 1000;
+            double currentTime = getTimeSinceStart() / 1000.0;
             packet = date.getDateTime() + "`Time since start: " + currentTime + "`";
         } else if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
-            double currentTime = (System.currentTimeMillis() - opModeInitTime) / 1000;
+            double currentTime = getTimeSinceInit() / 1000.0;
             packet = date.getDateTime() + "`Time since init: " + currentTime + "`";
         } else packet = date.getDateTime() + "`Stopped`";
 
@@ -682,6 +698,22 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
         public void putSlider(Object key, int low, int high) {
             put("SLIDER<&#%#&>" + String.valueOf(key) + "<&#%#&>" + low + "<&#%#&>" + high);
+        }
+
+        public void putGraph(Object key, String set, double x, double y) {
+            put("GRAPH<&#%#&>" + String.valueOf(key) + "<&#%#&>" + set + "<&#%#&>" + x + "<&#%#&>" + y);
+        }
+
+        public void putGraphPoint(Object key, String set, double x, double y) {
+            put("GRAPH_POINT<&#%#&>" + String.valueOf(key) + "<&#%#&>" + set + "<&#%#&>" + x + "<&#%#&>" + y);
+        }
+
+        public void putGraphCircle(Object key, String set, double r, double x, double y) {
+            put("GRAPH_CIRCLE<&#%#&>" + String.valueOf(key) + "<&#%#&>" + set + "<&#%#&>" + r + "<&#%#&>" + x + "<&#%#&>" + y);
+        }
+
+        public void clearGraph(Object key, String set) {
+            put("GRAPH_CLEAR<&#%#&>" + String.valueOf(key) + "<&#%#&>" + set);
         }
 
         public void get(String text) {

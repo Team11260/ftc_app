@@ -94,7 +94,16 @@ public class Drive extends TankDriveImpl{
         rightMotor.setZeroPowerBehavior(behavior);
     }
 
-    public void setPosisionP(double p) {
+    public PIDFCoefficients getSpeedPIDF() {
+        return leftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void setSpeedPIDF(PIDFCoefficients c) {
+        leftMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, c);
+        rightMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, c);
+    }
+
+    public void setPositionP(double p) {
         //leftMotor.setPositionPIDFCoefficients(p);
         //rightMotor.setPositionPIDFCoefficients(p);
     }
@@ -121,11 +130,6 @@ public class Drive extends TankDriveImpl{
 
     public boolean isBusy() {
         return leftMotor.isBusy() || rightMotor.isBusy();
-    }
-
-    public void setPositionP(double p) {
-        leftMotor.setPositionPIDFCoefficients(p);
-        rightMotor.setPositionPIDFCoefficients(p);
     }
 
     public double getLeftMotorCurrentDraw() {
@@ -174,7 +178,7 @@ public class Drive extends TankDriveImpl{
 
     @Override
     public double getExternalHeading() {
-        return getHeading();
+        return imu.getHeadingRadians();
     }
 
     @NotNull

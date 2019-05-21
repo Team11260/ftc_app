@@ -47,6 +47,8 @@ public class ClasspathScanner {
                     filter.processClass(klass);
                 } catch (ClassNotFoundException e) {
                     Log.w(TAG, e);
+                } catch (NoClassDefFoundError e) {
+                    Log.w(TAG, e);
                 }
             }
         }

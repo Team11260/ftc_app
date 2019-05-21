@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.bogiebase.opmodes.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
 @TeleOp(name = "Bogie Teleop Two Driver Demo", group = "New")
-@Disabled
+//@Disabled
 
 public class BogieTeleopTwoDriverDemo extends AbstractTeleop {
 
@@ -17,6 +16,8 @@ public class BogieTeleopTwoDriverDemo extends AbstractTeleop {
     public void RegisterEvents() {
         ////////////////Gamepad 1////////////////
         ////////Drive////////
+        addEventHandler("1_a_down", robot.toggleAngleServoTiltAngleCallable());
+
         addEventHandler("1_b_down", robot.dropMarkerCallable());
 
         addEventHandler("1_rt_down", robot.toggleMineralGateCallable());
@@ -36,6 +37,7 @@ public class BogieTeleopTwoDriverDemo extends AbstractTeleop {
 
         addEventHandler("2_rb_down", robot.moveMineralLiftToDumpPositionCallable());
 
+        addEventHandler("2_dpd_down", robot.toggleAngleServoTiltAngleCallable());
 
         ////////Robot Lift////////
         addEventHandler("2_lb_down", robot.robotLiftUpCallable());

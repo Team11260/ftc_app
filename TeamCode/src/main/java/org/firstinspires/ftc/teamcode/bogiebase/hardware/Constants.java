@@ -22,7 +22,7 @@ public final class Constants {
     public static final double DRIVE_SLEW_SPEED = 0.1;
 
     public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.55;
-    public static final double DRIVE_COUNTS_PER_INCH = 38.0;// 38 *1.3
+    public static final double DRIVE_COUNTS_PER_INCH = 38.0;
 
     public static final double DRIVE_RELEASE_WHEELS_POWER = -0.5;
 
@@ -34,13 +34,13 @@ public final class Constants {
     public static final int DRIVE_DUMP_TEAM_MARKER_DELAY = 1000;
 
     //Roadrunner
-    public static double TRACK_WIDTH = 17; // in
+    public static double TRACK_WIDTH = 26; // in
 
-    public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(30.0, 40.0, Math.PI / 2, Math.PI);
+    public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(25.0, 40.0, Math.PI / 4, Math.PI / 2);
 
-    public static double kV = 1;
-    public static double kA = 0;
-    public static double kStatic = 0;
+    public static double kV = 0.04;
+    public static double kA = 0.025;
+    public static double kStatic = 0.01;
 
 
     ////////INTAKE////////
@@ -365,7 +365,8 @@ public final class Constants {
     public final static Path splineToDepot = new Path("spline to depot");
 
     static {
-        splineToDepot.addSegment(new SplineSegment("spline to wall", new Pose2d(5, 5, 45), new Pose2d(-10, 60, 180)));
-        splineToDepot.addSegment(new SplineSegment("spline to depot", new Pose2d(-60, 60, 180)));
+        splineToDepot.addSegment(new SplineSegment("spline to wall", new Pose2d(0, 30, Math.toRadians(180))));
+        splineToDepot.addSegment(new SplineSegment("spline to depot", new Pose2d(0, 60, Math.toRadians(0))));
+        splineToDepot.addSegment(new SplineSegment("spline to depot", new Pose2d(0, 0, Math.toRadians(180))));
     }
 }

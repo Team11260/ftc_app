@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 
 public abstract class TankDriveImpl extends TankDrive {
-    public static PIDCoefficients DISPLACEMENT_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients DISPLACEMENT_PID = new PIDCoefficients(1, 0, 0.7);
     public static PIDCoefficients CROSS_TRACK_PID = new PIDCoefficients(0, 0, 0);
 
 

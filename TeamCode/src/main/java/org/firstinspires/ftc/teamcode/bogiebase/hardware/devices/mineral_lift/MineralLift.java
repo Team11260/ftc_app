@@ -7,9 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
-import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
-import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.DistanceSensor2m;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 
@@ -39,7 +36,7 @@ public class MineralLift {
 
         angleServo = hardwareMap.servo.get("sorter_angle");
         angleServo.setDirection(Servo.Direction.REVERSE);
-        angleServo.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION : Constants.MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
+        //angleServo.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION : Constants.MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
 
         distanceSensor = new DistanceSensor2m("Distance1");
 

@@ -52,6 +52,14 @@ public abstract class AbstractOpMode extends LinearOpMode {
 
     public abstract void runOpmode();
 
+    public static int getTimeSinceInit() {
+        return Dashboard.getTimeSinceInit();
+    }
+
+    public static int getTimeSinceStart() {
+        return Dashboard.getTimeSinceStart();
+    }
+
     public static void delay(int millis) {
         if(Thread.currentThread().isInterrupted()) return;
         try {
