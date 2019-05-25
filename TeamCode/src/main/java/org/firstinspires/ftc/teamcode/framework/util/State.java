@@ -54,13 +54,11 @@ public class State {
     }
 
     public boolean isDone() {
-        if (future != null) {
-            return future.isDone();
-        }
+        if (future != null) return future.isDone();
         return true;
     }
 
     public void cancel() {
-        future.cancel(true);
+        if(future != null) future.cancel(true);
     }
 }

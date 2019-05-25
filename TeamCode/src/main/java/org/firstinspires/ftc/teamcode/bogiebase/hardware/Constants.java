@@ -7,7 +7,9 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.SplineSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
+import org.upacreekrobotics.dashboard.Config;
 
+@Config
 public final class Constants {
     ////////Opmodes////////
     public static final int NORMAL_INTAKING_DELAY = 1000;
@@ -34,13 +36,13 @@ public final class Constants {
     public static final int DRIVE_DUMP_TEAM_MARKER_DELAY = 1000;
 
     //Roadrunner
-    public static double TRACK_WIDTH = 26; // in
+    public static double TRACK_WIDTH = 28; // in
 
-    public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(25.0, 40.0, Math.PI / 4, Math.PI / 2);
+    public final static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(25.0, 40.0, Math.PI / 4, Math.PI / 2);
 
-    public static double kV = 0.04;
-    public static double kA = 0.025;
-    public static double kStatic = 0.01;
+    public final static double kV = 0.04;
+    public final static double kA = 0.025;
+    public final static double kStatic = 0.01;
 
 
     ////////INTAKE////////

@@ -13,6 +13,8 @@ public enum MessageType {
     OP_MODES,
     SELECT_OP_MODE,
 
+    VARIABLE,
+
     INIT_OP_MODE,
     RUN_OP_MODE,
     STOP_OP_MODE,

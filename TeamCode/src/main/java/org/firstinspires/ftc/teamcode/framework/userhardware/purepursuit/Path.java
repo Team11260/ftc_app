@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit;
 
+import org.upacreekrobotics.dashboard.Config;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@Config
 public class Path {
 
-    private double spacing = 0.5, w = 0.99, t = 0.001, k = 0.015;
-    private final double MAX_ACCELERATION = 0.01, MAX_SPEED = 0.6, LOOK_AHEAD_DISTANCE = 10;
+    public static double spacing = 0.5, w = 0.995, t = 0.001, k = 0.01;
+    public static double MAX_ACCELERATION = 0.07, MAX_SPEED = 0.8, LOOK_AHEAD_DISTANCE = 9;
 
     private int lastPointIndex = 0, lastCurrentPointIndex = 0;
 
@@ -73,14 +76,14 @@ public class Path {
         return targetAngle;
     }
 
-    public double getPathPointVelocity(int index) {
-        return range(path.get(index).getVelocity(), 0.3, MAX_SPEED);
+    public double getPathPointVelocity(int index, Pose currentLocation) {
+        return range(path.get(index).getVelocity(), 0.3, MAX_SPEED) / range(getTrackingError(currentLocation) / 5, 1, 2);
     }
 
     public int getLookAheadPointIndex(Pose currentPosition) {
 
         for(int i = getClosestPointIndex(currentPosition); i < path.size(); i++) {
-            curvature = Math.sqrt(Math.abs(getCurvatureFromPathPoint(i, currentPosition))) * 4;
+            curvature = Math.sqrt(Math.abs(getCurvatureFromPathPoint(i, currentPosition))) * 3.8;
 
             double correction = range(curvature / range(getTrackingError(currentPosition) / 3, 1, 3), 0.6, 3);
 
@@ -90,13 +93,13 @@ public class Path {
             }
         }
 
-        if(currentPosition.distance(path.get(path.size() - 1)) > 3) return path.size() - 1;
+        if(currentPosition.distance(path.get(path.size() - 1)) > 4) return path.size() - 1;
 
         return -1;
     }
 
     public double getTrackingError(Point currentPosition) {
-        return path.get(getClosestPointIndex(currentPosition)).distance(currentPosition) + (deltaAngle / 10);
+        return path.get(getClosestPointIndex(currentPosition)).distance(currentPosition) + Math.abs(deltaAngle / 8);
     }
 
     private void build() {
@@ -191,7 +194,7 @@ public class Path {
     }
 
     private double getPointVelocity(int p) {
-        if(p >= points.size() - 1) return 0.2;
+        if(p >= points.size() - 1) return 0.3;
 
         double d = points.get(p).distance(points.get(p + 1));
 
@@ -201,7 +204,7 @@ public class Path {
     }
 
     private double getPointNewVelocity(int p) {
-        if(p >= points.size() - 1) return 0.0;
+        if(p >= points.size() - 1) return 0.2;
 
         double d = points.get(p).distance(points.get(p + 1));
 

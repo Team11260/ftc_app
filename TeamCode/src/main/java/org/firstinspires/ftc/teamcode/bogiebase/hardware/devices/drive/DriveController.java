@@ -13,11 +13,13 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Segment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.SplineSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
+import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Point;
 import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Pose;
 import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Vector;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
@@ -306,7 +308,9 @@ public class DriveController extends SubsystemController {
 
     public synchronized void runPath(org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Path path) {
 
-       // drive.setSpeedPIDF(new PIDFCoefficients(20, drive.getSpeedPIDF().i, drive.getSpeedPIDF().d, drive.getSpeedPIDF().f));
+        //drive.setSpeedPIDF(new PIDFCoefficients(10, 0, 0, drive.getSpeedPIDF().f));
+
+        ArrayList<Point> points = new ArrayList<>();
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -324,17 +328,19 @@ public class DriveController extends SubsystemController {
             r = rr;
             currentPosition = new Pose(currentPosition.addVector(new Vector(d * Math.cos(Math.toRadians(heading)), d * Math.sin(Math.toRadians(heading)))), heading);
 
+            points.add(currentPosition);
+
             int lookahead = path.getLookAheadPointIndex(currentPosition);
             int closest = path.getClosestPointIndex(currentPosition);
 
             if(lookahead == -1) break;
 
-            telemetry.getSmartdashboard().putGraph("Path", "Actual", currentPosition.getX(), currentPosition.getY());
-            telemetry.getSmartdashboard().putGraphPoint("Path", "Lookahead Point", path.getPoints().get(lookahead).getX(), path.getPoints().get(lookahead).getY());
-            telemetry.getSmartdashboard().putGraphPoint("Path", "Closest Point", path.getPoints().get(closest).getX(), path.getPoints().get(closest).getY());
+            //telemetry.getSmartdashboard().putGraph("Path", "Actual", currentPosition.getX(), currentPosition.getY());
+            //telemetry.getSmartdashboard().putGraphPoint("Path", "Lookahead Point", path.getPoints().get(lookahead).getX(), path.getPoints().get(lookahead).getY());
+            //telemetry.getSmartdashboard().putGraphPoint("Path", "Closest Point", path.getPoints().get(closest).getX(), path.getPoints().get(closest).getY());
 
             //double v = path.getPathPointVelocity(closest) / (path.getTrackingError(currentPosition) > 2 ? path.getTrackingError(currentPosition) : 2);
-            double v = Math.min(path.getPathPointVelocity(closest), path.getPathPointVelocity(lookahead));
+            double v = Math.min(path.getPathPointVelocity(closest, currentPosition), path.getPathPointVelocity(lookahead, currentPosition));
             double c = path.getCurvatureFromPathPoint(lookahead, currentPosition);
 
             double left = v * ((2 + c * TRACK_WIDTH)/2);
@@ -342,9 +348,11 @@ public class DriveController extends SubsystemController {
 
             drive.setPower(left, right);
 
-            telemetry.addDataDB(INFO, "Left: " + (float)left + "  Right: " + (float)right + "  Left C: " + (float)drive.getLeftMotorCurrentDraw() + "  Right C: " + (float)drive.getRightMotorCurrentDraw() + " X: " + (float)currentPosition.getX() + "  Y: " + (float)currentPosition.getY() + "  Heading: " + (float)currentPosition.getHeading() + "  Target Heading: " + (float)path.getTargetAngle() + "  C: " + (float)c + "  I: " + lookahead + "  Point: " + path.getPoint(lookahead));
+            //telemetry.addDataDB(INFO, "Left: " + (float)left + "  Right: " + (float)right + "  Left C: " + (float)drive.getLeftMotorCurrentDraw() + "  Right C: " + (float)drive.getRightMotorCurrentDraw() + " X: " + (float)currentPosition.getX() + "  Y: " + (float)currentPosition.getY() + "  Heading: " + (float)currentPosition.getHeading() + "  Target Heading: " + (float)path.getTargetAngle() + "  C: " + (float)c + "  I: " + lookahead + "  Point: " + path.getPoint(lookahead));
             //telemetry.update();
         }
+
+        for(Point point:points) telemetry.getSmartdashboard().putGraph("Path", "Actual", point.getX(), point.getY());
 
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }

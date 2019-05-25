@@ -2,7 +2,6 @@ package org.upacreekrobotics.dashboard;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.EventLoop;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -15,9 +14,12 @@ import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 import org.firstinspires.ftc.robotcore.internal.opmode.RegisteredOpModes;
 import org.upacreekrobotics.eventloop.OurEventLoop;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,9 +55,10 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     private RobotStatus.OpModeStatus activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
     private RobotStatus.OpModeStatus requestedOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
     private List<String> opModeList;
+    private HashMap<String, HashMap<String, Field>> variables;
 
-    private static Context context;
-    private static SharedPreferences sharedPreferences;
+    private Context context;
+    private SharedPreferences sharedPreferences;
 
     private static Dashboard dashboard;
 
@@ -65,7 +68,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             "android",
             "com.sun",
             "com.vuforia",
-            "com.google"
+            "com.google",
+            "kotlin"
     ));
 
     ////////////////Start the dashboard, calls Dashboard constructor, called by "onCreate()" in "FtcRobotControllerActivity"////////////////
@@ -81,8 +85,6 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     ////////////////called by "requestRobotSetup()" in "FtcRobotControllerActivity"////////////////
     public static void attachEventLoop(EventLoop eventLoop, Context ct) {
         dashboard.internalAttachEventLoop(eventLoop, ct);
-        context = ct;
-        sharedPreferences = context.getSharedPreferences("UP_A_CREEK_FTC_PREFERENCES", Context.MODE_PRIVATE);
     }
 
     ////////////////Stops the dashboard and socket connection////////////////
@@ -104,6 +106,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
         isRunning = true;
 
+        variables = new HashMap<>();
+
         ClasspathScanner scanner = new ClasspathScanner(new ClassFilter() {
             @Override
             public boolean shouldProcessClass(String className) {
@@ -118,7 +122,20 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             @Override
             public void processClass(Class klass) {
                 if (klass.isAnnotationPresent(Config.class) && !klass.isAnnotationPresent(Disabled.class)) {
-                    Log.i(TAG, String.format("Found config class %s", klass.getCanonicalName()));
+
+                    HashMap<String, Field> klassVariables = new HashMap<>();
+
+                    for(Field field:klass.getDeclaredFields()) {
+                        try {
+                            if(Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers()) && !Modifier.isFinal(field.getModifiers()) && (field.get(null) instanceof  Integer || field.get(null) instanceof  Double || field.get(null) instanceof String)) {
+                                klassVariables.put(field.getName(), field);
+                            }
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if(klassVariables.size() > 0) variables.put(klass.getSimpleName(), klassVariables);
                 }
             }
         });
@@ -132,11 +149,14 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         dataThread.start();
         dashboardThread = new Thread(new DashboardHandler());
         dashboardThread.start();
-
     }
 
     ////////////////Returns the current "RobotStatus", this may be useful in the future////////////////
     private void internalAttachEventLoop(EventLoop eventLoop, Context context) {
+
+        this.context = context;
+        sharedPreferences = context.getSharedPreferences("UP_A_CREEK_FTC_PREFERENCES", Context.MODE_PRIVATE);
+
         opModeManager = eventLoop.getOpModeManager();
 
         this.eventLoop = eventLoop;
@@ -197,6 +217,19 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                         } catch (NullPointerException e) {
 
                         }
+
+                        for(HashMap.Entry<String, HashMap<String, Field>> entry:variables.entrySet()) {
+                            String dataLine = entry.getKey();
+                            for(HashMap.Entry<String, Field> e:entry.getValue().entrySet()) {
+                                try {
+                                    dataLine += "<&#%#&>" + e.getKey() + ">#&%&#<" + e.getValue().getType() + ">#&%&#<" + e.getValue().get(null);
+                                } catch (IllegalAccessException e1) {
+                                    e1.printStackTrace();
+                                }
+                            }
+                            data.write(new Message(MessageType.VARIABLE, dataLine));
+                        }
+
                         String[] telemetryParts = oldTelemetry.split("&#%#&");
                         for (String part : telemetryParts) {
                             if (!part.equals(" "))
@@ -212,6 +245,18 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                         oldSmartdashboard = "";
 
                         if (batteryChecker != null) batteryChecker.pollBatteryLevel(batteryWatcher);
+                        break;
+                    }
+
+                    case VARIABLE: {
+                        String[] parts = message.getText().split("<&#%#&>");
+                        try {
+                            if (variables.get(parts[0]).get(parts[1].split(">#&%&#<")[0]).get(null) instanceof Integer) variables.get(parts[0]).get(parts[1].split(">#&%&#<")[0]).set(null, Integer.valueOf(parts[1].split(">#&%&#<")[1]));
+                            else if (variables.get(parts[0]).get(parts[1].split(">#&%&#<")[0]).get(null) instanceof Double) variables.get(parts[0]).get(parts[1].split(">#&%&#<")[0]).set(null, Double.valueOf(parts[1].split(">#&%&#<")[1]));
+                            else variables.get(parts[0]).get(parts[1].split(">#&%&#<")[0]).set(null, Integer.valueOf(parts[1].split(">#&%&#<")[1]));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         break;
                     }
 
@@ -270,6 +315,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                                 ((DashboardGamepad) opModeManager.getActiveOpMode().gamepad1).update(message.getText());
                             }
                         } catch (ClassCastException e) {
+                        } catch (NullPointerException e) {
                         }
 
                         break;
