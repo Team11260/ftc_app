@@ -8,8 +8,8 @@ import java.util.Arrays;
 @Config
 public class Path {
 
-    public static double spacing = 0.5, w = 0.995, t = 0.001, k = 0.01;
-    public static double MAX_ACCELERATION = 0.07, MAX_SPEED = 0.8, LOOK_AHEAD_DISTANCE = 9;
+    public static double spacing = 0.5, SMOOTHING = 0.995, t = 0.001, k = 0.1;
+    public static double MAX_ACCELERATION = 0.1, MIN_SPEED = 0.3, MAX_SPEED = 1.0, LOOK_AHEAD_DISTANCE = 12;
 
     private int lastPointIndex = 0, lastCurrentPointIndex = 0;
 
@@ -63,6 +63,8 @@ public class Path {
 
         deltaAngle = currentLocation.getHeading() - angle;
 
+        if(Math.abs(deltaAngle) > 180) deltaAngle = -Math.signum(deltaAngle) * (360 - Math.abs(deltaAngle));
+
         double c = (Math.abs(deltaAngle) > 90 ? Math.signum(deltaAngle) : Math.sin(Math.toRadians(deltaAngle))) / (path.get(index).distance(currentLocation) / 2);
 
         if(Double.isInfinite(c) || Double.isNaN(c)) return 0.0;
@@ -77,23 +79,35 @@ public class Path {
     }
 
     public double getPathPointVelocity(int index, Pose currentLocation) {
-        return range(path.get(index).getVelocity(), 0.3, MAX_SPEED) / range(getTrackingError(currentLocation) / 5, 1, 2);
+        double speed = MAX_SPEED;
+        for(int i = index; i < index + 15; i++) {
+            speed = Math.min(speed, range(path.get(index).getVelocity() / range(getTrackingError(currentLocation) / 2, 1, 3), MIN_SPEED, MAX_SPEED));
+        }
+        return speed;
     }
 
     public int getLookAheadPointIndex(Pose currentPosition) {
 
+        int closest = getClosestPointIndex(currentPosition);
+
         for(int i = getClosestPointIndex(currentPosition); i < path.size(); i++) {
-            curvature = Math.sqrt(Math.abs(getCurvatureFromPathPoint(i, currentPosition))) * 3.8;
+            curvature = Math.abs(getCurvatureFromPathPoint(i, currentPosition));
 
-            double correction = range(curvature / range(getTrackingError(currentPosition) / 3, 1, 3), 0.6, 3);
+            double correction = range(curvature, 1, 5);
 
-            if(i > getClosestPointIndex(currentPosition) && currentPosition.distance(path.get(i)) > LOOK_AHEAD_DISTANCE / correction) {
+            double curvature = 0;
+
+            for(int p = closest; p <= i; p++) {
+                curvature += getPointCurvature(closest);
+            }
+
+            if(getPointDistance(i) - getPointDistance(closest) > LOOK_AHEAD_DISTANCE) {
                 lastPointIndex = i;
                 return i;
             }
         }
 
-        if(currentPosition.distance(path.get(path.size() - 1)) > 4) return path.size() - 1;
+        if(currentPosition.distance(path.get(path.size() - 1)) > 2) return path.size() - 1;
 
         return -1;
     }
@@ -139,7 +153,7 @@ public class Path {
             change = 0.0;
             for(int i = 1; i < points.size()-1; i++) {
                 Point point = newPoints.get(i);
-                newPoints.set(i, newPoints.get(i).addVector(new Vector((1 - w) * (points.get(i).getX() - newPoints.get(i).getX()) + w * (newPoints.get(i - 1).getX() + newPoints.get(i + 1).getX() - (2.0 * newPoints.get(i).getX())), (1 - w) * (points.get(i).getY() - newPoints.get(i).getY()) + w * (newPoints.get(i - 1).getY() + newPoints.get(i + 1).getY() - (2.0 * newPoints.get(i).getY())))));
+                newPoints.set(i, newPoints.get(i).addVector(new Vector((1 - SMOOTHING) * (points.get(i).getX() - newPoints.get(i).getX()) + SMOOTHING * (newPoints.get(i - 1).getX() + newPoints.get(i + 1).getX() - (2.0 * newPoints.get(i).getX())), (1 - SMOOTHING) * (points.get(i).getY() - newPoints.get(i).getY()) + SMOOTHING * (newPoints.get(i - 1).getY() + newPoints.get(i + 1).getY() - (2.0 * newPoints.get(i).getY())))));
                 change += point.distance(newPoints.get(i));
             }
         }

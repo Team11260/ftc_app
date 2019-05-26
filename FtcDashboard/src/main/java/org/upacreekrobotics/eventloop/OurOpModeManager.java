@@ -121,7 +121,7 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
     // Construction
     //------------------------------------------------------------------------------------------------
 
-    // Called on FtcRobotControllerService thread
+    // Called on OurRobotControllerService thread
     public OurOpModeManager(Activity activity, HardwareMap hardwareMap) {
         super(activity, hardwareMap);
 
@@ -224,7 +224,7 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
     }
 
     // called on DS receive thread
-    // initActiveOpMode(DEFAULT_OP_MODE_NAME) is called from event loop thread, FtcRobotControllerService thread
+    // initActiveOpMode(DEFAULT_OP_MODE_NAME) is called from event loop thread, OurRobotControllerService thread
     public void initActiveOpMode(String name) {
         OpModeStateTransition newState = new OpModeStateTransition();
         newState.queuedOpModeName = name;
@@ -412,7 +412,11 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
         try {
             runnable.run();
         } finally {
-            stuckMonitor.stopMonitoring();
+            try {
+                stuckMonitor.stopMonitoring();
+            } catch (Exception e) {
+
+            }
         }
     }
 
@@ -555,12 +559,7 @@ public class OurOpModeManager extends OpModeManagerImpl implements OpModeService
     }
 
     protected void callActiveOpModeLoop() {
-        detectStuck(activeOpMode.msStuckDetectLoop, "loop()", new Runnable() {
-            @Override
-            public void run() {
-                activeOpMode.loop();
-            }
-        });
+        detectStuck(activeOpMode.msStuckDetectLoop, "loop()", () -> activeOpMode.loop());
         activeOpMode.internalPostLoop();
     }
 

@@ -21,6 +21,9 @@ public class IMU implements Runnable {
     private boolean newValue = false;
     private double heading = 0;
 
+    private double lastHeading = 0;
+    private double absoluteHeadingCorrection = 0;
+
     private final Object lock = new Object();
 
     public IMU(HardwareMap hwMap) {
@@ -52,6 +55,10 @@ public class IMU implements Runnable {
         return 0;
     }
 
+    public double getAbsoluteHeading() {
+        return absoluteHeadingCorrection + heading;
+    }
+
     public double getHeadingRadians() {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
     }
@@ -80,6 +87,11 @@ public class IMU implements Runnable {
                 heading = angle.firstAngle;
                 newValue = true;
             }
+
+            if(heading > 90 && lastHeading < -90) absoluteHeadingCorrection -= 360;
+            if(heading < -90 && lastHeading > 90) absoluteHeadingCorrection += 360;
+
+            lastHeading = heading;
         }
     }
 }

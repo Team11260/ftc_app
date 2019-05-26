@@ -36,7 +36,7 @@ public final class Constants {
     public static final int DRIVE_DUMP_TEAM_MARKER_DELAY = 1000;
 
     //Roadrunner
-    public static double TRACK_WIDTH = 28; // in
+    public static double TRACK_WIDTH = 26; // in
 
     public final static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(25.0, 40.0, Math.PI / 4, Math.PI / 2);
 

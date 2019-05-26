@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Point;
 import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Pose;
 import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Vector;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
+import org.upacreekrobotics.dashboard.Config;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.curre
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentPath;
 import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.INFO;
 
+@Config
 public class DriveController extends SubsystemController {
 
     private Drive drive;
@@ -52,6 +55,8 @@ public class DriveController extends SubsystemController {
     private ElapsedTime runtime;
 
     private DecimalFormat DF;
+
+    public static double PATH_P = 8, PATH_F = 3;
 
     //Utility Methods
     public DriveController() {
@@ -308,11 +313,11 @@ public class DriveController extends SubsystemController {
 
     public synchronized void runPath(org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Path path) {
 
-        //drive.setSpeedPIDF(new PIDFCoefficients(10, 0, 0, drive.getSpeedPIDF().f));
+        drive.setSpeedPIDF(new PIDFCoefficients(PATH_P, 0, 0, PATH_F));
 
         ArrayList<Point> points = new ArrayList<>();
 
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         Pose currentPosition = new Pose();
 
@@ -335,9 +340,9 @@ public class DriveController extends SubsystemController {
 
             if(lookahead == -1) break;
 
-            //telemetry.getSmartdashboard().putGraph("Path", "Actual", currentPosition.getX(), currentPosition.getY());
-            //telemetry.getSmartdashboard().putGraphPoint("Path", "Lookahead Point", path.getPoints().get(lookahead).getX(), path.getPoints().get(lookahead).getY());
-            //telemetry.getSmartdashboard().putGraphPoint("Path", "Closest Point", path.getPoints().get(closest).getX(), path.getPoints().get(closest).getY());
+            telemetry.getSmartdashboard().putGraph("Path", "Actual", currentPosition.getX(), currentPosition.getY());
+            telemetry.getSmartdashboard().putGraphPoint("Path", "Lookahead Point", path.getPoints().get(lookahead).getX(), path.getPoints().get(lookahead).getY());
+            telemetry.getSmartdashboard().putGraphPoint("Path", "Closest Point", path.getPoints().get(closest).getX(), path.getPoints().get(closest).getY());
 
             //double v = path.getPathPointVelocity(closest) / (path.getTrackingError(currentPosition) > 2 ? path.getTrackingError(currentPosition) : 2);
             double v = Math.min(path.getPathPointVelocity(closest, currentPosition), path.getPathPointVelocity(lookahead, currentPosition));
@@ -352,7 +357,7 @@ public class DriveController extends SubsystemController {
             //telemetry.update();
         }
 
-        for(Point point:points) telemetry.getSmartdashboard().putGraph("Path", "Actual", point.getX(), point.getY());
+        //for(Point point:points) telemetry.getSmartdashboard().putGraph("Path", "Actual", point.getX(), point.getY());
 
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }

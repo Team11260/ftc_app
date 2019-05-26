@@ -28,7 +28,8 @@ public class TestSplines extends AbstractAutonNew {
         robot = new Robot();
         robot.stopTensorFlow();
 
-        path = new Path(new Point(0, 0), new Point(20, 0), new Point(40, 40), new Point(40, 60), new Point(80, 60));
+        path = path = new Path(new Point(0, 0), new Point(20, 0), new Point(30, 30), new Point(20, 60), new Point(0, 0));
+        //path = new Path(new Point(0, 0), new Point(20, 0), new Point(40, 40), new Point(40, 60), new Point(80, 60));
         //path = new Path(new Point(0, 0), new Point(55, 30), new Point(10, 60));
 
         telemetry.getSmartdashboard().putGraphPoint("Path", "Lookahead Point", 0, 0);

@@ -242,7 +242,7 @@ public class MultiBoxTracker {
     if (objectTracker == null && !initialized) {
       ObjectTracker.clearInstance();
 
-      //Log.i(TAG, String.format("Initializing ObjectTracker: %dx%d", w, h));
+      //Log.i(TAG, String.format("Initializing ObjectTracker: %dx%d", SMOOTHING, h));
       objectTracker = ObjectTracker.getInstance(w, h, rowStride, true);
       frameWidth = w;
       frameHeight = h;

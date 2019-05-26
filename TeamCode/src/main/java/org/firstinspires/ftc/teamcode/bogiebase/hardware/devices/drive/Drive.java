@@ -145,6 +145,10 @@ public class Drive extends TankDriveImpl{
         return imu.getHeading();
     }
 
+    public double getAbsoluteHeading() {
+        return imu.getAbsoluteHeading();
+    }
+
     public double getPitch(){
         return imu.getPitch();
     }

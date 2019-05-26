@@ -40,7 +40,6 @@ import com.qualcomm.ftccommon.ClassManagerFactory;
 import com.qualcomm.ftccommon.FtcAboutActivity;
 import com.qualcomm.ftccommon.FtcEventLoopIdle;
 import com.qualcomm.ftccommon.FtcRobotControllerService;
-import com.qualcomm.ftccommon.FtcRobotControllerService.FtcRobotControllerBinder;
 import com.qualcomm.ftccommon.FtcRobotControllerSettingsActivity;
 import com.qualcomm.ftccommon.LaunchActivityConstantsList;
 import com.qualcomm.ftccommon.LaunchActivityConstantsList.RequestCode;
@@ -157,7 +156,7 @@ public class FtcRobotControllerActivity extends Activity {
     protected ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            FtcRobotControllerBinder binder = (FtcRobotControllerBinder) service;
+            FtcRobotControllerService.FtcRobotControllerBinder binder = (FtcRobotControllerService.FtcRobotControllerBinder) service;
             onServiceBind(binder.getService());
         }
 
@@ -605,14 +604,7 @@ public class FtcRobotControllerActivity extends Activity {
             callback.networkConnectionUpdate(controllerService.getNetworkConnectionStatus());
             callback.updateRobotStatus(controllerService.getRobotStatus());
             // Only show this first-time toast on headless systems: what we have now on non-headless suffices
-            requestRobotSetup(LynxConstants.isRevControlHub()
-                    ? new Runnable() {
-                @Override
-                public void run() {
-                    showRestartRobotCompleteToast(R.string.toastRobotSetupComplete);
-                }
-            }
-                    : null);
+            requestRobotSetup(LynxConstants.isRevControlHub() ? () -> showRestartRobotCompleteToast(R.string.toastRobotSetupComplete) : null);
         }
     }
 
