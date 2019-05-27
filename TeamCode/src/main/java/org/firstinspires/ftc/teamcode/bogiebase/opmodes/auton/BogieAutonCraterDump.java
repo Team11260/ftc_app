@@ -19,6 +19,11 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
 
     @Override
     public void RegisterStates() {
+        addState(new State("telemetry", "start", () ->{
+            while (opModeIsActive()) {
+                robot.updateAll();
+            }
+        }));
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
@@ -26,7 +31,6 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
             RobotState.currentPath.pause();
             delay(Constants.DUMP_ROUTE_INTAKING_DELAY);
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
@@ -35,16 +39,22 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
             RobotState.currentPath.pause();
             delay(Constants.DUMP_MINERAL_DELAY);
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new PathState("open mineral gate", "drive to lander", robot.openMineralGateCallable()));
         addState(new PathState("lower lift", "turn to wall", robot.autonMoveMineralLiftToCollectPositionSequenceCallable()));
         addState(new PathState("stop drive to wall", "large drive to wall", robot.autonDriveToWallSequenceCallable()));
         addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
+        addState(new PathState("stop robot on crater","drive to depot",() -> {
+            while (robot.getPitch() < 6);
+            RobotState.currentPath.nextSegment();
+        }));
     }
 
     @Override
     public void Init() {
+
+        telemetry.putBoolean("teleop_position", false);
+
         //Init robot
         robot = new Robot();
     }
@@ -75,7 +85,7 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectCenterMineralDump);
                 break;
             default:
-                robot.runDrivePath(Constants.collectCenterMineralDump);
+                robot.runDrivePath(Constants.collectRightMineralDump);
                 break;
         }
 

@@ -6,7 +6,11 @@ public class Date {
     private SimpleDateFormat dtf;
 
     public Date() {
-        dtf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        this("dd/MM/yyyy HH:mm:ss");
+    }
+
+    public Date(String format) {
+        dtf = new SimpleDateFormat(format);
     }
 
     public String getDate() {

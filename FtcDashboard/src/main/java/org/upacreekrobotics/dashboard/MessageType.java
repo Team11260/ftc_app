@@ -13,6 +13,8 @@ public enum MessageType {
     OP_MODES,
     SELECT_OP_MODE,
 
+    VARIABLE,
+
     INIT_OP_MODE,
     RUN_OP_MODE,
     STOP_OP_MODE,
@@ -22,7 +24,13 @@ public enum MessageType {
     RETURN_VALUE,
     INFO,
     TELEMETRY,
-    LOG;
+    LOG,
+
+    SMARTDASHBOARD_PUT,
+    SMARTDASHBOARD_GET,
+
+    GAMEPAD_1_SET,
+    GAMEPAD_2_SET;
 
     public String getMessage(MessageType type) {
         return type.toString();

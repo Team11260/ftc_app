@@ -38,10 +38,8 @@ import com.google.blocks.ftcrobotcontroller.ProgrammingWebHandlers;
 import com.google.blocks.ftcrobotcontroller.runtime.BlocksOpMode;
 import com.qualcomm.ftccommon.ClassManagerFactory;
 import com.qualcomm.ftccommon.FtcAboutActivity;
-import com.qualcomm.ftccommon.FtcEventLoop;
 import com.qualcomm.ftccommon.FtcEventLoopIdle;
 import com.qualcomm.ftccommon.FtcRobotControllerService;
-import com.qualcomm.ftccommon.FtcRobotControllerService.FtcRobotControllerBinder;
 import com.qualcomm.ftccommon.FtcRobotControllerSettingsActivity;
 import com.qualcomm.ftccommon.LaunchActivityConstantsList;
 import com.qualcomm.ftccommon.LaunchActivityConstantsList.RequestCode;
@@ -72,9 +70,7 @@ import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogServic
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
 import org.firstinspires.ftc.robotcore.external.navigation.MotionDetection;
 import org.firstinspires.ftc.robotcore.internal.hardware.DragonboardLynxDragonboardIsPresentPin;
-import org.firstinspires.ftc.robotcore.internal.network.DeviceNameManager;
 import org.firstinspires.ftc.robotcore.internal.network.DeviceNameManagerFactory;
-import org.firstinspires.ftc.robotcore.internal.network.WifiDirectDeviceNameManager;
 import org.firstinspires.ftc.robotcore.internal.network.PreferenceRemoterRC;
 import org.firstinspires.ftc.robotcore.internal.network.StartResult;
 import org.firstinspires.ftc.robotcore.internal.network.WifiMuteEvent;
@@ -89,12 +85,11 @@ import org.firstinspires.ftc.robotcore.internal.ui.UILocation;
 import org.firstinspires.ftc.robotcore.internal.webserver.RobotControllerWebInfo;
 import org.firstinspires.ftc.robotcore.internal.webserver.WebServer;
 import org.firstinspires.inspection.RcInspectionActivity;
+import org.upacreekrobotics.dashboard.Dashboard;
+import org.upacreekrobotics.eventloop.OurEventLoop;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.upacreekrobotics.dashboard.Dashboard;
-import org.upacreekrobotics.eventloop.OurEventLoop;
 
 
 @SuppressWarnings("WeakerAccess")
@@ -161,7 +156,7 @@ public class FtcRobotControllerActivity extends Activity {
     protected ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            FtcRobotControllerBinder binder = (FtcRobotControllerBinder) service;
+            FtcRobotControllerService.FtcRobotControllerBinder binder = (FtcRobotControllerService.FtcRobotControllerBinder) service;
             onServiceBind(binder.getService());
         }
 
@@ -609,14 +604,7 @@ public class FtcRobotControllerActivity extends Activity {
             callback.networkConnectionUpdate(controllerService.getNetworkConnectionStatus());
             callback.updateRobotStatus(controllerService.getRobotStatus());
             // Only show this first-time toast on headless systems: what we have now on non-headless suffices
-            requestRobotSetup(LynxConstants.isRevControlHub()
-                    ? new Runnable() {
-                @Override
-                public void run() {
-                    showRestartRobotCompleteToast(R.string.toastRobotSetupComplete);
-                }
-            }
-                    : null);
+            requestRobotSetup(LynxConstants.isRevControlHub() ? () -> showRestartRobotCompleteToast(R.string.toastRobotSetupComplete) : null);
         }
     }
 

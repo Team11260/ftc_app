@@ -34,7 +34,7 @@ public class Logger {
             file.createNewFile();
             fOut = new FileOutputStream(file);
             myOutWriter = new OutputStreamWriter(fOut);
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("Exception", "File init failed " + e.toString());
         }
     }
@@ -47,7 +47,7 @@ public class Logger {
         try {
             myOutWriter.append(timeStamp + " : " + text + (char) Character.LINE_SEPARATOR);
             myOutWriter.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("Exception", "File append failed: " + e.toString());
         }
     }

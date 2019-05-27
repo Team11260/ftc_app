@@ -1,7 +1,6 @@
 package org.upacreekrobotics.dashboard;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
@@ -16,8 +15,6 @@ import dalvik.system.DexFile;
  * Classpath scanning utility designed to find annotations at runtime.
  */
 public class ClasspathScanner {
-    public static final String TAG = "ClasspathScanner";
-
     private DexFile dexFile;
     private ClassFilter filter;
 
@@ -26,7 +23,7 @@ public class ClasspathScanner {
         try {
             this.dexFile = new DexFile(context.getPackageCodePath());
         } catch (IOException e) {
-            Log.w(TAG, e);
+            e.printStackTrace();
         }
         this.filter = filter;
     }
@@ -46,7 +43,9 @@ public class ClasspathScanner {
 
                     filter.processClass(klass);
                 } catch (ClassNotFoundException e) {
-                    Log.w(TAG, e);
+                    e.printStackTrace();
+                } catch (NoClassDefFoundError e) {
+                    e.printStackTrace();
                 }
             }
         }

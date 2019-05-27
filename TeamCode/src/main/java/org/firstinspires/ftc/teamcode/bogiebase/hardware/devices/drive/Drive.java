@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive;
 
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.acmerobotics.roadrunner.trajectory.WaitSegment;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -12,18 +10,21 @@ import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.IMU;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
-import org.jetbrains.annotations.NotNull;
+import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.PurePursuitController;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive.DriveController.PATH_F;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive.DriveController.PATH_P;
 
-public class Drive extends TankDriveImpl {
+public class Drive extends PurePursuitController {
 
     private SlewDcMotor leftMotor, rightMotor;
-    private IMU imu;
+    private DcMotorSimple light;
     private Servo servoMarker;
 
+    private IMU imu;
+
     public Drive(HardwareMap hardwareMap) {
+        super(Constants.TRACK_WIDTH);
 
         imu = new IMU(hardwareMap);
 
@@ -41,7 +42,7 @@ public class Drive extends TankDriveImpl {
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //Encoders
+        //Encoder Set Up
         leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -51,6 +52,8 @@ public class Drive extends TankDriveImpl {
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 
+        light = hardwareMap.get(DcMotorSimple.class, "light");
+        light.setPower(0);
 
         servoMarker = hardwareMap.servo.get("servo_marker");
         servoMarker.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.DRIVE_TEAM_MARKER_RETRACTED : Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED);
@@ -91,7 +94,16 @@ public class Drive extends TankDriveImpl {
         rightMotor.setZeroPowerBehavior(behavior);
     }
 
-    public void setPosisionP(double p) {
+    public PIDFCoefficients getSpeedPIDF() {
+        return leftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void setSpeedPIDF(PIDFCoefficients c) {
+        leftMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, c);
+        rightMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, c);
+    }
+
+    public void setPositionP(double p) {
         //leftMotor.setPositionPIDFCoefficients(p);
         //rightMotor.setPositionPIDFCoefficients(p);
     }
@@ -102,6 +114,29 @@ public class Drive extends TankDriveImpl {
 
     public int getRightPosition() {
         return rightMotor.getCurrentPosition();
+    }
+
+    @Override
+    public double getActualHeadingDegrees() {
+        return getHeading();
+    }
+
+    @Override
+    public double getLeftActualPositionInches() {
+        return getRightPosition() / Constants.DRIVE_COUNTS_PER_INCH;
+    }
+
+    @Override
+    public double getRightActualPositionInches() {
+        return getLeftPosition() / Constants.DRIVE_COUNTS_PER_INCH;
+    }
+
+    @Override
+    public void setPowers(double l, double r) {
+        setSpeedPIDF(new PIDFCoefficients(PATH_P, 0, 0, PATH_F));
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        setPower(l, r);
     }
 
     public double getLeftPower() {
@@ -120,9 +155,12 @@ public class Drive extends TankDriveImpl {
         return leftMotor.isBusy() || rightMotor.isBusy();
     }
 
-    public void setPositionP(double p) {
-        leftMotor.setPositionPIDFCoefficients(p);
-        rightMotor.setPositionPIDFCoefficients(p);
+    public double getLeftMotorCurrentDraw() {
+        return leftMotor.getCurrentDraw();
+    }
+
+    public double getRightMotorCurrentDraw() {
+        return rightMotor.getCurrentDraw();
     }
 
     public double getHeading() {
@@ -130,9 +168,21 @@ public class Drive extends TankDriveImpl {
         return imu.getHeading();
     }
 
+    public double getAbsoluteHeading() {
+        return imu.getAbsoluteHeading();
+    }
+
+    public double getPitch(){
+        return imu.getPitch();
+    }
+
     public boolean isGyroCalibrated() {
         if (imu == null) return false;
         return imu.isGyroCalibrated();
+    }
+
+    public void setLightPower(double power) {
+        light.setPower(Math.abs(power));
     }
 
     public void stop() {
@@ -141,32 +191,4 @@ public class Drive extends TankDriveImpl {
         rightMotor.stop();
     }
 
-    @Override
-    public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {
-        PIDFCoefficients coefficients = leftMotor.getPIDFCoefficients(runMode);
-        return new PIDCoefficients(coefficients.p, coefficients.i, coefficients.d);
-    }
-
-    @Override
-    public void setPIDCoefficients(DcMotor.RunMode runMode, PIDCoefficients coefficients) {
-        leftMotor.setPIDFCoefficients(runMode, new PIDFCoefficients(coefficients.kP, coefficients.kI, coefficients.kD, 1));
-        rightMotor.setPIDFCoefficients(runMode, new PIDFCoefficients(coefficients.kP, coefficients.kI, coefficients.kD, 1));
-    }
-
-    @Override
-    public double getExternalHeading() {
-        return getHeading();
-    }
-
-    @NotNull
-    @Override
-    public List<Double> getWheelPositions() {
-        return Arrays.asList((double) getLeftPosition(), (double) getRightPosition());
-    }
-
-    @Override
-    public void setMotorPowers(double v, double v1) {
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        setPower(v, v1);
-    }
 }

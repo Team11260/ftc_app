@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.mineral_lift;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
-import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.DistanceSensor2m;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 
@@ -17,6 +17,8 @@ public class MineralLift {
     private Servo gateServo, angleServo;
 
     private DistanceSensor2m distanceSensor;
+
+    private AnalogInput bottomLimitSwitch;
 
     public MineralLift(HardwareMap hardwareMap) {
         liftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("mineral_lift"));
@@ -34,9 +36,11 @@ public class MineralLift {
 
         angleServo = hardwareMap.servo.get("sorter_angle");
         angleServo.setDirection(Servo.Direction.REVERSE);
-        angleServo.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION : Constants.MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
+        //angleServo.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION : Constants.MINERAL_LIFT_ANGLE_SERVO_HORIZONTAL_POSITION);
 
         distanceSensor = new DistanceSensor2m("Distance1");
+
+        bottomLimitSwitch = hardwareMap.analogInput.get("lift_bottom_limit");
     }
 
     public double getDistance() {
@@ -70,9 +74,11 @@ public class MineralLift {
         liftMotor.setPower(power);
     }
 
+    public double getMotorCurrentDraw(){ return liftMotor.getCurrentDraw();}
+
     public void setLiftMotorPowerNoEncoder(double power) {
-        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftMotor.setPower(power);
+        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void resetPosition() {
@@ -85,8 +91,16 @@ public class MineralLift {
         gateServo.setPosition(position);
     }
 
+    public double getGateServoPosition() {
+        return gateServo.getPosition();
+    }
+
     public void setAngleServoPosition(double position) {
         angleServo.setPosition(position);
+    }
+
+    public boolean getBottomLimitSwitchPressed() {
+        return bottomLimitSwitch.getVoltage() > 1;
     }
 
     public void stop() {

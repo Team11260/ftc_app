@@ -23,19 +23,7 @@ public class Vuforia {
     private VuforiaTrackable template;
 
     protected Vuforia(boolean viewer, boolean led) {
-        VuforiaLocalizer.Parameters parameters;
-        if (viewer) {
-            int cameraMonitorViewId = AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getPackageName());
-            parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        } else {
-            parameters = new VuforiaLocalizer.Parameters();
-        }
-        parameters.vuforiaLicenseKey = "AbuxcJX/////AAABmXadAYnA80uwmb4Rhy4YmvIh7qg/f2yrRu1Nd8O7sSufbUWHSv1jDhunwDBItvFchrvkc8EjTzjh97m2kAPy8YOjBclQbEBtuR8qcIfrGofASCZh2M6vQ0/Au+YbhYh0MLLdNrond+3YjkLswv6+Se3eVGw9y9fPGamiABzIrosjUdanAOWemf8BtuQUW7EqXa4mNPtQ+2jpZQO2sqtqxGu1anHQCD0S/PvdZdB7dRkyWaH6XTZCat5gZ0fpFH/aLWMFP4yiknlgYbjT7gklUAqyDX81pNrQhWWY4dOFnz2WiWhkCt+MNZMLKH5SdsyC7gwKI/r3h51pTwgXZfyYymB60eYAFqEUpeTrL+4LmltN";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.getInstance().createVuforia(parameters);
-        vuforia.setFrameQueueCapacity(1);
-        vuforia.enableConvertFrameToBitmap();
-        setLED(led);
+        this("BACK", viewer, led);
     }
 
     protected Vuforia(String camera, boolean viewer, boolean led) {

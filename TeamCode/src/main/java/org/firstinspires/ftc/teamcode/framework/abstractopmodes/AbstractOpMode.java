@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.Logger;
+import org.openftc.revextensions2.RevExtensions2;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
     }
 
     public AbstractOpMode() {
+        RevExtensions2.init();
         thisOpMode = this;
         opmode = this;
         linearOpMode = this;
@@ -44,7 +46,19 @@ public abstract class AbstractOpMode extends LinearOpMode {
     }
 
     @Override
-    public abstract void runOpMode();
+    public void runOpMode() {
+        runOpmode();
+    }
+
+    public abstract void runOpmode();
+
+    public static int getTimeSinceInit() {
+        return Dashboard.getTimeSinceInit();
+    }
+
+    public static int getTimeSinceStart() {
+        return Dashboard.getTimeSinceStart();
+    }
 
     public static void delay(int millis) {
         if(Thread.currentThread().isInterrupted()) return;
@@ -76,7 +90,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
             telemetry.update();
             for (StackTraceElement element : e.getStackTrace()) {
                 if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
-                    telemetry.addData(element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
+                    telemetry.addData(DoubleTelemetry.LogMode.ERROR, element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
                 }
             }
             switch (e.getClass().getSimpleName()) {
@@ -114,6 +128,20 @@ public abstract class AbstractOpMode extends LinearOpMode {
                     telemetry.update();
                     AbstractOpMode.delay(500);
                     VuforiaException exception = (VuforiaException) e;
+                    throw exception;
+                }
+                case "ExecutionException": {
+                    telemetry.update();
+                    for (StackTraceElement element : e.getCause().getStackTrace()) {
+                        if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
+                            telemetry.addData(DoubleTelemetry.LogMode.ERROR, element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
+                        }
+                    }
+                    telemetry.update();
+                    AbstractOpMode.delay(500);
+                    RuntimeException exception = new RuntimeException();
+                    exception.initCause(e);
+                    exception.setStackTrace(e.getCause().getStackTrace());
                     throw exception;
                 }
                 default: {

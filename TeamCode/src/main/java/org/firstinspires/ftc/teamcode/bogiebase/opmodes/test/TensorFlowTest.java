@@ -7,16 +7,16 @@ import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
-import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.TensorFlow;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.TensorFlowImpl;
 
 import static org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
-@Autonomous(name = "TensorFlow Test", group = "New")
+@Autonomous(name = "TensorFlowImpl Test", group = "New")
 @Disabled
 
 public class TensorFlowTest extends AbstractAutonNew {
 
-    private TensorFlow tensorFlow;
+    private TensorFlowImpl tensorFlow;
     private SamplePosition lastPosition = SamplePosition.UNKNOWN;
 
     @Override
@@ -26,8 +26,8 @@ public class TensorFlowTest extends AbstractAutonNew {
 
     @Override
     public void Init() {
-        tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
-        //tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.HORIZONTAL, false);
+        tensorFlow = new TensorFlowImpl(TensorFlowImpl.CameraOrientation.VERTICAL, "Webcam 1", false);
+        //tensorFlow = new TensorFlowImpl(TensorFlowImpl.CameraOrientation.HORIZONTAL, false);
     }
 
     @Override

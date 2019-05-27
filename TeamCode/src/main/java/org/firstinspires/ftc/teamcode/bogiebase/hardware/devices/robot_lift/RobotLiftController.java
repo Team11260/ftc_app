@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.robot_lift;
 
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
-import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.*;
-import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.*;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.ROBOT_LIFT_AUTON_DELAY;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.ROBOT_LIFT_LOWERED_POSITION;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.ROBOT_LIFT_LOWER_POWER;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.ROBOT_LIFT_PAWL_ENGAGED;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.ROBOT_LIFT_PAWL_RELEASED;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.ROBOT_LIFT_RELEASE_PAWL_POSITION;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.RobotLiftState;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentRobotLiftState;
 
 public class RobotLiftController extends SubsystemController {
 
@@ -34,21 +39,15 @@ public class RobotLiftController extends SubsystemController {
     }
 
     public synchronized void robotLiftStop() {
-        // robot is hanging
         robotLift.setLiftPower(0);
         robotLift.setServoPosition(ROBOT_LIFT_PAWL_ENGAGED);
     }
 
     public synchronized void robotLiftDown() {
-        robotLift.setPosition(robotLift.getTargetPosition() + ROBOT_LIFT_RELEASE_PAWL_POSITION);
+        robotLift.setPosition(robotLift.getCurrentPosition() + 100);
         robotLift.setServoPosition(ROBOT_LIFT_PAWL_RELEASED);
-        delay(1000);
+        delay(300);
         robotLift.setLiftPower(-0.5);
-    }
-
-    public synchronized void raiseLift() {
-        robotLift.setPosition(ROBOT_LIFT_RAISED_POSITION);
-        currentRobotLiftState = RobotLiftState.RAISED;
     }
 
     public synchronized void autonLowerLiftSequence() {
@@ -71,7 +70,6 @@ public class RobotLiftController extends SubsystemController {
     public synchronized void autonFinishLowerLiftSequence() {
         robotLift.setLiftPower(0);
         robotLift.setServoPosition(ROBOT_LIFT_PAWL_ENGAGED);
-        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Encoder: " + robotLift.getCurrentPosition());
         currentRobotLiftState = RobotLiftState.LOWERED;
     }
 

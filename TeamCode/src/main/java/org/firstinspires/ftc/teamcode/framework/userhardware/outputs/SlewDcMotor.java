@@ -9,10 +9,11 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
+import org.openftc.revextensions2.ExpansionHubMotor;
 
 public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable {
     //Motor
-    private DcMotor motor;
+    private ExpansionHubMotor motor;
     private DcMotorEx motorEx;
 
     private double slewSpeed = 0.1;
@@ -27,7 +28,7 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable {
 
     //Motor
     public SlewDcMotor(DcMotor motor) {
-        this.motor = motor;
+        this.motor = (ExpansionHubMotor) motor;
         this.motorEx = (DcMotorEx) motor;
 
         //Threading
@@ -302,5 +303,9 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable {
     @Override
     public int getTargetPositionTolerance() {
         return motorEx.getTargetPositionTolerance();
+    }
+
+    public double getCurrentDraw() {
+        return motor.getCurrentDraw();
     }
 }

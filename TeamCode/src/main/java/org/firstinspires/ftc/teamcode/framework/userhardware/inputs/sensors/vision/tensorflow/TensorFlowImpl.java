@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision;
+package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.support.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.vuforia.VuforiaImpl;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABE
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
 
-public class TensorFlow {
+public class TensorFlowImpl {
 
     DoubleTelemetry telemetry = AbstractOpMode.getTelemetry();
 
@@ -26,23 +28,23 @@ public class TensorFlow {
 
     private CameraOrientation orientation;
 
-    public TensorFlow() {
+    public TensorFlowImpl() {
         this(CameraOrientation.VERTICAL);
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation) {
+    public TensorFlowImpl(CameraOrientation cameraOrientation) {
         this(cameraOrientation, true);
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation, String camera) {
+    public TensorFlowImpl(CameraOrientation cameraOrientation, String camera) {
         this(cameraOrientation, camera, true);
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation, boolean led) {
+    public TensorFlowImpl(CameraOrientation cameraOrientation, boolean led) {
         this(cameraOrientation, "BACK", led);
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation, String camera, boolean led) {
+    public TensorFlowImpl(CameraOrientation cameraOrientation, String camera, boolean led) {
         orientation = cameraOrientation;
 
         do {
@@ -57,7 +59,7 @@ public class TensorFlow {
         }
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation, String camera, boolean led, boolean viewer) {
+    public TensorFlowImpl(CameraOrientation cameraOrientation, String camera, boolean led, boolean viewer) {
         orientation = cameraOrientation;
 
         do {
@@ -76,15 +78,17 @@ public class TensorFlow {
         int tfodMonitorViewId = AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.50;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia.getVuforia());
+        tfodParameters.minimumConfidence = 0.25;
+        tfodParameters.useObjectTracker = false;
+        tfod = new TensorFlow(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
     private void initTfodWithoutViewer() {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
-        tfodParameters.minimumConfidence = 0.50;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia.getVuforia());
+        tfodParameters.minimumConfidence = 0.25;
+        tfodParameters.useObjectTracker = false;
+        tfod = new TensorFlow(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
@@ -120,13 +124,21 @@ public class TensorFlow {
             if (updatedRecognitions != null) {
                 ArrayList<Mineral> minerals = new ArrayList<>();
                 for (Recognition recognition : updatedRecognitions) {
-                    //if (recognition.getConfidence() < 0.5) continue;
-                    minerals.add(new Mineral(recognition));
+                    Mineral mineral = new Mineral(recognition);
+                    telemetry.addData(DoubleTelemetry.LogMode.TRACE,"x pos. :"+ mineral.getX()+" y pos. :"+mineral.getY() + " "+ mineral.mineralType);
+
+                    //if ((mineral.getX() < 40 && mineral.getX()>30) && (mineral.getY()<145 && mineral.getY() > 135))  continue;
+
+                    minerals.add(mineral);
                 }
 
-                if (minerals.size() >= 3) position = samplePositionFromThreeMinerals(minerals);
-                else if (minerals.size() > 0)
+                if (minerals.size() >= 3)
+                {
+                    position = samplePositionFromThreeMinerals(minerals);
+                }
+                else if (minerals.size() > 0) {
                     position = samplePositionFromOneMineral(minerals, updatedRecognitions.get(0).getImageWidth(), updatedRecognitions.get(0).getImageHeight());
+                }
             }
         }
 
@@ -199,7 +211,7 @@ public class TensorFlow {
 
         ArrayList<Mineral> silverMinerals = new ArrayList<>();
         for (Mineral mineral : minerals) {
-            if (mineral.getType() == MineralType.SILVER) silverMinerals.add(mineral);
+            if (mineral.getType() == MineralType.SILVER && mineral.getConfidence() > 0.25) silverMinerals.add(mineral);
         }
 
         if (silverMinerals.size() < 2) return null;
@@ -248,7 +260,7 @@ public class TensorFlow {
 
         private MineralType mineralType;
 
-        public Mineral(Recognition recognition) {
+        private Mineral(Recognition recognition) {
             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) mineralType = MineralType.GOLD;
             else mineralType = MineralType.SILVER;
             if (orientation == CameraOrientation.VERTICAL) {
@@ -261,19 +273,19 @@ public class TensorFlow {
             this.confidence = recognition.getConfidence();
         }
 
-        public int getX() {
+        private int getX() {
             return x;
         }
 
-        public int getY() {
+        private int getY() {
             return y;
         }
 
-        public double getConfidence() {
+        private double getConfidence() {
             return confidence;
         }
 
-        public MineralType getType() {
+        private MineralType getType() {
             return mineralType;
         }
     }

@@ -23,12 +23,9 @@ public abstract class AbstractAuton extends AbstractOpMode {
     }
 
     @Override
-    public void runOpMode() {
+    public void runOpmode() {
 
         RobotState.currentMatchState = RobotState.MatchState.AUTONOMOUS;
-
-        gamepad1.reset();
-        gamepad2.reset();
 
         ExecutorService service = Executors.newSingleThreadExecutor();
 

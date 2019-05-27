@@ -78,6 +78,15 @@ public class DoubleTelemetry {
         }
     }
 
+    public void addDataPhone(LogMode mode, Object caption, Object data) {
+        String message = "[" + mode.toString() + "] " + String.valueOf(caption) + ": " + String.valueOf(data);
+        log(message);
+        if (loggingMode.shouldLog(mode)) {
+            telemetry.addData(String.valueOf(caption), String.valueOf(data));
+            dashtelem.info(message);
+        }
+    }
+
     public void update() {
         try {
             telemetry.update();
@@ -89,6 +98,42 @@ public class DoubleTelemetry {
 
     public void log(Object data) {
         logger.log(Dashboard.getInstance().getLogPreMessage() + String.valueOf(data));
+    }
+
+    public Dashboard.smartdashboard getSmartdashboard() {
+        return Dashboard.getInstance().getSmartDashboard();
+    }
+
+    public void putString(String key, String value) {
+        dashtelem.putString(key, value);
+    }
+
+    public void putInt(String key, int value) {
+        dashtelem.putInt(key, value);
+    }
+
+    public void putFloat(String key, float value) {
+        dashtelem.putFloat(key, value);
+    }
+
+    public void putBoolean(String key, boolean value) {
+        dashtelem.putBoolean(key, value);
+    }
+
+    public String getString(String key, String defaultValue) {
+        return dashtelem.getString(key, defaultValue);
+    }
+
+    public int getInt(String key, int defaultValue) {
+        return dashtelem.getInt(key, defaultValue);
+    }
+
+    public float getFloat(String key, float defaultValue) {
+        return dashtelem.getFloat(key, defaultValue);
+    }
+
+    public boolean getBoolean(String key, boolean defaultValue) {
+        return dashtelem.getBoolean(key, defaultValue);
     }
 
     public void stop() {

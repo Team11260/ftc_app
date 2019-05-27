@@ -24,12 +24,10 @@ public class BogieAutonDoubleSample extends AbstractAutonNew {
         addState(new PathState("finish lowering robot lift", "turn to gold mineral", robot.finishRobotLiftToBottomSequenceCallable()));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("intaking pause", "drive to minerals", () -> {
-            while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"))
-                ;
+            while (!RobotState.currentPath.getCurrentSegment().getName().equals("back up from minerals"));
             RobotState.currentPath.pause();
             delay(Constants.NORMAL_INTAKING_DELAY);
             RobotState.currentPath.resume();
-            return true;
         }));
         addState(new PathState("finish intaking", "turn to wall", robot.finishIntakingCallable()));
         addState(new PathState("finish intaking", "orient at depot", robot.finishIntakingCallable()));
@@ -39,6 +37,9 @@ public class BogieAutonDoubleSample extends AbstractAutonNew {
 
     @Override
     public void Init() {
+
+        telemetry.putBoolean("teleop_position", false);
+
         robot = new Robot();
     }
 
@@ -68,7 +69,7 @@ public class BogieAutonDoubleSample extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectCenterMineral);
                 break;
             default:
-                robot.runDrivePath(Constants.collectCenterMineral);
+                robot.runDrivePath(Constants.collectRightMineral);
                 break;
         }
 
@@ -87,7 +88,7 @@ public class BogieAutonDoubleSample extends AbstractAutonNew {
                 robot.runDrivePath(Constants.collectCenterMineralDoubleSample);
                 break;
             default:
-                robot.runDrivePath(Constants.collectCenterMineralDoubleSample);
+                robot.runDrivePath(Constants.collectRightMineralDoubleSample);
                 break;
         }
 

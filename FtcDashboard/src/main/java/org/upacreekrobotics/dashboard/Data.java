@@ -40,9 +40,13 @@ public class Data {
         } catch (NullPointerException e) {
             connect();
         }
-        if (line != null) {
-            String[] text = line.split("~", 2);
-            return new Message(MessageType.valueOf(text[0]), text[1]);
+        try {
+            if (line != null) {
+                String[] text = line.split("~", 2);
+                return new Message(MessageType.valueOf(text[0]), text[1]);
+            }
+        } catch (Exception e) {
+            System.err.println("Invalid Dashboard Message");
         }
         return null;
     }

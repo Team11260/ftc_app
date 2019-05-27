@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.vuforia;
 
+import android.graphics.Bitmap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 public class VuforiaImpl {
@@ -28,5 +30,9 @@ public class VuforiaImpl {
 
     public void setLED(boolean on) {
         vuforia.setLED(on);
+    }
+
+    public Bitmap getImage() {
+        return vuforia.getImage();
     }
 }
