@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.bogiebase.hardware;
+package org.firstinspires.ftc.teamcode.examplebase.hardware;
 
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
@@ -56,7 +56,7 @@ public class Robot extends AbstractRobot {
 
     public void updateAll() {
         if (RobotState.currentMatchState == RobotState.MatchState.TELEOP) {
-            hardware.drive.update();
+            hardware.subsystem.update();
             hardware.intake.update();
             hardware.mineralLift.update();
             hardware.robotLift.update();
@@ -66,19 +66,19 @@ public class Robot extends AbstractRobot {
     }
 
     public void updateTelemetry() {
-        telemetry.getSmartdashboard().putValue("Left drive current", hub.getCurrentDrawMotor0());
-        telemetry.getSmartdashboard().putValue("Right drive current", hub.getCurrentDrawMotor1());
+        telemetry.getSmartdashboard().putValue("Left subsystem current", hub.getCurrentDrawMotor0());
+        telemetry.getSmartdashboard().putValue("Right subsystem current", hub.getCurrentDrawMotor1());
         telemetry.getSmartdashboard().putValue("Robot lift current", hub.getCurrentDrawMotor2());
         telemetry.getSmartdashboard().putValue("Mineral lift current", hub.getCurrentDrawMotor3());
         telemetry.getSmartdashboard().putValue("Total current", hub.getTotalCurrentDraw());
         telemetry.getSmartdashboard().putValue("Voltage", hub.getVoltage());
-        telemetry.getSmartdashboard().putValue("Heading", hardware.drive.getHeading());
-        telemetry.getSmartdashboard().putValue("Pitch", hardware.drive.getPitch());
-        telemetry.getSmartdashboard().putValue("Left drive position", hardware.drive.getLeftPosition());
-        telemetry.getSmartdashboard().putValue("Right drive position", hardware.drive.getRightPosition());
+        telemetry.getSmartdashboard().putValue("Heading", hardware.subsystem.getHeading());
+        telemetry.getSmartdashboard().putValue("Pitch", hardware.subsystem.getPitch());
+        telemetry.getSmartdashboard().putValue("Left subsystem position", hardware.subsystem.getLeftPosition());
+        telemetry.getSmartdashboard().putValue("Right subsystem position", hardware.subsystem.getRightPosition());
 
-        telemetry.addDataPhone(TRACE, "Left drive current: " + hub.getCurrentDrawMotor0());
-        telemetry.addDataPhone(TRACE, "Right drive current: " + hub.getCurrentDrawMotor1());
+        telemetry.addDataPhone(TRACE, "Left subsystem current: " + hub.getCurrentDrawMotor0());
+        telemetry.addDataPhone(TRACE, "Right subsystem current: " + hub.getCurrentDrawMotor1());
         telemetry.addDataPhone(TRACE, "Robot lift current: " + hub.getCurrentDrawMotor2());
         telemetry.addDataPhone(TRACE, "Mineral lift current: " + hub.getCurrentDrawMotor3());
         telemetry.addDataPhone(INFO, "Total current: " + hub.getTotalCurrentDraw());
@@ -102,89 +102,89 @@ public class Robot extends AbstractRobot {
         hardware.stop();
     }
 
-    //Drive Methods
+    //ExampleSubsystem Methods
     public void setDriveY(double y) {
-        hardware.drive.setY(y);
+        hardware.subsystem.setY(y);
     }
 
     public void setDriveZ(double z) {
-        hardware.drive.setZ(z);
+        hardware.subsystem.setZ(z);
     }
 
     public void driveUpdate() {
-        hardware.drive.updateYZDrive();
+        hardware.subsystem.updateYZDrive();
     }
 
     public void setDrivePowerNoEncoder(double l, double r) {
-        hardware.drive.setPowerNoEncoder(l, r);
+        hardware.subsystem.setPowerNoEncoder(l, r);
     }
 
     public void setDrivePower(double l, double r) {
-        hardware.drive.setPower(l, r);
+        hardware.subsystem.setPower(l, r);
     }
 
     public void runDrivePath(Path path) {
-        hardware.drive.runDrivePath(path);
+        hardware.subsystem.runDrivePath(path);
     }
 
     public void driveRunPath(org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Path path) {
-        hardware.drive.runPath(path);
+        hardware.subsystem.runPath(path);
     }
 
     public void setDrivePosition(int position, double power) {
-        hardware.drive.setPosition(position, power);
+        hardware.subsystem.setPosition(position, power);
     }
 
     public int getLeftDrivePosition() {
-        return hardware.drive.getLeftPosition();
+        return hardware.subsystem.getLeftPosition();
     }
 
     public int getRightDrivePosition() {
-        return hardware.drive.getRightPosition();
+        return hardware.subsystem.getRightPosition();
     }
 
     public void resetDrivePosition() {
-        hardware.drive.resetPosition();
+        hardware.subsystem.resetPosition();
     }
 
     public boolean isGyroCalibrated() {
-        return hardware.drive.isGyroCalibrated();
+        return hardware.subsystem.isGyroCalibrated();
     }
 
     public RobotCallable autonReleaseWheelsSequenceCallable() {
-        return () -> hardware.drive.autonReleaseWheelsSequence();
+        return () -> hardware.subsystem.autonReleaseWheelsSequence();
     }
 
     public void autonReleaseWheelsSequence() {
-        hardware.drive.autonReleaseWheelsSequence();
+        hardware.subsystem.autonReleaseWheelsSequence();
     }
 
     public void autonDriveToWallSequence() {
-        hardware.drive.autonDriveToWallSequence();
+        hardware.subsystem.autonDriveToWallSequence();
     }
 
     public RobotCallable autonDriveToWallSequenceCallable() {
-        return () -> hardware.drive.autonDriveToWallSequence();
+        return () -> hardware.subsystem.autonDriveToWallSequence();
     }
 
     public double getHeading() {
-        return hardware.drive.getHeading();
+        return hardware.subsystem.getHeading();
     }
 
     public double getPitch() {
-        return hardware.drive.getPitch();
+        return hardware.subsystem.getPitch();
     }
 
     public RobotCallable getPitchCallable() {
-        return () -> hardware.drive.getPitch();
+        return () -> hardware.subsystem.getPitch();
     }
 
     public void setLightOn() {
-        hardware.drive.setLightOn();
+        hardware.subsystem.setLightOn();
     }
 
     public void setLightOff() {
-        hardware.drive.setLightOff();
+        hardware.subsystem.setLightOff();
     }
 
     //Intake Methods
@@ -349,7 +349,7 @@ public class Robot extends AbstractRobot {
     }
 
     public RobotCallable dropMarkerCallable() {
-        return () -> hardware.drive.dropTeamMarker();
+        return () -> hardware.subsystem.dropTeamMarker();
     }
 
     public RobotCallable resetLiftPositionCallable() {

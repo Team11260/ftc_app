@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware.paths;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 
@@ -55,7 +53,7 @@ public class Path implements Cloneable {
 
         if (currentSegment.getNumber() >= segments.size() - 1) {
             isDone = true;
-            AbstractAutonNew.addFinishedState(lastSegmentName);
+            AbstractAuton.addFinishedState(lastSegmentName);
             return null;
         }
 
@@ -65,7 +63,7 @@ public class Path implements Cloneable {
 
         if (paused) pause();
 
-        AbstractAutonNew.addFinishedState(lastSegmentName);
+        AbstractAuton.addFinishedState(lastSegmentName);
 
         return currentSegment;
     }
