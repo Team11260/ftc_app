@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.framework.abstractopmodes;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
+import org.firstinspires.ftc.teamcode.examplebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.util.Emitter;
 import org.firstinspires.ftc.teamcode.framework.util.RobotCallable;
 
