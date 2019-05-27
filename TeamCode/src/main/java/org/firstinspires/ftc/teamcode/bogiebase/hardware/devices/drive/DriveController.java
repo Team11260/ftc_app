@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive;
 
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
@@ -12,16 +9,11 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Segment;
-import org.firstinspires.ftc.teamcode.framework.userhardware.paths.SplineSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
-import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Point;
-import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Pose;
-import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Vector;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 import org.upacreekrobotics.dashboard.Config;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
@@ -33,7 +25,6 @@ import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_TEAM_MARKER_EXTENDED;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_TEAM_MARKER_RETRACTED;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED;
-import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.TRACK_WIDTH;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.MatchState;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.MineralLiftState;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentMatchState;
@@ -83,6 +74,8 @@ public class DriveController extends SubsystemController {
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Right drive power: " + drive.getRightPower());
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Left drive position: " + drive.getLeftPosition());
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Right drive position: " + drive.getRightPosition());
+        drive.update();
+        telemetry.addData(INFO, "X:" + drive.getCurrentPosition().getX() + "  Y: " + drive.getCurrentPosition().getY());
     }
 
     public synchronized void stop() {
@@ -116,8 +109,6 @@ public class DriveController extends SubsystemController {
                 turnToSegment((TurnSegment) path.getCurrentSegment());
             } else if (path.getCurrentSegment().getType() == Segment.SegmentType.DRIVE) {
                 driveToSegment((DriveSegment) path.getCurrentSegment());
-            } else if (path.getCurrentSegment().getType() == Segment.SegmentType.SPLINE) {
-                splineToSegment((SplineSegment) path.getCurrentSegment());
             }
 
             telemetry.addData(INFO, "Finished segment: " + path.getCurrentSegment().getName() + " in path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
@@ -296,90 +287,20 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public synchronized void splineToSegment(SplineSegment segment) {
-
-        if(segment.getStartingPosition() != null) drive.setPoseEstimate(segment.getStartingPosition());
-
-        drive.followTrajectory(drive.trajectoryBuilder().splineTo(segment.getTrajectory()).build());
-
-        while (drive.isFollowingTrajectory() && opModeIsActive()) {
-            drive.update();
-            telemetry.addData(INFO, "Pose: ", drive.getPoseEstimate());
-            telemetry.update();
-        }
-
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
     public synchronized void runPath(org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Path path) {
 
-        drive.setSpeedPIDF(new PIDFCoefficients(PATH_P, 0, 0, PATH_F));
+        drive.follow(path);
 
-        ArrayList<Point> points = new ArrayList<>();
+        while (opModeIsActive() && drive.isFollowing()) {
 
-        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        Pose currentPosition = new Pose();
-
-        double l = 0, r = 0;
-
-        while (opModeIsActive()) {
-            double heading = getHeading();
-
-            double ll = drive.getLeftPosition();
-            double rr = drive.getRightPosition();
-            double d = (((ll - l) + (rr - r)) / 2) / DRIVE_COUNTS_PER_INCH;
-            l = ll;
-            r = rr;
-            currentPosition = new Pose(currentPosition.addVector(new Vector(d * Math.cos(Math.toRadians(heading)), d * Math.sin(Math.toRadians(heading)))), heading);
-
-            points.add(currentPosition);
-
-            int lookahead = path.getLookAheadPointIndex(currentPosition);
-            int closest = path.getClosestPointIndex(currentPosition);
-
-            if(lookahead == -1) break;
-
-            telemetry.getSmartdashboard().putGraph("Path", "Actual", currentPosition.getX(), currentPosition.getY());
-            telemetry.getSmartdashboard().putGraphPoint("Path", "Lookahead Point", path.getPoints().get(lookahead).getX(), path.getPoints().get(lookahead).getY());
-            telemetry.getSmartdashboard().putGraphPoint("Path", "Closest Point", path.getPoints().get(closest).getX(), path.getPoints().get(closest).getY());
-
-            //double v = path.getPathPointVelocity(closest) / (path.getTrackingError(currentPosition) > 2 ? path.getTrackingError(currentPosition) : 2);
-            double v = Math.min(path.getPathPointVelocity(closest, currentPosition), path.getPathPointVelocity(lookahead, currentPosition));
-            double c = path.getCurvatureFromPathPoint(lookahead, currentPosition);
-
-            double left = v * ((2 + c * TRACK_WIDTH)/2);
-            double right = v * ((2 - c * TRACK_WIDTH)/2);
-
-            drive.setPower(left, right);
-
-            //telemetry.addDataDB(INFO, "Left: " + (float)left + "  Right: " + (float)right + "  Left C: " + (float)drive.getLeftMotorCurrentDraw() + "  Right C: " + (float)drive.getRightMotorCurrentDraw() + " X: " + (float)currentPosition.getX() + "  Y: " + (float)currentPosition.getY() + "  Heading: " + (float)currentPosition.getHeading() + "  Target Heading: " + (float)path.getTargetAngle() + "  C: " + (float)c + "  I: " + lookahead + "  Point: " + path.getPoint(lookahead));
-            //telemetry.update();
-        }
-
-        //for(Point point:points) telemetry.getSmartdashboard().putGraph("Path", "Actual", point.getX(), point.getY());
-
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
-    public synchronized void runTrajectory(Trajectory trajectory) {
-
-        drive.followTrajectory(trajectory);
-
-        telemetry.addData(INFO, "Running trajectory: " + trajectory.getSegments().toString() + " " + drive.isFollowingTrajectory() + " " + opModeIsActive());
-        telemetry.update();
-
-        while (drive.isFollowingTrajectory() && opModeIsActive()) {
             drive.update();
-            telemetry.addData(INFO, "Pose", drive.getPoseEstimate());
-            telemetry.update();
+
+            telemetry.getSmartdashboard().putGraph("Path", "Actual", drive.getCurrentPosition().getX(), drive.getCurrentPosition().getY());
+            //telemetry.getSmartdashboard().putGraphPoint("Path", "Lookahead Point", path.getPoints().get(lookahead).getX(), path.getPoints().get(lookahead).getY());
+            //telemetry.getSmartdashboard().putGraphPoint("Path", "Closest Point", path.getPoints().get(closest).getX(), path.getPoints().get(closest).getY());
         }
 
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
-    public synchronized TrajectoryBuilder getTrajectoryBuilder() {
-        return drive.trajectoryBuilder();
     }
 
     public synchronized void setPosition(int position, double power) {

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive;
 
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,12 +10,12 @@ import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.IMU;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
-import org.jetbrains.annotations.NotNull;
+import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.PurePursuitController;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive.DriveController.PATH_F;
+import static org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive.DriveController.PATH_P;
 
-public class Drive extends TankDriveImpl{
+public class Drive extends PurePursuitController {
 
     private SlewDcMotor leftMotor, rightMotor;
     private DcMotorSimple light;
@@ -25,6 +24,7 @@ public class Drive extends TankDriveImpl{
     private IMU imu;
 
     public Drive(HardwareMap hardwareMap) {
+        super(Constants.TRACK_WIDTH);
 
         imu = new IMU(hardwareMap);
 
@@ -116,6 +116,29 @@ public class Drive extends TankDriveImpl{
         return rightMotor.getCurrentPosition();
     }
 
+    @Override
+    public double getActualHeadingDegrees() {
+        return getHeading();
+    }
+
+    @Override
+    public double getLeftActualPositionInches() {
+        return getRightPosition() / Constants.DRIVE_COUNTS_PER_INCH;
+    }
+
+    @Override
+    public double getRightActualPositionInches() {
+        return getLeftPosition() / Constants.DRIVE_COUNTS_PER_INCH;
+    }
+
+    @Override
+    public void setPowers(double l, double r) {
+        setSpeedPIDF(new PIDFCoefficients(PATH_P, 0, 0, PATH_F));
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        setPower(l, r);
+    }
+
     public double getLeftPower() {
         return leftMotor.getPower();
     }
@@ -168,32 +191,4 @@ public class Drive extends TankDriveImpl{
         rightMotor.stop();
     }
 
-    @Override
-    public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {
-        PIDFCoefficients coefficients = leftMotor.getPIDFCoefficients(runMode);
-        return new PIDCoefficients(coefficients.p, coefficients.i, coefficients.d);
-    }
-
-    @Override
-    public void setPIDCoefficients(DcMotor.RunMode runMode, PIDCoefficients coefficients) {
-        leftMotor.setPIDFCoefficients(runMode, new PIDFCoefficients(coefficients.kP, coefficients.kI, coefficients.kD, 1));
-        rightMotor.setPIDFCoefficients(runMode, new PIDFCoefficients(coefficients.kP, coefficients.kI, coefficients.kD, 1));
-    }
-
-    @Override
-    public double getExternalHeading() {
-        return imu.getHeadingRadians();
-    }
-
-    @NotNull
-    @Override
-    public List<Double> getWheelPositions() {
-        return Arrays.asList(leftMotor.getCurrentPosition() / Constants.DRIVE_COUNTS_PER_INCH, rightMotor.getCurrentPosition() / Constants.DRIVE_COUNTS_PER_INCH);
-    }
-
-    @Override
-    public void setMotorPowers(double v, double v1) {
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        setPower(v, v1);
-    }
 }

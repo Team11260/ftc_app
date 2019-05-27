@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
-
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
-import org.firstinspires.ftc.teamcode.framework.userhardware.paths.SplineSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
 import org.upacreekrobotics.dashboard.Config;
 
@@ -37,8 +33,6 @@ public final class Constants {
 
     //Roadrunner
     public static double TRACK_WIDTH = 26; // in
-
-    public final static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(25.0, 40.0, Math.PI / 4, Math.PI / 2);
 
     public final static double kV = 0.04;
     public final static double kA = 0.025;
@@ -362,13 +356,5 @@ public final class Constants {
     static {
         pickupMinerals.addSegment(new DriveSegment("drive to crater", 100, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
         pickupMinerals.addSegment(new DriveSegment("drive into crater", 22, AUTON_PATH_SPEED, AUTON_DISTANCE_ERROR));
-    }
-
-    public final static Path splineToDepot = new Path("spline to depot");
-
-    static {
-        splineToDepot.addSegment(new SplineSegment("spline to wall", new Pose2d(0, 30, Math.toRadians(180))));
-        splineToDepot.addSegment(new SplineSegment("spline to depot", new Pose2d(0, 60, Math.toRadians(0))));
-        splineToDepot.addSegment(new SplineSegment("spline to depot", new Pose2d(0, 0, Math.toRadians(180))));
     }
 }
