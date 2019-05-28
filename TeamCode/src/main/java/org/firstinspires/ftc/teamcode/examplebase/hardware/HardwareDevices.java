@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode.examplebase.hardware;
 
-import org.firstinspires.ftc.teamcode.examplebase.hardware.devices.subsystem.ExampleSubsystemController;
+import org.firstinspires.ftc.teamcode.examplebase.hardware.devices.subsystem.DriveController;
 
 public class HardwareDevices {
 
-    public ExampleSubsystemController subsystem = null;
+    public DriveController drive = null;
 
     public HardwareDevices() {
-        subsystem = new ExampleSubsystemController();
+        drive = new DriveController();
     }
 
     public void stop() {
-        if (subsystem != null) subsystem.stop();
+        if (drive != null) drive.stop();
     }
 }

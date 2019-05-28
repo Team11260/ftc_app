@@ -10,16 +10,16 @@ public abstract class SubsystemController {
     public DoubleTelemetry telemetry;
     public HardwareMap hardwareMap;
 
+    public SubsystemController() {
+        telemetry = AbstractOpMode.getTelemetry();
+        hardwareMap = AbstractOpMode.getHardwareMap();
+    }
+
     public abstract void init();
 
     public abstract void update();
 
     public abstract void stop();
-
-    public void opModeSetup() {
-        telemetry = AbstractOpMode.getTelemetry();
-        hardwareMap = AbstractOpMode.getHardwareMap();
-    }
 
     public void delay(int millis) {
         AbstractOpMode.delay(millis);

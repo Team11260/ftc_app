@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.examplebase.opmodes.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.examplebase.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
 @TeleOp(name = "Example Teleop", group = "Example")
-@Disabled
+//@Disabled
 
 public class ExampleTeleop extends AbstractTeleop {
 

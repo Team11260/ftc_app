@@ -8,6 +8,7 @@ public class Robot extends AbstractRobot {
     private HardwareDevices hardware;
     private ExpansionHubMonitor hub;
 
+
     //Robot Methods
     public Robot() {
         hardware = new HardwareDevices();
@@ -15,12 +16,13 @@ public class Robot extends AbstractRobot {
     }
 
     public void updateAll() {
-        if (RobotState.currentMatchState == RobotState.MatchState.TELEOP) {
-            hardware.subsystem.update();
-        }
+        //if (RobotState.currentMatchState == RobotState.MatchState.TELEOP) {
+            hardware.drive.update();
+        //}
 
         updateTelemetry();
     }
+
 
     public void updateTelemetry() {
         telemetry.update();
@@ -32,6 +34,14 @@ public class Robot extends AbstractRobot {
 
     public double getCurrent() {
         return hub.getTotalCurrentDraw();
+    }
+
+    public void driveInches(int inches){
+        hardware.drive.driveInches(inches);
+    }
+
+    public void turnLeft() {
+        hardware.drive.turnLeft();
     }
 
     public void stop() {
