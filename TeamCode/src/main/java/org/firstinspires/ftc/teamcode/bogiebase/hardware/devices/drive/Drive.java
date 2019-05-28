@@ -36,8 +36,13 @@ public class Drive extends PurePursuitController {
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        leftMotor.setSlewSpeed(Constants.DRIVE_SLEW_SPEED);
-        rightMotor.setSlewSpeed(Constants.DRIVE_SLEW_SPEED);
+        if(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
+            leftMotor.setSlewSpeed(Constants.AUTON_DRIVE_SLEW_SPEED);
+            rightMotor.setSlewSpeed(Constants.AUTON_DRIVE_SLEW_SPEED);
+        } else {
+            leftMotor.setSlewSpeed(Constants.TELEOP_DRIVE_SLEW_SPEED);
+            rightMotor.setSlewSpeed(Constants.TELEOP_DRIVE_SLEW_SPEED);
+        }
 
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
