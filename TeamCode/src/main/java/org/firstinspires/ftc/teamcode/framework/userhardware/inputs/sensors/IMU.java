@@ -20,6 +20,7 @@ public class IMU implements Runnable {
 
     private boolean newValue = false;
     private double heading = 0;
+    private double accelerationX = 0;
 
     private double lastHeading = 0;
     private double absoluteHeadingCorrection = 0;
@@ -55,6 +56,10 @@ public class IMU implements Runnable {
         return 0;
     }
 
+    public double getXAcceleration() {
+        return accelerationX;
+    }
+
     public double getAbsoluteHeading() {
         return absoluteHeadingCorrection + heading;
     }
@@ -82,6 +87,7 @@ public class IMU implements Runnable {
         Orientation angle;
         while (AbstractOpMode.isOpModeActive()) {
             angle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            accelerationX = imu.getAcceleration().xAccel;
 
             synchronized (lock) {
                 heading = angle.firstAngle;
