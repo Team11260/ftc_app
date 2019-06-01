@@ -31,6 +31,10 @@ public class Drive {
         return imu.getHeading();
     }
 
+    public void resetHeading () {
+        imu.resetAngleToZero();
+    }
+
     public double getLeftCurrentPosition(){
         return slewDcMotorLeft.getCurrentPosition();
     }

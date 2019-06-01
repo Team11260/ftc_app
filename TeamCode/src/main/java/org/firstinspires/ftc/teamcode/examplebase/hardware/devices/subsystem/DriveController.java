@@ -36,13 +36,23 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public void turnLeft(){
+    public void turnLeft(int angle){
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        drive.setPower(0,0.5);
-        while (drive.getHeading()<90);
+        drive.setPower(-0.3,0.3);
+        while (drive.getHeading()<angle);
         drive.setPower(0,0);
+        drive.resetHeading();
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
 
+    public void turnRight(int angle){
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        drive.setPower(0.3,-0.3);
+        while (drive.getHeading()>(-angle));
+        drive.setPower(0,0);
+        drive.resetHeading();
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 

@@ -70,7 +70,7 @@ public class IMU implements Runnable {
     public void resetAngleToZero() {
         imu.initialize(parameters);
 
-        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000 && AbstractOpMode.isOpModeActive());
+        while (!imu.isGyroCalibrated() && AbstractOpMode.isOpModeActive());
     }
 
     public boolean isGyroCalibrated() {
