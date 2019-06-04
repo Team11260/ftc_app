@@ -47,7 +47,7 @@ public class DriveController extends SubsystemController {
 
     private DecimalFormat DF;
 
-    public static double PATH_P = 8, PATH_F = 3;
+    public static double PATH_P = 15, PATH_F = 5;
 
     //Utility Methods
     public DriveController() {
@@ -296,8 +296,7 @@ public class DriveController extends SubsystemController {
             drive.update();
 
             telemetry.getSmartdashboard().putGraph("Path", "Actual", drive.getCurrentPosition().getX(), drive.getCurrentPosition().getY());
-            //telemetry.getSmartdashboard().putGraphPoint("Path", "Lookahead Point", path.getPoints().get(lookahead).getX(), path.getPoints().get(lookahead).getY());
-            //telemetry.getSmartdashboard().putGraphPoint("Path", "Closest Point", path.getPoints().get(closest).getX(), path.getPoints().get(closest).getY());
+
         }
 
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

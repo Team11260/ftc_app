@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
-import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.IMU;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.imu.IMU;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.PurePursuitController;
 
@@ -90,6 +90,7 @@ public class Drive extends PurePursuitController {
     }
 
     public void setMode(DcMotor.RunMode mode) {
+        if(mode == DcMotor.RunMode.STOP_AND_RESET_ENCODER) encodersZero();
         leftMotor.setMode(mode);
         rightMotor.setMode(mode);
     }
@@ -171,6 +172,14 @@ public class Drive extends PurePursuitController {
     public double getHeading() {
         if (imu == null) return 0.0;
         return imu.getHeading();
+    }
+
+    public double getAccelerationX() {
+        return imu.getXAcceleration();
+    }
+
+    public double getVelocityX() {
+        return imu.getXVelocity();
     }
 
     public double getAbsoluteHeading() {

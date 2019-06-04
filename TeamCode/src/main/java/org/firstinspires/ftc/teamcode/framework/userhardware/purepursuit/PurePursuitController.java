@@ -27,7 +27,7 @@ public abstract class PurePursuitController {
 
         double distance = ((leftPosition - lastLeftPosition) + (rightPosition - lastRightPosition)) / 2;
 
-        currentPosition = new Pose(currentPosition.addVector(new Vector(distance * Math.cos(Math.toRadians(heading)), distance * Math.sin(Math.toRadians(heading)))), heading);
+        currentPosition = new Pose(currentPosition.add(new Vector(distance * Math.cos(Math.toRadians(heading)), distance * Math.sin(Math.toRadians(heading)))), heading);
 
         lastLeftPosition = leftPosition;
         lastRightPosition = rightPosition;
@@ -74,6 +74,15 @@ public abstract class PurePursuitController {
 
     public void resume() {
         isFollowing = true;
+    }
+
+    public void encodersZero() {
+        lastLeftPosition = 0;
+        lastRightPosition = 0;
+    }
+
+    public void resetPosition() {
+        currentPosition = new Pose();
     }
 
     public abstract double getActualHeadingDegrees();

@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit;
 
-public class Vector {
-
-    private final double x, y;
+public class Vector extends Point {
 
     public Vector(double x, double y) {
-        this.x = x;
-        this.y = y;
+        super(x, y);
+    }
+
+    public Vector(Point point) {
+        this(point.getX(), point.getY());
     }
 
     public Vector(double x1, double y1, double x2, double y2) {
@@ -31,10 +32,6 @@ public class Vector {
 
     public Vector normalize() {
         return new Vector((1/magnitude()) * x, (1/magnitude()) * y);
-    }
-
-    public Vector add(Vector vector) {
-        return new Vector(x + vector.getX(), y + vector.getY());
     }
 
     public Vector scale(double scalar) {

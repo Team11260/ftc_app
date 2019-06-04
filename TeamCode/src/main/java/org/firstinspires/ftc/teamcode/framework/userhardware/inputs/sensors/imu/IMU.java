@@ -1,14 +1,17 @@
-package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors;
+package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.imu;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.NaiveAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ThreadPool;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 
 public class IMU implements Runnable {
@@ -18,13 +21,19 @@ public class IMU implements Runnable {
 
     private ElapsedTime GyroTimeOut;
 
-    private boolean newValue = false;
+    private boolean newHeadingValue = false;
+    private boolean newAccelerationValue = false;
+    private boolean newVelocityValue = false;
     private double heading = 0;
+    private double accelerationX = 0;
+    private double velocityX = 0;
 
     private double lastHeading = 0;
     private double absoluteHeadingCorrection = 0;
 
-    private final Object lock = new Object();
+    private final Object headingLock = new Object();
+    private final Object accelerationLock = new Object();
+    private final Object velocityLock = new Object();
 
     public IMU(HardwareMap hwMap) {
         parameters = new BNO055IMU.Parameters();
@@ -44,10 +53,36 @@ public class IMU implements Runnable {
 
     public double getHeading() {
         while (AbstractOpMode.isOpModeActive()) {
-            synchronized (lock) {
-                if(newValue) {
-                    newValue = false;
+            synchronized (headingLock) {
+                if(newHeadingValue) {
+                    newHeadingValue = false;
                     return heading;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    public double getXAcceleration() {
+        while (AbstractOpMode.isOpModeActive()) {
+            synchronized (accelerationLock) {
+                if(newAccelerationValue) {
+                    newAccelerationValue = false;
+                    return accelerationX;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    public double getXVelocity() {
+        while (AbstractOpMode.isOpModeActive()) {
+            synchronized (velocityLock) {
+                if(newVelocityValue) {
+                    newVelocityValue = false;
+                    return velocityX;
                 }
             }
         }
@@ -80,12 +115,26 @@ public class IMU implements Runnable {
     @Override
     public void run() {
         Orientation angle;
+        Acceleration acceleration;
+        Velocity velocity;
         while (AbstractOpMode.isOpModeActive()) {
             angle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            acceleration = imu.getAcceleration();
+            velocity = imu.getVelocity();
 
-            synchronized (lock) {
+            synchronized (headingLock) {
                 heading = angle.firstAngle;
-                newValue = true;
+                newHeadingValue = true;
+            }
+
+            synchronized (accelerationLock) {
+                accelerationX = acceleration.yAccel;
+                newAccelerationValue = true;
+            }
+
+            synchronized (velocityLock) {
+                velocityX = velocity.xVeloc;
+                newVelocityValue = true;
             }
 
             if(heading > 90 && lastHeading < -90) absoluteHeadingCorrection -= 360;

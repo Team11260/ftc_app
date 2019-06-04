@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit;
 
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.upacreekrobotics.dashboard.Config;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Arrays;
 public class Path {
 
     public static double spacing = 0.5, SMOOTHING = 0.995, t = 0.001, k = 0.1;
-    public static double MAX_ACCELERATION = 0.1, MIN_SPEED = 0.3, MAX_SPEED = 1.0, LOOK_AHEAD_DISTANCE = 12;
+    public static double MAX_ACCELERATION = 0.05, MIN_SPEED = 0.3, MAX_SPEED = 1.0, LOOK_AHEAD_DISTANCE = 12;
 
     private int lastPointIndex = 0, lastCurrentPointIndex = 0;
 
@@ -34,6 +35,39 @@ public class Path {
         return (ArrayList<PathPoint>) path.clone();
     }
 
+    public double getCurvatureFromPathPoint(int index, Pose currentLocation) {
+        Vector delta = new Vector(index < path.size() - 1 ? path.get(index).subtract(currentLocation) : path.get(path.size() - 1).add(new Vector(path.get(path.size() - 1).subtract(path.get(path.size() - 2))).normalize().scale(LOOK_AHEAD_DISTANCE - currentLocation.distance(path.get(path.size() - 1)))).subtract(currentLocation));
+
+        double angle = atan(Math.abs(delta.getX()) > 0.3 ? delta.getX() : 0.3 * Math.signum(delta.getX()), delta.getY());
+
+        targetAngle = angle;
+
+        deltaAngle = currentLocation.getHeading() - angle;
+
+        if (Math.abs(deltaAngle) > 180)
+            deltaAngle = -Math.signum(deltaAngle) * (360 - Math.abs(deltaAngle));
+
+        double c = (Math.abs(deltaAngle) > 90 ? Math.signum(deltaAngle) : Math.sin(Math.toRadians(deltaAngle))) / (delta.magnitude() / 2);
+
+        if (Double.isInfinite(c) || Double.isNaN(c)) return 0.0;
+
+        curvature = c;
+
+        return c;
+    }
+
+    public double getTargetAngle() {
+        return targetAngle;
+    }
+
+    public double getPathPointVelocity(int index, Pose currentLocation) {
+        double speed = MAX_SPEED;
+        for(int i = index; i < index + 15; i++) {
+            speed = Math.min(speed, range(path.get(index).getVelocity() / range(getTrackingError(currentLocation) / 1.5, 1, 3), MIN_SPEED, MAX_SPEED));
+        }
+        return speed;
+    }
+
     public int getClosestPointIndex(Point currentPosition) {
         double distance = 1000000;
         int index = -1;
@@ -48,42 +82,6 @@ public class Path {
         lastCurrentPointIndex = index;
 
         return index;
-    }
-
-    public double getCurvatureFromPathPoint(int index, Pose currentLocation) {
-        double x = path.get(index).getX();
-        double y = path.get(index).getY();
-
-        double deltaX = x - currentLocation.getX();
-        double deltaY = y - currentLocation.getY();
-
-        double angle = atan(Math.abs(deltaX) > 0.3 ? deltaX : 0.3 * Math.signum(deltaX), deltaY);
-
-        targetAngle = angle;
-
-        deltaAngle = currentLocation.getHeading() - angle;
-
-        if(Math.abs(deltaAngle) > 180) deltaAngle = -Math.signum(deltaAngle) * (360 - Math.abs(deltaAngle));
-
-        double c = (Math.abs(deltaAngle) > 90 ? Math.signum(deltaAngle) : Math.sin(Math.toRadians(deltaAngle))) / (path.get(index).distance(currentLocation) / 2);
-
-        if(Double.isInfinite(c) || Double.isNaN(c)) return 0.0;
-
-        curvature = c;
-
-        return c;
-    }
-
-    public double getTargetAngle() {
-        return targetAngle;
-    }
-
-    public double getPathPointVelocity(int index, Pose currentLocation) {
-        double speed = MAX_SPEED;
-        for(int i = index; i < index + 15; i++) {
-            speed = Math.min(speed, range(path.get(index).getVelocity() / range(getTrackingError(currentLocation) / 2, 1, 3), MIN_SPEED, MAX_SPEED));
-        }
-        return speed;
     }
 
     public int getLookAheadPointIndex(Pose currentPosition) {
@@ -101,13 +99,13 @@ public class Path {
                 curvature += getPointCurvature(closest);
             }
 
-            if(getPointDistance(i) - getPointDistance(closest) > LOOK_AHEAD_DISTANCE) {
+            if(getPointDistance(i) - getPointDistance(closest) > LOOK_AHEAD_DISTANCE / range(curvature / 3, 1, 2)) {
                 lastPointIndex = i;
                 return i;
             }
         }
 
-        if(currentPosition.distance(path.get(path.size() - 1)) > 2) return path.size() - 1;
+        if(closest != path.size() - 1) return path.size() - 1;
 
         return -1;
     }
@@ -136,7 +134,7 @@ public class Path {
             vector = vector.normalize().scale(spacing);
 
             for (int i = 0; i < numPointsFit; i++) {
-                newPoints.add(points.get(s - 1).addVector(vector.scale(i)));
+                newPoints.add(points.get(s - 1).add(vector.scale(i)));
             }
         }
 
@@ -153,7 +151,7 @@ public class Path {
             change = 0.0;
             for(int i = 1; i < points.size()-1; i++) {
                 Point point = newPoints.get(i);
-                newPoints.set(i, newPoints.get(i).addVector(new Vector((1 - SMOOTHING) * (points.get(i).getX() - newPoints.get(i).getX()) + SMOOTHING * (newPoints.get(i - 1).getX() + newPoints.get(i + 1).getX() - (2.0 * newPoints.get(i).getX())), (1 - SMOOTHING) * (points.get(i).getY() - newPoints.get(i).getY()) + SMOOTHING * (newPoints.get(i - 1).getY() + newPoints.get(i + 1).getY() - (2.0 * newPoints.get(i).getY())))));
+                newPoints.set(i, newPoints.get(i).add(new Vector((1 - SMOOTHING) * (points.get(i).getX() - newPoints.get(i).getX()) + SMOOTHING * (newPoints.get(i - 1).getX() + newPoints.get(i + 1).getX() - (2.0 * newPoints.get(i).getX())), (1 - SMOOTHING) * (points.get(i).getY() - newPoints.get(i).getY()) + SMOOTHING * (newPoints.get(i - 1).getY() + newPoints.get(i + 1).getY() - (2.0 * newPoints.get(i).getY())))));
                 change += point.distance(newPoints.get(i));
             }
         }
@@ -218,7 +216,7 @@ public class Path {
     }
 
     private double getPointNewVelocity(int p) {
-        if(p >= points.size() - 1) return 0.2;
+        if(p >= points.size() - 1) return 0;
 
         double d = points.get(p).distance(points.get(p + 1));
 
