@@ -6,7 +6,7 @@ public abstract class PurePursuitController {
     private double lastLeftPosition = 0, lastRightPosition = 0;
     private Pose currentPosition = new Pose();
     private boolean isFollowing = false;
-    private Path currentPath = null;
+    private SmoothPath currentPath = null;
 
     public PurePursuitController(double trackWidth) {
         this.trackWidth = trackWidth;
@@ -55,7 +55,7 @@ public abstract class PurePursuitController {
         setPowers(left, right);
     }
 
-    public void follow(Path path) {
+    public void follow(SmoothPath path) {
         currentPath = path;
         isFollowing = true;
     }

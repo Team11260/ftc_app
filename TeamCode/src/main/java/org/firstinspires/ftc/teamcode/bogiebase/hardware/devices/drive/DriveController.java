@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Segment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
+import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.SmoothPath;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 import org.upacreekrobotics.dashboard.Config;
 
@@ -100,7 +101,7 @@ public class DriveController extends SubsystemController {
 
         while (!path.isDone() && opModeIsActive()) {
 
-            //Path is done
+            //SmoothPath is done
             if (path.getNextSegment() == null) break;
 
             telemetry.addData(INFO, "Starting segment: " + path.getCurrentSegment().getName() + " in path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
@@ -287,7 +288,7 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public synchronized void runPath(org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Path path) {
+    public synchronized void runPath(SmoothPath path) {
 
         drive.follow(path);
 
@@ -295,7 +296,7 @@ public class DriveController extends SubsystemController {
 
             drive.update();
 
-            telemetry.getSmartdashboard().putGraph("Path", "Actual", drive.getCurrentPosition().getX(), drive.getCurrentPosition().getY());
+            telemetry.getSmartdashboard().putGraph("SmoothPath", "Actual", drive.getCurrentPosition().getX(), drive.getCurrentPosition().getY());
 
         }
 

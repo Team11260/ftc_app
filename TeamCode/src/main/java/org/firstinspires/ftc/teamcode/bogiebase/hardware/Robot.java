@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.Expa
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.TensorFlowImpl;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
+import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.SmoothPath;
 import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 import org.firstinspires.ftc.teamcode.framework.util.RobotCallable;
 
@@ -127,7 +128,7 @@ public class Robot extends AbstractRobot {
         hardware.drive.runDrivePath(path);
     }
 
-    public void driveRunPath(org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Path path) {
+    public void driveRunPath(SmoothPath path) {
         hardware.drive.runPath(path);
     }
 

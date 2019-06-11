@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Path implements Cloneable {
+public class fPath implements Cloneable {
 
     private ConcurrentHashMap<Integer, Segment> segments = new ConcurrentHashMap<>();
     private Segment currentSegment = null;

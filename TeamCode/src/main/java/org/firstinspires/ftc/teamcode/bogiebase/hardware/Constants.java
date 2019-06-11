@@ -85,7 +85,7 @@ public final class Constants {
 
 
     ////////AUTON PATHS////////
-    //Path variables
+    //SmoothPath variables
     public final static double AUTON_PATH_SPEED = 1;
     public final static double AUTON_MINERAL_TURN_SPEED = 0.4;
     public final static double AUTON_TURN_ERROR = 8;
