@@ -11,14 +11,8 @@ public class IntakeController extends SubsystemController {
     private Intake intake;
 
     public IntakeController() {
-        init();
-    }
-
-    public synchronized void init() {
-
-        opModeSetup();
-
         intake = new Intake(hardwareMap);
+
     }
 
     public synchronized void update() {

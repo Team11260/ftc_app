@@ -55,7 +55,7 @@ public class Robot extends AbstractRobot {
         tensorFlow.stop();
     }
 
-    public void updateAll() {
+    public void updateAll() throws Exception{
         if (RobotState.currentMatchState == RobotState.MatchState.TELEOP) {
             hardware.drive.update();
             hardware.intake.update();
