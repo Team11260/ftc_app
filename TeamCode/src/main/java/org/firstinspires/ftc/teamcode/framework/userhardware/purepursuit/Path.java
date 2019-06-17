@@ -5,7 +5,7 @@ import org.upacreekrobotics.dashboard.Config;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-@Config
+//@Config
 public class Path {
 
     public static double spacing = 0.5, SMOOTHING = 0.995, t = 0.001, k = 0.1;
