@@ -35,9 +35,13 @@ public class ExampleAuton extends AbstractAuton {
     @Override
     public void Run() {
 
-        robot.driveInches(8);
-        robot.turnLeft();
-        robot.driveInches(8);
+        robot.driveInches(36);
+        robot.turnLeft(45);
+        robot.driveInches(50);
+        robot.turnLeft(90);
+        robot.driveInches(30);
+        robot.turnRight(0);
+        robot.driveInches(40);
 
     }
 

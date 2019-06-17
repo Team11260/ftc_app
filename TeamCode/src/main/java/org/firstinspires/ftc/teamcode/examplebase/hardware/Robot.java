@@ -40,8 +40,12 @@ public class Robot extends AbstractRobot {
         hardware.drive.driveInches(inches);
     }
 
-    public void turnLeft() {
-        hardware.drive.turnLeft();
+    public void turnLeft(int angle) {
+        hardware.drive.turnLeft(angle);
+    }
+
+    public void turnRight(int angle) {
+        hardware.drive.turnRight(angle);
     }
 
     public void stop() {
