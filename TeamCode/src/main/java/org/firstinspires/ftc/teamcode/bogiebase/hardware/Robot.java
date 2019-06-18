@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.TensorFlowImpl;
@@ -17,11 +20,14 @@ public class Robot extends AbstractRobot {
     private HardwareDevices hardware;
     private TensorFlowImpl tensorFlow;
     private ExpansionHubMonitor hub;
+    private ElapsedTime cameraTime;
 
     //Robot Methods
     public Robot() {
         hardware = new HardwareDevices();
         hub = new ExpansionHubMonitor("Expansion Hub 1");
+
+        cameraTime = new ElapsedTime();
 
         if (RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS) {
             telemetry.addData(INFO, "starting tensorflow");
@@ -36,6 +42,18 @@ public class Robot extends AbstractRobot {
     }
 
     public void updateSamplePosition(int loop) {
+
+        if(cameraTime.milliseconds() > 500 && AbstractOpMode.getGamePad1().dpad_up) {
+            RobotState.currentFrameTopScalar -= 0.05;
+            RobotState.currentFrameBottomScalar -= 0.05;
+            cameraTime.reset();
+        }
+
+        if(cameraTime.milliseconds() > 500 && AbstractOpMode.getGamePad1().dpad_down) {
+            RobotState.currentFrameTopScalar += 0.05;
+            RobotState.currentFrameBottomScalar += 0.05;
+            cameraTime.reset();
+        }
 
         //Object recognition loop
         if (loop % 5 == 0) tensorFlow.restart();
