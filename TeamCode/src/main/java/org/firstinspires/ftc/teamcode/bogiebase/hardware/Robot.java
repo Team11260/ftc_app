@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode.bogiebase.hardware;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.ExpansionHubMonitor;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.tensorflow.TensorFlowImpl;
-import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
-import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.SmoothPath;
+import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Path;
 import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 import org.firstinspires.ftc.teamcode.framework.util.RobotCallable;
 
@@ -124,12 +123,16 @@ public class Robot extends AbstractRobot {
         hardware.drive.setPower(l, r);
     }
 
-    public void runDrivePath(Path path) {
+    public void runDrivePath(org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path path) {
         hardware.drive.runDrivePath(path);
     }
 
-    public void driveRunPath(SmoothPath path) {
+    public void driveRunPath(Path path) {
         hardware.drive.runPath(path);
+    }
+
+    public void setDriveFollowReversed(boolean reversed) {
+        hardware.drive.setFollowReversed(reversed);
     }
 
     public void setDrivePosition(int position, double power) {

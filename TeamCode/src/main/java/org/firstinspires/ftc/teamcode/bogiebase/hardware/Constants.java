@@ -33,7 +33,7 @@ public final class Constants {
     public static final int DRIVE_DUMP_TEAM_MARKER_DELAY = 1000;
 
     //Roadrunner
-    public static double TRACK_WIDTH = 26; // in
+    public static double TRACK_WIDTH = 20; // in
 
     public final static double kV = 0.04;
     public final static double kA = 0.025;
@@ -85,7 +85,7 @@ public final class Constants {
 
 
     ////////AUTON PATHS////////
-    //SmoothPath variables
+    //Path variables
     public final static double AUTON_PATH_SPEED = 1;
     public final static double AUTON_MINERAL_TURN_SPEED = 0.4;
     public final static double AUTON_TURN_ERROR = 8;

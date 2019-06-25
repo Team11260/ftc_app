@@ -57,7 +57,10 @@ public class BogieTeleopTwoDriverDemo extends AbstractTeleop {
         checkBooleanInput("2_lt", gamepad2.left_trigger > 0.5);
         checkBooleanInput("2_rt", gamepad2.right_trigger > 0.5);
 
-        robot.setDrivePower((-gamepad1.left_stick_y) + gamepad1.left_stick_x, (-gamepad1.left_stick_y) - gamepad1.left_stick_x);
+        double y = -gamepad1.left_stick_y;
+        double x = gamepad1.right_stick_x;
+
+        robot.setDrivePower(y + x, y - x);
     }
 
     @Override

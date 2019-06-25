@@ -1,12 +1,17 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit;
 
+import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
+
 public abstract class PurePursuitController {
 
     private final double trackWidth;
     private double lastLeftPosition = 0, lastRightPosition = 0;
     private Pose currentPosition = new Pose();
+    private Path currentPath = null;
     private boolean isFollowing = false;
-    private SmoothPath currentPath = null;
+    private boolean isReversed = false;
 
     public PurePursuitController(double trackWidth) {
         this.trackWidth = trackWidth;
@@ -37,8 +42,12 @@ public abstract class PurePursuitController {
 
         if(!isFollowing || currentPath == null) return;
 
-        int lookahead = currentPath.getLookAheadPointIndex(currentPosition);
-        int closest = currentPath.getClosestPointIndex(currentPosition);
+        Pose followPosition = currentPosition.clone();
+
+        if(isReversed) followPosition = new Pose(followPosition.getX(), followPosition.getY(), ((followPosition.getHeading() + 360) % 360) - 180);
+
+        int lookahead = currentPath.getLookAheadPointIndex(followPosition);
+        int closest = currentPath.getClosestPointIndex(followPosition);
 
         if(lookahead == -1) {
             currentPath = null;
@@ -46,18 +55,37 @@ public abstract class PurePursuitController {
             return;
         }
 
-        double velocity = currentPath.getPathPointVelocity(closest, currentPosition);
-        double curvature = currentPath.getCurvatureFromPathPoint(lookahead, currentPosition);
+        double velocity = currentPath.getPathPointVelocity(closest, followPosition);
+        double curvature = currentPath.getCurvatureFromPathPoint(lookahead, followPosition);
 
-        double left = velocity * ((2 + curvature * trackWidth)/2);
-        double right = velocity * ((2 - curvature * trackWidth)/2);
+        double left;
+        double right;
+
+        if(isReversed) {
+            left = -Range.clip(velocity * ((1.5 - curvature * trackWidth)/1.5), -1, 1);
+            right = -Range.clip(velocity * ((1.5 + curvature * trackWidth)/1.5), -1, 1);
+        } else {
+            left = Range.clip(velocity * ((1.5 + curvature * trackWidth)/1.5), -1, 1);
+            right = Range.clip(velocity * ((1.5 - curvature * trackWidth)/1.5), -1, 1);
+        }
+
+        AbstractOpMode.getTelemetry().getSmartdashboard().putGraph("Speeds", "L", AbstractOpMode.getTimeSinceStart(), left);
+        AbstractOpMode.getTelemetry().getSmartdashboard().putGraph("Speeds", "R", AbstractOpMode.getTimeSinceStart(), right);
 
         setPowers(left, right);
     }
 
-    public void follow(SmoothPath path) {
+    public void follow(Path path) {
         currentPath = path;
         isFollowing = true;
+    }
+
+    public void setFollowReversed(boolean reversed) {
+        isReversed = reversed;
+    }
+
+    public boolean getFollowReversed() {
+        return isReversed;
     }
 
     public Pose getCurrentPosition() {

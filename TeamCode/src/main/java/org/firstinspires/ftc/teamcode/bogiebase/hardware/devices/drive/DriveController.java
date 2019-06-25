@@ -7,10 +7,9 @@ import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
-import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Segment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.TurnSegment;
-import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.SmoothPath;
+import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Path;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 import org.upacreekrobotics.dashboard.Config;
 
@@ -84,7 +83,7 @@ public class DriveController extends SubsystemController {
     }
 
     //Autonomous Methods
-    public synchronized void runDrivePath(Path path) {
+    public synchronized void runDrivePath(org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path path) {
 
         boolean lastPathPaused = false;
 
@@ -101,7 +100,7 @@ public class DriveController extends SubsystemController {
 
         while (!path.isDone() && opModeIsActive()) {
 
-            //SmoothPath is done
+            //Path is done
             if (path.getNextSegment() == null) break;
 
             telemetry.addData(INFO, "Starting segment: " + path.getCurrentSegment().getName() + " in path: " + currentPath.getName() + "  paused: " + currentPath.isPaused() + "  done: " + currentPath.isDone());
@@ -288,7 +287,7 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public synchronized void runPath(SmoothPath path) {
+    public synchronized void runPath(Path path) {
 
         drive.follow(path);
 
@@ -296,11 +295,15 @@ public class DriveController extends SubsystemController {
 
             drive.update();
 
-            telemetry.getSmartdashboard().putGraph("SmoothPath", "Actual", drive.getCurrentPosition().getX(), drive.getCurrentPosition().getY());
+            telemetry.getSmartdashboard().putGraph("Path", "Actual", drive.getCurrentPosition().getX(), drive.getCurrentPosition().getY());
 
         }
 
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public synchronized void setFollowReversed(boolean reversed) {
+        drive.setFollowReversed(reversed);
     }
 
     public synchronized void setPosition(int position, double power) {
