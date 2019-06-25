@@ -34,7 +34,7 @@ public class Drive {
 
         double slewSpeed = 0.2;
         DcMotor.ZeroPowerBehavior zero = DcMotor.ZeroPowerBehavior.BRAKE;
-        //DcMotor.RunMode encodingMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+//        DcMotor.RunMode encodingMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
         DcMotor.RunMode encodingMode = DcMotor.RunMode.RUN_USING_ENCODER;
 
         for (SlewDcMotor motor: motors) {

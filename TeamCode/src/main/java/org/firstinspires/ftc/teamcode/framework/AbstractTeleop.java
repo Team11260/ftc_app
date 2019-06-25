@@ -18,7 +18,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             rb_down = false, dpl_down = false, dpr_down = false, dpu_down = false, dpd_down = false,
             start_down = false, back_down = false;
 
-    private double lt_down = 0, rt_down = 0, lsx_down = 0, lsy_down = 0, rsx_down = 0, rsy_down = 0;
+    private double lt_down = 0, rt_down = 0, lsx_down = 0, lsy_down = 0, rsx_down = 0, rsy_down = 0, safelsy_down = 0;
 
     public AbstractTeleop(){
 

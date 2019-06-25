@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.teamcode.framework.SubsystemController;
 import org.firstinspires.ftc.teamcode.framework.userHardware.MyNumberRound;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.Logger;
+import org.firstinspires.ftc.teamcode.skidsteer_base.hardware.MyRev2mDistanceSensor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,9 +27,10 @@ public class DriveController extends SubsystemController{
 
     private Drive drive;
     private MyNumberRound DriveControllerRound;
-
+    private MyRev2mDistanceSensor dist;
+    private MyRev2mDistanceSensor dist1;
     //these are for the joysticks
-    private double turn_x=0, turn_y=0, turn_z=0, fl=0, fr=0, bl=0, br=0, Drive_Power = 0.5;
+    private double turn_x=0, turn_y=0, turn_z=0, fl=0, fr=0, bl=0, br=0, Drive_Power = 1;
 
     //For testing each motor
     private double Button_Power = 1;
@@ -60,7 +62,10 @@ public class DriveController extends SubsystemController{
         opModeSetup();
 
         logger = new Logger("mecanumMotor.txt");
-
+        dist = new MyRev2mDistanceSensor("dist");
+        dist1 = new MyRev2mDistanceSensor("dist1");
+//        dist = null;
+//        dist1 = null;
         runtime = new ElapsedTime();
 
         DriveControllerRound = new MyNumberRound();
@@ -292,7 +297,25 @@ public class DriveController extends SubsystemController{
 
     }
 
+    public void resetAllEncoders() {
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
 
+    public double getFrontLeftPosition() {
+        return drive.getFrontLeftPosition();
+    }
+
+    public double getFrontRightPosition() {
+        return drive.getFrontRightPosition();
+    }
+
+    public double getBackLeftPosition() {
+        return drive.getBackLeftPosition();
+    }
+
+    public double getBackRightPosition() {
+        return drive.getBackRightPosition();
+    }
 
     public void strafeToMyDistance(double distance,double speed) {
 
@@ -511,14 +534,41 @@ public class DriveController extends SubsystemController{
 
 
     public void update(){
-        fl = range((turn_y + turn_x + turn_z) * Drive_Power);
-        fr = range((turn_y - turn_x - turn_z) * Drive_Power);
-        bl = range((turn_y - turn_x + turn_z) * Drive_Power);
-        br = range((turn_y + turn_x - turn_z) * Drive_Power);
+
+//        if (dist !=null && dist.getDistanceIN() > 20 && dist.getDistanceIN() > 20 && dist.getDistanceIN() > 20)
+//        {
+//
+//        }
+//        else {
+//            if (turn_y > 0)
+//            {
+//                turn_y = 0;
+//            }
+//        }
+//
+//        if (dist1 !=null && dist1.getDistanceIN() > 20 && dist1.getDistanceIN() > 20 && dist1.getDistanceIN() > 20)
+//        {
+//
+//        }
+//        else  {
+//            if (turn_y < 0)
+//            {
+//                turn_y = 0;
+//            }
+//        }
+
+        fl = range((turn_y + turn_x - turn_z) * Drive_Power);
+        fr = range((turn_y - turn_x + turn_z) * Drive_Power);
+        bl = range((turn_y - turn_x - turn_z) * Drive_Power);
+        br = range((turn_y + turn_x + turn_z) * Drive_Power);
         telemetry.addData("fl",fl);
         telemetry.addData("fr",fr);
         telemetry.addData("bl",bl);
         telemetry.addData("br",br);
+        telemetry.addData("Front Left", drive.getFrontLeftPosition());
+        telemetry.addData("Front Right",drive.getFrontRightPosition());
+        telemetry.addData("Back Left",drive.getBackLeftPosition());
+        telemetry.addData("Back Right",drive.getBackRightPosition());
         if((aButton_pressed == 1) || (bButton_pressed == 1) || (xButton_pressed == 1) || (yButton_pressed == 1))
         {
             //If any buttons are pressed then do nothing here

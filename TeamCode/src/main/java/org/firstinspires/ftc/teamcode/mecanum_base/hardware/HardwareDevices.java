@@ -66,6 +66,10 @@ public class HardwareDevices {
         drive.update();
     }
 
+    public void driveMotors(double speed) {
+        drive.setPower(speed, speed, speed, speed);
+    }
+
     public void updateCheckMotors() {
         drive.updateCheckMotors();
     }
