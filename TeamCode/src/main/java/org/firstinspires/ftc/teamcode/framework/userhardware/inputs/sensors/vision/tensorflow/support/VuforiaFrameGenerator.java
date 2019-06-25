@@ -19,6 +19,7 @@ import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.BlockingQueue;
@@ -87,10 +88,13 @@ public class VuforiaFrameGenerator implements FrameGenerator {
                     buffer.get(bytes, 0, bytes.length);
 
                     for (int b = 0; b < bytes.length; b++) {
-                        int x = b % cameraInformation.size.width;
                         int y = b / cameraInformation.size.width;
-                        if (y < cameraInformation.size.height * 0.6 || y > cameraInformation.size.height * 1.3) {
-                            bytes[b] = 0;
+                        if (y < cameraInformation.size.height * RobotState.currentFrameTopScalar || y > cameraInformation.size.height * RobotState.currentFrameBottomScalar) {
+                            for(; y == b / cameraInformation.size.width; b++) {
+                                bytes[b] = 0;
+                            }
+                        } else {
+                            b += cameraInformation.size.width;
                         }
                     }
 

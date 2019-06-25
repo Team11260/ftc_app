@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.util.PathState;
 import org.firstinspires.ftc.teamcode.framework.util.State;
 import org.upacreekrobotics.dashboard.Dashboard;
@@ -21,7 +22,11 @@ public class BogieAutonCraterDump extends AbstractAutonNew {
     public void RegisterStates() {
         addState(new State("telemetry", "start", () ->{
             while (opModeIsActive()) {
-                robot.updateAll();
+                try {
+                    robot.updateAll();
+                } catch (Exception e) {
+                    AbstractOpMode.staticThrowException(e);
+                }
             }
         }));
         addState(new State("auton release wheels sequence", "start", robot.autonReleaseWheelsSequenceCallable()));

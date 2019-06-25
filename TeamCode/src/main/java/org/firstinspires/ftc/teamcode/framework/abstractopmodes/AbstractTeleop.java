@@ -147,17 +147,17 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
     public abstract void UpdateEvents();
 
-    public abstract void Init();
+    public abstract void Init() throws Exception;
 
-    public void InitLoop() {
-
-    }
-
-    public void Start() {
+    public void InitLoop() throws Exception {
 
     }
 
-    public abstract void Loop();
+    public void Start() throws Exception {
+
+    }
+
+    public abstract void Loop() throws Exception;
 
     public abstract void Stop();
 

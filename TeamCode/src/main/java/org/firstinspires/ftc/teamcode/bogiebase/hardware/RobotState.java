@@ -5,6 +5,9 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Path;
 
 public final class RobotState {
 
+    public static double currentFrameTopScalar = Constants.START_FRAME_TOP_SCALAR;
+    public static double currentFrameBottomScalar = Constants.START_FRAME_BOTTOM_SCALAR;
+
     public static MatchState currentMatchState = MatchState.UNKNOWN;
 
     public static MineralLiftState currentMineralLiftState = MineralLiftState.COLLECT_POSITION;

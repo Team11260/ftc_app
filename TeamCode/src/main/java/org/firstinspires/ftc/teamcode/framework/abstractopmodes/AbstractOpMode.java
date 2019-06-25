@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.framework.abstractopmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
@@ -24,6 +25,8 @@ public abstract class AbstractOpMode extends LinearOpMode {
     private static LinearOpMode linearOpMode;
     public static DoubleTelemetry telemetry;
     private static AbstractOpMode thisOpMode;
+    private static Gamepad staticGamepad1;
+    private static Gamepad staticGamepad2;
 
     public static DoubleTelemetry getTelemetry() {
         return telemetry;
@@ -37,6 +40,14 @@ public abstract class AbstractOpMode extends LinearOpMode {
         return opmode;
     }
 
+    public static Gamepad getGamePad1() {
+        return staticGamepad1;
+    }
+
+    public static Gamepad getGamePad2() {
+        return staticGamepad2;
+    }
+
     public AbstractOpMode() {
         RevExtensions2.init();
         thisOpMode = this;
@@ -47,6 +58,8 @@ public abstract class AbstractOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        staticGamepad1 = gamepad1;
+        staticGamepad2 = gamepad2;
         runOpmode();
     }
 

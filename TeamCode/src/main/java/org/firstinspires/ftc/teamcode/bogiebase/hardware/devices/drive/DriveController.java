@@ -51,22 +51,17 @@ public class DriveController extends SubsystemController {
 
     //Utility Methods
     public DriveController() {
-        init();
-    }
-
-    public synchronized void init() {
-
-        opModeSetup();
 
         runtime = new ElapsedTime();
 
         DF = new DecimalFormat("#.###");
         //Put general setup here
         drive = new Drive(hardwareMap);
-        anglePID = new PIDController(15, 0.1, 250, 0.3, 0.08);//D was 150
+        anglePID = new PIDController(17, 0.1, 250, 0.3, 0.1);//D was 150
         //anglePID.setLogging(true);
         straightPID = new PIDController(50, 0.5, 50, 1, 0);
         distancePID = new PIDController(0.6, 0.1, 0, 2, 0.1);
+
     }
 
     public synchronized void update() {
@@ -76,6 +71,8 @@ public class DriveController extends SubsystemController {
         telemetry.addData(DoubleTelemetry.LogMode.TRACE, "Right drive position: " + drive.getRightPosition());
         drive.update();
         telemetry.addData(INFO, "X:" + drive.getCurrentPosition().getX() + "  Y: " + drive.getCurrentPosition().getY());
+
+
     }
 
     public synchronized void stop() {

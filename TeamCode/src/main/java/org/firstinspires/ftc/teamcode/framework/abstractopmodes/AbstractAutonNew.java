@@ -104,17 +104,17 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
     public abstract void RegisterStates();
 
-    public abstract void Init();
+    public abstract void Init() throws Exception;
 
-    public void InitLoop() {
-
-    }
-
-    public void InitLoop(int loops) {
+    public void InitLoop() throws Exception {
 
     }
 
-    public abstract void Run();
+    public void InitLoop(int loops) throws Exception {
+
+    }
+
+    public abstract void Run() throws Exception;
 
     public void Stop() {
     }

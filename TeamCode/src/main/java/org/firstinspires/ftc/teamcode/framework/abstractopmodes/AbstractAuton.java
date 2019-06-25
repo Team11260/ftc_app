@@ -92,13 +92,13 @@ public abstract class AbstractAuton extends AbstractOpMode {
         telemetry.stop();
     }
 
-    public abstract void Init();
+    public abstract void Init() throws Exception;
 
-    public void InitLoop() {
+    public void InitLoop() throws Exception {
 
     }
 
-    public abstract void Run();
+    public abstract void Run() throws Exception;
 
     public void Stop() {
 

@@ -17,12 +17,6 @@ public class RobotLiftController extends SubsystemController {
     private RobotLift robotLift;
 
     public RobotLiftController() {
-        init();
-    }
-
-    public synchronized void init() {
-        opModeSetup();
-
         robotLift = new RobotLift(hardwareMap);
     }
 
