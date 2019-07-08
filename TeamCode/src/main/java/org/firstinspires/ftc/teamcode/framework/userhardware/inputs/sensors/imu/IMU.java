@@ -35,20 +35,25 @@ public class IMU implements Runnable {
     private final Object accelerationLock = new Object();
     private final Object velocityLock = new Object();
 
-    public IMU(HardwareMap hwMap) {
+    public IMU(BNO055IMU imu) {
         parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
         parameters.mode = BNO055IMU.SensorMode.IMU;
 
-        imu = hwMap.get(BNO055IMU.class, "imu");
+        this.imu = imu;
 
         AbstractOpMode.telemetry.addData("IMU initializing: " + imu.toString());
 
         ThreadPool.getDefault().submit((Runnable)() -> imu.initialize(parameters));
 
         new Thread(this).start();
+    }
+
+    @Deprecated
+    public IMU(HardwareMap hwMap) {
+        this(hwMap.get(BNO055IMU.class, "imu"));
     }
 
     public double getHeading() {

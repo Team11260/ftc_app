@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.DriveSegment;
 import org.firstinspires.ftc.teamcode.framework.userhardware.paths.Segment;
@@ -30,7 +30,7 @@ import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.Miner
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentMatchState;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentMineralLiftState;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.currentPath;
-import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.INFO;
+import static org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry.LogMode.INFO;
 
 @Config
 public class DriveController extends SubsystemController {

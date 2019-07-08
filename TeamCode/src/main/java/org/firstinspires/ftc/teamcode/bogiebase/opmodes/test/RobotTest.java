@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Robot;
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.Speech;
 
 @TeleOp(name = "Robot Test", group = "Test")

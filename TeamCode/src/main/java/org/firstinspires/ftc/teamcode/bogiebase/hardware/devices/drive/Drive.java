@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.imu.IMU;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.PurePursuitController;
+import org.firstinspires.ftc.teamcode.framework.util.HardwareMapEx;
 
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive.DriveController.PATH_F;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.drive.DriveController.PATH_P;
@@ -23,14 +24,14 @@ public class Drive extends PurePursuitController {
 
     private IMU imu;
 
-    public Drive(HardwareMap hardwareMap) {
+    public Drive(HardwareMapEx hardwareMap) {
         super(Constants.TRACK_WIDTH);
 
-        imu = new IMU(hardwareMap);
+        imu = hardwareMap.getImu("imu");
 
         //Motors
-        leftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("left"));
-        rightMotor = new SlewDcMotor(hardwareMap.dcMotor.get("right"));
+        leftMotor = hardwareMap.getSlewDcMotor("left");
+        rightMotor = hardwareMap.getSlewDcMotor("right");
 
         //Motor Set Up
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -57,10 +58,10 @@ public class Drive extends PurePursuitController {
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 
-        light = hardwareMap.get(DcMotorSimple.class, "light");
+        light = hardwareMap.getDcMotorSimple("light");
         light.setPower(0);
 
-        servoMarker = hardwareMap.servo.get("servo_marker");
+        servoMarker = hardwareMap.getServo("servo_marker");
         servoMarker.setPosition(RobotState.currentMatchState == RobotState.MatchState.AUTONOMOUS ? Constants.DRIVE_TEAM_MARKER_RETRACTED : Constants.DRIVE_TEAM_MARKER_TELEOP_RETRACTED);
     }
 
