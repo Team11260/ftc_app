@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.Path;
 import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 import org.firstinspires.ftc.teamcode.framework.util.RobotCallable;
 
-import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.INFO;
-import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.TRACE;
+import static org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry.LogMode.INFO;
+import static org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry.LogMode.TRACE;
 import static org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition.UNKNOWN;
 
 public class Robot extends AbstractRobot {

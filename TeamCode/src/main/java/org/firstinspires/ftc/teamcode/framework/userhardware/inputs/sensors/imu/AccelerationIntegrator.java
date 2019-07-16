@@ -7,13 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 
 public class AccelerationIntegrator implements BNO055IMU.AccelerationIntegrator {
     BNO055IMU.Parameters parameters;

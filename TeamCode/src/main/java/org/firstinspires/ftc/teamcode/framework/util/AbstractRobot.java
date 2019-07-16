@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.framework.util;
 
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 
 public abstract class AbstractRobot {
 
