@@ -22,7 +22,7 @@ public final class Constants {
 
 
     ////////DRIVE////////
-    public static final double TELEOP_DRIVE_SLEW_SPEED = 0.1;
+    public static final double TELEOP_DRIVE_SLEW_SPEED = 2;
     public static final double AUTON_DRIVE_SLEW_SPEED = 2;
 
     public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.55;
