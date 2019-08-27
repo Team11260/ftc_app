@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.userHardware.inputs;
+package org.firstinspires.ftc.teamcode.framework.userhardware.inputs;
 
 import java.text.SimpleDateFormat;
 

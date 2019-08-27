@@ -4,18 +4,23 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.IMU;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
+
+import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.IMU;
+import org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit.PurePursuitController;
 
 import java.util.ArrayList;
 
-public class Drive {
+public class Drive extends PurePursuitController{
 
     private SlewDcMotor back_left, back_right, front_left, front_right;
     private ArrayList<SlewDcMotor> motors;
     private IMU imu;
-    public Drive(HardwareMap hwMap){
 
+    public Drive(HardwareMap hwMap){
+        super(18);
+
+        imu = new IMU(hwMap);
         //Motors
         front_left = new SlewDcMotor(hwMap.dcMotor.get("front_left"));
         front_right = new SlewDcMotor(hwMap.dcMotor.get("front_right"));
@@ -34,8 +39,8 @@ public class Drive {
 
         double slewSpeed = 0.2;
         DcMotor.ZeroPowerBehavior zero = DcMotor.ZeroPowerBehavior.BRAKE;
-//        DcMotor.RunMode encodingMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
-        DcMotor.RunMode encodingMode = DcMotor.RunMode.RUN_USING_ENCODER;
+        DcMotor.RunMode encodingMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+//        DcMotor.RunMode encodingMode = DcMotor.RunMode.RUN_USING_ENCODER;
 
         for (SlewDcMotor motor: motors) {
             motor.setSlewSpeed(slewSpeed);
@@ -44,7 +49,6 @@ public class Drive {
             motor.setMode(encodingMode);
             motor.setPower(0);
         }
-        imu = new IMU(hwMap);
     }//end of drive function
 
     public void setSlewSpeed(double ss){
@@ -98,6 +102,14 @@ public class Drive {
         AbstractOpMode.getOpModeInstance().telemetry.addData("BR ",back_right.getCurrentPosition());
         AbstractOpMode.getOpModeInstance().telemetry.update();
     }
+    public void setNewPower(double Left, double Right){
+        front_left.setPower(Right);
+        back_left.setPower(Right);
+        front_right.setPower(Left);
+        back_right.setPower(Left);
+        //somehow backwards??
+    }
+
 
     public void stop(){
         //Stops Update Threads
@@ -105,4 +117,28 @@ public class Drive {
             motor.stop();
         }
     }
+
+    @Override
+    public double getActualHeadingDegrees() {
+        return getHeading();
+    }
+
+    @Override
+    public double getLeftActualPositionInches() {
+        return getBackLeftPosition()/49.09;
+    }
+
+    @Override
+    public double getRightActualPositionInches() {
+        return getBackRightPosition()/49.09;
+    }
+
+    @Override
+    public void setPowers(double l, double r) {
+        setPower(l,r,l,r);
+    }
+
+//    public void setPowerForStrafe(double l, double r){
+//        setPower(l,r,l,r);
+//    }
 }

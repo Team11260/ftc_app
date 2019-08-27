@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.framework;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 public abstract class AbstractOpMode extends LinearOpMode {

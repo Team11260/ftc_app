@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors;
+package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors;
 /*
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.navXPIDController;*///**************************************************************************************************//

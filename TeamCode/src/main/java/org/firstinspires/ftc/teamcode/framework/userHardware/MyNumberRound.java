@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.userHardware;
+package org.firstinspires.ftc.teamcode.framework.userhardware;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

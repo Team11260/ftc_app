@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.vuforia;
+package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.vuforia;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 

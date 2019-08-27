@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
-import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.Pixycam;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.Pixycam;
 import org.firstinspires.ftc.teamcode.skidsteer_base.hardware.Robot;
 
 @Autonomous(name="SkidSteer_Auto_733pm", group="AAA")

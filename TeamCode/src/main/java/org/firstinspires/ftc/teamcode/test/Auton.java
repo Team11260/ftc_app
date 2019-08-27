@@ -6,8 +6,8 @@ import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
-import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.vuforia.SampleVuforia;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.Speech;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.vuforia.SampleVuforia;
+import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.Speech;
 
 import java.io.File;
 import java.io.FileOutputStream;

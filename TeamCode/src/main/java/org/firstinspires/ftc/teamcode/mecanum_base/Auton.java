@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.mecanum_base;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
-import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.vuforia.RelicVuMarkTracker;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.vuforia.RelicVuMarkTracker;
 import org.firstinspires.ftc.teamcode.mecanum_base.hardware.Robot;
 
 @Autonomous(name="Mecanum_Auto_New", group="New")

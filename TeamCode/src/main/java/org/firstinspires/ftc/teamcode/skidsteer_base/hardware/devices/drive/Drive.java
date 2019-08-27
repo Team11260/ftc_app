@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.skidsteer_base.hardware.devices.drive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.IMU;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.IMU;
+import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 
 public class Drive {
 

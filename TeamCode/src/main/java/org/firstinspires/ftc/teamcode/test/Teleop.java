@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
-import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.vuforia.VuforiaTest;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.vuforia.VuforiaTest;
 import org.firstinspires.ftc.teamcode.test.hardware.Robot;
 
 @TeleOp(name="Test_TeleOp_New", group="New")

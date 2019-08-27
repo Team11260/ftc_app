@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.vuforia;
+package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.vuforia;
 
-import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.SamplePosition;
 
 public class SampleVuforia {
     Vuforia vuforia;

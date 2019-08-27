@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision;
+package org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.I2cAddr;

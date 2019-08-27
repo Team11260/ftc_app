@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.SubsystemController;
-import org.firstinspires.ftc.teamcode.framework.userHardware.PIDController;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.Logger;
+import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
+import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.Logger;
 
 import java.text.DecimalFormat;
 

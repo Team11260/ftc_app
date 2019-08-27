@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
+import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 @Autonomous(name="Mecanum_Test_CreatePath_New", group="New")

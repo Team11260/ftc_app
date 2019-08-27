@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.omni_base.hardware;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractRobot;
-import org.firstinspires.ftc.teamcode.framework.userHardware.PIDController;
+import org.firstinspires.ftc.teamcode.framework.userhardware.PIDController;
 
 public class Robot extends AbstractRobot {
 

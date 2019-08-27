@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.test;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
-import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.Pixycam;
+import org.firstinspires.ftc.teamcode.framework.userhardware.inputs.sensors.vision.Pixycam;
 import org.firstinspires.ftc.teamcode.test.hardware.Robot;
 
 @Autonomous(name="Pixy_Auto_New", group="New")

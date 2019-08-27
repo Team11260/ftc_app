@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
+import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 import org.firstinspires.ftc.teamcode.skidsteer_base.hardware.Robot;
 
 import java.io.File;

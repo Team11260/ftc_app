@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.userHardware;
+package org.firstinspires.ftc.teamcode.framework.userhardware;
 
 public class PIDController {
     private double p,i,d,iVal,lastError=0;

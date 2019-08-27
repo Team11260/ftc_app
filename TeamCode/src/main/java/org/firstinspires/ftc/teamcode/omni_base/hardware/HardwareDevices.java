@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.omni_base.hardware;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.Speech;
+import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.Speech;
 import org.firstinspires.ftc.teamcode.omni_base.hardware.devices.drive.DriveController;
 import org.firstinspires.ftc.teamcode.omni_base.hardware.devices.glyph.GlyphController;
 import org.firstinspires.ftc.teamcode.omni_base.hardware.devices.jewel.JewelController;

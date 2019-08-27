@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.userHardware;
+package org.firstinspires.ftc.teamcode.framework.userhardware;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.upacreekrobotics.dashboard.Dashboard.dashboardtelemetry;
