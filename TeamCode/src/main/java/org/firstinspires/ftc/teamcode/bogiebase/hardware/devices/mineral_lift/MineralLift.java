@@ -27,6 +27,7 @@ public class MineralLift {
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftMotor.setTargetPosition(0);
         liftMotor.setPower(0);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         liftMotor.setSlewSpeed(2);
 

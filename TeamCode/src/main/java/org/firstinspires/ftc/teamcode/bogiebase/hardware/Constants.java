@@ -38,7 +38,7 @@ public final class Constants {
     public static final int DRIVE_DUMP_TEAM_MARKER_DELAY = 1000;
 
     //Roadrunner
-    public static double TRACK_WIDTH = 26; // in
+    public final static double TRACK_WIDTH = 26; // in
 
     public final static double kV = 0.04;
     public final static double kA = 0.025;
@@ -73,6 +73,9 @@ public final class Constants {
     public final static double MINERAL_LIFT_ANGLE_SERVO_STEEP_DUMP_POSITION = 0.42;
     public final static double MINERAL_LIFT_ANGLE_SERVO_SHALLOW_DUMP_POSITION = 0.35;
     public final static double MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION = 0.9;
+
+    //Arm Servo and Gripper Servo
+
 
 
     ////////ROBOT LIFT////////

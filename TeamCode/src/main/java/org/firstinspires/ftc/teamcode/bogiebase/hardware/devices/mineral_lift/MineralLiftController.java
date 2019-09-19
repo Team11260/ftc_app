@@ -122,7 +122,7 @@ public class MineralLiftController extends SubsystemController {
         mineralLift.setLiftMotorPowerNoEncoder(0.8);
         delay(500);
         currentMineralLiftState = MineralLiftState.DUMP_POSITION;
-        mineralLift.setLiftMotorPowerNoEncoder(0);
+        mineralLift.setLiftMotorPowerNoEncoder(0.0);
     }
 
     public int getMineralLiftPosition() {

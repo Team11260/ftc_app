@@ -367,6 +367,7 @@ public class Robot extends AbstractRobot {
         return () -> hardware.robotLift.autonFinishLowerLiftSequence();
     }
 
+
     public RobotCallable dropMarkerCallable() {
         return () -> hardware.drive.dropTeamMarker();
     }
