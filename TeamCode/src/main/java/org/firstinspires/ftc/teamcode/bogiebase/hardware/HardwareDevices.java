@@ -15,10 +15,10 @@ public class HardwareDevices {
     public GripperController gripper = null;
 
     public HardwareDevices() {
-        //drive = new DriveController();
-        //intake = new IntakeController();
-        // mineralLift = new MineralLiftController();
-        //robotLift = new RobotLiftController();
+        drive = new DriveController();
+        intake = new IntakeController();
+         mineralLift = new MineralLiftController();
+        robotLift = new RobotLiftController();
         gripper = new GripperController();
     }
 

@@ -52,9 +52,11 @@ public class LearningTeleopMode extends AbstractTeleop {
     @Override
     public void UpdateEvents() {
         double left_stick_x=gamepad1.left_stick_x,left_stick_y = -gamepad1.left_stick_y, right_stick_x = gamepad1.right_stick_x;
-
-
         SetDrivePowerAll(left_stick_y-left_stick_x-right_stick_x,left_stick_y+left_stick_x+right_stick_x,left_stick_y+left_stick_x-right_stick_x,left_stick_y-left_stick_x+right_stick_x);
+        dcMotorFrontRight.getCurrentPosition();
+        dcMotorFrontLeft.getCurrentPosition();
+        dcMotorBackLeft.getCurrentPosition();
+        dcMotorBackRight.getCurrentPosition();
     }
 
     @Override
