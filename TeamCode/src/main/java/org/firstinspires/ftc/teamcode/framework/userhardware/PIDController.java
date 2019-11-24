@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware;
 
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry;
 
 import java.text.DecimalFormat;
 
-import static org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry.LogMode.INFO;
+import static org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry.LogMode.INFO;
 
 public class PIDController {
     private double p, i, d, iVal, lastError = 0, ilimit = 1, minimumOutput = 0;

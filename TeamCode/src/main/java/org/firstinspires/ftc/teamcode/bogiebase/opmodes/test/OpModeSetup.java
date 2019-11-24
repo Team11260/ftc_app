@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.bogiebase.opmodes.test;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry;
 
 @TeleOp(name = "OpMode Setup", group = "New")
 //@Disabled

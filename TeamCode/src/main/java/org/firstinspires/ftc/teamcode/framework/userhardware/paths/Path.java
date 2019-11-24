@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware.paths;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;

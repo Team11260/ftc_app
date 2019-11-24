@@ -6,8 +6,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.Logger;
+import org.firstinspires.ftc.teamcode.framework.util.HardwareMapEx;
 import org.openftc.revextensions2.RevExtensions2;
 import org.upacreekrobotics.dashboard.Dashboard;
 
@@ -24,6 +25,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
     private static OpMode opmode;
     private static LinearOpMode linearOpMode;
     public static DoubleTelemetry telemetry;
+    public static HardwareMapEx hardwareMap;
     private static AbstractOpMode thisOpMode;
     private static Gamepad staticGamepad1;
     private static Gamepad staticGamepad2;
@@ -32,8 +34,8 @@ public abstract class AbstractOpMode extends LinearOpMode {
         return telemetry;
     }
 
-    public static HardwareMap getHardwareMap() {
-        return opmode.hardwareMap;
+    public static HardwareMapEx getHardwareMap() {
+        return hardwareMap;
     }
 
     public static OpMode getOpModeInstance() {
@@ -54,10 +56,11 @@ public abstract class AbstractOpMode extends LinearOpMode {
         opmode = this;
         linearOpMode = this;
         telemetry = new DoubleTelemetry(super.telemetry, Dashboard.getInstance().getTelemetry(), new Logger(Dashboard.getCurrentOpMode()));
+        hardwareMap = new HardwareMapEx(super.hardwareMap);
     }
 
     @Override
-    public void runOpMode() {
+    public final void runOpMode() {
         staticGamepad1 = gamepad1;
         staticGamepad2 = gamepad2;
         runOpmode();

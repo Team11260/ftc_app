@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.framework.userhardware.purepursuit;
 
-public class Pose extends Point {
+public class Pose extends Point implements Cloneable {
 
     private final double heading;
 
@@ -19,5 +19,9 @@ public class Pose extends Point {
 
     public double getHeading() {
         return heading;
+    }
+
+    public Pose clone() {
+        return new Pose(x, y, heading);
     }
 }

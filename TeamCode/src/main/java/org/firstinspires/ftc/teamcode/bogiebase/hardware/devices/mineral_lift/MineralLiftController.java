@@ -3,11 +3,8 @@ package org.firstinspires.ftc.teamcode.bogiebase.hardware.devices.mineral_lift;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants;
-import org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState;
-import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.util.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
-import org.firstinspires.ftc.teamcode.framework.util.SubsytemState;
 
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.Constants.*;
 import static org.firstinspires.ftc.teamcode.bogiebase.hardware.RobotState.*;

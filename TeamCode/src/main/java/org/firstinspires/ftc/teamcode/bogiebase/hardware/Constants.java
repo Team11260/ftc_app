@@ -22,7 +22,7 @@ public final class Constants {
 
 
     ////////DRIVE////////
-    public static final double TELEOP_DRIVE_SLEW_SPEED = 0.1;
+    public static final double TELEOP_DRIVE_SLEW_SPEED = 2;
     public static final double AUTON_DRIVE_SLEW_SPEED = 2;
 
     public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.55;
@@ -38,7 +38,7 @@ public final class Constants {
     public static final int DRIVE_DUMP_TEAM_MARKER_DELAY = 1000;
 
     //Roadrunner
-    public final static double TRACK_WIDTH = 26; // in
+    public static double TRACK_WIDTH = 20; // in
 
     public final static double kV = 0.04;
     public final static double kA = 0.025;
@@ -74,9 +74,6 @@ public final class Constants {
     public final static double MINERAL_LIFT_ANGLE_SERVO_SHALLOW_DUMP_POSITION = 0.35;
     public final static double MINERAL_LIFT_ANGLE_SERVO_VERTICAL_POSITION = 0.9;
 
-    //Arm Servo and Gripper Servo
-
-
 
     ////////ROBOT LIFT////////
     //Lift
@@ -93,7 +90,7 @@ public final class Constants {
 
 
     ////////AUTON PATHS////////
-    //SmoothPath variables
+    //Path variables
     public final static double AUTON_PATH_SPEED = 1;
     public final static double AUTON_MINERAL_TURN_SPEED = 0.4;
     public final static double AUTON_TURN_ERROR = 8;
