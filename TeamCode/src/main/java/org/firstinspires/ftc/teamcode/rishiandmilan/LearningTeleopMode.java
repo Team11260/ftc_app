@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
-import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
+//import org.firstinspires.ftc.teamcode.framework.userhardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userhardware.outputs.SlewDcMotor;
 import org.firstinspires.ftc.teamcode.framework.util.RobotCallable;
 import org.upacreekrobotics.dashboard.Config;
@@ -43,7 +43,7 @@ public class LearningTeleopMode extends AbstractTeleop {
         addEventHandler("1_a_down", () -> toggleArmPosition());
         addEventHandler("1_b_down", () -> toggleGripperPosition());
         addEventHandler("1_x_down", () -> {
-            telemetry.addData(DoubleTelemetry.LogMode.INFO, "X pressed");
+           // telemetry.addData(DoubleTelemetry.LogMode.INFO, "X pressed");
             telemetry.update();
         });
 
